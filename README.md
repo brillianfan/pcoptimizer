@@ -2,7 +2,7 @@
 
 > Công cụ tối ưu hóa và quản trị hệ thống Windows toàn diện
 
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
 
@@ -22,9 +22,9 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 
 ### 🛡️ Bằng chứng An toàn:
 - 📂 **Source code mở 100%** - Bạn có thể đọc và kiểm tra từng dòng code
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection)
 - 👤 **Tác giả**: Brillian Pham
-- 📧 **Liên hệ**: [Email của bạn]
+- 📧 **Liên hệ**: brillianpham@gmail.com
 
 ---
 
