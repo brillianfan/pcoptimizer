@@ -1,0 +1,235 @@
+# 🚀 HƯỚNG DẪN NHANH - QUICK START
+
+## 📁 Files bạn vừa nhận được:
+
+1. **README.md** - File mô tả chính của dự án
+2. **LICENSE** - Giấy phép MIT
+3. **SECURITY.md** - Chính sách bảo mật
+4. **CONTRIBUTING.md** - Hướng dẫn đóng góp
+5. **.gitignore** - Loại trừ files không cần thiết
+6. **VIRUSTOTAL_GUIDE.md** - Hướng dẫn quét VirusTotal chi tiết
+7. **SETUP_CHECKLIST.md** - Checklist hoàn chỉnh
+
+---
+
+## ⚡ HÀNH ĐỘNG NGAY BÂY GIỜ:
+
+### Bước 1: Upload lên GitHub (5 phút)
+
+```bash
+# 1. Mở thư mục dự án của bạn
+cd /path/to/PC-Ultimate-Optimizer
+
+# 2. Copy tất cả files vừa tải vào thư mục này
+# (Copy 7 files ở trên vào thư mục dự án)
+
+# 3. Thêm file optimizer.bat (file chính của bạn) vào
+
+# 4. Git commands:
+git add .
+git commit -m "Initial release with complete documentation"
+git push origin main
+```
+
+---
+
+### Bước 2: Quét VirusTotal (3 phút)
+
+**QUAN TRỌNG: Làm ngay bước này!**
+
+1. 🌐 Truy cập: https://www.virustotal.com
+2. 📤 Click "Choose file" và chọn `optimizer.bat`
+3. ⏳ Đợi 2-5 phút quét
+4. 📋 Copy link kết quả (dạng: https://www.virustotal.com/gui/file/[HASH]/detection)
+
+---
+
+### Bước 3: Cập nhật README (2 phút)
+
+Mở file **README.md** và thay thế:
+
+**TÌM:**
+```markdown
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Clean-brightgreen)](LINK_VIRUSTOTAL_O_DAY)
+```
+
+**THAY BẰNG** (ví dụ nếu kết quả là 0/71):
+```markdown
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](LINK_BẠN_VỪA_COPY_Ở_BƯỚC_2)
+```
+
+**TÌM:**
+```markdown
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](LINK_VIRUSTOTAL_O_DAY)
+```
+
+**THAY BẰNG:**
+```markdown
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](LINK_BẠN_VỪA_COPY_Ở_BƯỚC_2)
+```
+
+**Lưu file và commit:**
+```bash
+git add README.md
+git commit -m "Add VirusTotal scan results"
+git push origin main
+```
+
+---
+
+### Bước 4: Tùy chỉnh thông tin (5 phút)
+
+**Tìm và thay trong TẤT CẢ các files:**
+
+| Tìm | Thay bằng |
+|-----|-----------|
+| `[your-email@example.com]` | Email thật của bạn |
+| `YOUR_USERNAME` | brillianpham (hoặc username GitHub của bạn) |
+| `[Your LinkedIn]` | Link LinkedIn của bạn |
+| `[@your-username]` | @brillianpham |
+
+**Các file cần sửa:**
+- README.md
+- SECURITY.md
+- CONTRIBUTING.md
+
+**Sau đó commit:**
+```bash
+git add .
+git commit -m "Update personal information"
+git push origin main
+```
+
+---
+
+## ✅ CHECKLIST 10 PHÚT
+
+- [ ] Upload tất cả files lên GitHub
+- [ ] Quét VirusTotal và copy link
+- [ ] Cập nhật link VirusTotal vào README
+- [ ] Thay email và username
+- [ ] Push tất cả lên GitHub
+- [ ] Kiểm tra repo trên GitHub xem đã đẹp chưa
+
+---
+
+## 🎯 SAU KHI HOÀN THÀNH
+
+### Repo của bạn sẽ có:
+
+```
+PC-Ultimate-Optimizer/
+├── optimizer.bat          ← File chính của bạn
+├── README.md              ← Mô tả dự án đẹp mắt
+├── LICENSE                ← Giấy phép MIT
+├── SECURITY.md            ← Chính sách bảo mật
+├── CONTRIBUTING.md        ← Hướng dẫn đóng góp
+├── .gitignore             ← Git ignore file
+└── (screenshots/)         ← Thư mục ảnh (tùy chọn)
+```
+
+### Repo sẽ hiển thị:
+
+- ✅ Badges đẹp mắt (VirusTotal, License, Platform)
+- ✅ Mô tả đầy đủ và chuyên nghiệp
+- ✅ Hướng dẫn sử dụng chi tiết
+- ✅ Chính sách bảo mật rõ ràng
+- ✅ Hướng dẫn đóng góp
+
+---
+
+## 🔥 BONUS: Tạo Release
+
+1. Vào GitHub repo → **Releases** tab
+2. Click **"Create a new release"**
+3. Điền:
+   - Tag: `v1.0.0`
+   - Title: `PC Ultimate Optimizer v1.0.0`
+   - Description: (Copy từ SETUP_CHECKLIST.md)
+4. Upload file `optimizer.bat`
+5. Click **"Publish release"**
+
+---
+
+## 📸 THÊM ẢNH (Tùy chọn - 5 phút)
+
+1. Chụp màn hình khi chạy script
+2. Tạo thư mục `screenshots/` trong repo
+3. Upload ảnh vào đó
+4. Thêm vào README:
+
+```markdown
+## 📸 Screenshots
+
+![Main Menu](screenshots/main-menu.png)
+![PC Specs](screenshots/specs.png)
+```
+
+---
+
+## 🎉 XEM KẾT QUẢ
+
+Truy cập: `https://github.com/brillianpham/PC-Ultimate-Optimizer`
+
+Bạn sẽ thấy một repo chuyên nghiệp với:
+- Badge VirusTotal màu xanh
+- README đẹp mắt
+- Documentation đầy đủ
+- Sẵn sàng chia sẻ!
+
+---
+
+## 📞 CẦN TRỢ GIÚP?
+
+**Xem file chi tiết:**
+- VIRUSTOTAL_GUIDE.md - Hướng dẫn quét VirusTotal từng bước
+- SETUP_CHECKLIST.md - Checklist đầy đủ với mọi chi tiết
+
+**Vấn đề thường gặp:**
+
+1. **Git push bị lỗi?**
+   ```bash
+   git pull origin main --rebase
+   git push origin main
+   ```
+
+2. **VirusTotal báo detections?**
+   - Đọc SECURITY.md để hiểu về False Positive
+   - Cập nhật badge: `0%2F71%20Clean` → `2%2F71%20False%20Positive`
+
+3. **README không hiển thị đẹp?**
+   - Kiểm tra markdown syntax
+   - Preview trên GitHub trước khi push
+
+---
+
+## 🚀 TIẾP THEO
+
+Sau khi hoàn thành:
+
+1. **Chia sẻ dự án:**
+   - Facebook groups
+   - Reddit (r/windows, r/software)
+   - Vietnamese tech forums
+
+2. **Theo dõi:**
+   - Star count
+   - Issues
+   - Pull requests
+
+3. **Cải thiện:**
+   - Nhận feedback
+   - Fix bugs
+   - Thêm features
+   - Release v1.1.0
+
+---
+
+**Thời gian hoàn thành: ~15-20 phút**
+
+**Kết quả: Repo GitHub chuyên nghiệp, sẵn sàng chia sẻ! 🎉**
+
+---
+
+**Made with ❤️ by Brillian Pham**  
+**Date: January 28, 2026**
