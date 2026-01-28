@@ -2,7 +2,7 @@
 
 > Công cụ tối ưu hóa và quản trị hệ thống Windows toàn diện
 
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Clean-brightgreen)](LINK_VIRUSTOTAL_O_DAY)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Clean-brightgreen)](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
 
