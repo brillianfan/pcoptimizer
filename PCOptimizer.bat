@@ -564,7 +564,7 @@ if "%upd%"=="1" (
     echo Dang bat Windows Update...
     sc config wuauserv start= demand >nul 2>&1
     net start wuauserv >nul 2>&1
-    echo [OK] Da bat Windows Update thành cong!
+    echo [OK] Da bat Windows Update thanh cong!
     pause
 )
 if "%upd%"=="2" (
@@ -677,36 +677,36 @@ goto software_health
 chcp 65001 >nul
 cls
 echo ======================================================
-echo             TÙY CHỌN PHẦN MỀM ĐỂ CẬP NHẬT
+echo             TUY CHON PHAN MEM DE CAP NHAT
 echo ======================================================
 echo.
-echo Đang kết nối đến hệ thống Windows Package Manager...
-echo Vui lòng đợi trong giây lát...
+echo Dang ket noi den he thong Windows Package Manager...
+echo Vui long doi trong giay lat...
 echo.
 
-:: Hiển thị danh sách phần mềm có bản cập nhật
+:: Hien thi danh sach phan mem co ban cap nhat
 winget list --upgrade-available
 if %errorlevel% neq 0 (
     echo.
-    echo LỖI: Không thể kết nối đến máy chủ Winget hoặc không có bản cập nhật nào.
+    echo LOI: Khong the ket noi den may chu Winget hoac khong co ban cap nhat nao.
     pause
     goto software_health
 )
 
 echo.
 echo ------------------------------------------------------
-echo Hướng dẫn: Copy "ID" ở cột thứ 2 và Paste vào đây.
-echo Ví dụ: Google.Chrome
+echo Huong dan: Copy "ID" o cot thu 2 va Paste vao day.
+echo Vi du: Google.Chrome
 echo.
-echo 0 - Quay lại Menu chính
-echo 1 - Thoát
+echo 0 - Quay lai Menu chinh
+echo 1 - Thoat
 echo.
 
 set "sw_id="
-set /p sw_id="Nhập ID phần mềm: "
+set /p sw_id="Nhap ID phan mem: "
 
 if "%sw_id%"=="" (
-    echo Hãy nhập ID hợp lệ!
+    echo Hay nhap ID hop le!
     timeout /t 2 >nul
     goto sw_update_select
 )
@@ -715,22 +715,22 @@ if /i "%sw_id%"=="0" goto menu
 if /i "%sw_id%"=="1" goto software_health
 
 echo.
-echo Đang tải và cài đặt bản cập nhật cho: %sw_id%
+echo Dang tai va cai dat ban cap nhat cho: %sw_id%
 echo.
-:: Thêm --silent để cài đặt ngầm nếu hỗ trợ
+:: Them --silent de cai dat ngam neu ho tro
 winget upgrade --id "%sw_id%" --accept-package-agreements --accept-source-agreements
 if %errorlevel% equ 0 (
     echo.
-    echo THÀNH CÔNG: Cập nhật %sw_id% hoàn tất!
+    echo THANH CONG: Cap nhat %sw_id% hoan tat!
     pause
 ) else (
     echo.
-    echo LỖI: Không thể cập nhật %sw_id%.
+    echo LOI: Khong the cap nhat %sw_id%.
     echo.
-    echo [1] Thử lại
-    echo [2] Bỏ qua kiểm tra hash (--force)
-    echo [3] Quay lại
-    set /p re_choice="Lựa chọn của bạn: "
+    echo [1] Thu lai
+    echo [2] Bo qua kiem tra hash (--force)
+    echo [3] Quay lai
+    set /p re_choice="Lua chon cua ban: "
     if "%re_choice%"=="2" winget upgrade --id "%sw_id%" --force --accept-package-agreements --accept-source-agreements
     goto sw_update_select
 )

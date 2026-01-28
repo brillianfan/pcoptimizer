@@ -38,12 +38,13 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - Chạy Windows Disk Cleanup
 
 ### 🗑️ **Uninstaller**
-- Gỡ bỏ phần mềm không cần thiết
-- Mở Control Panel > Programs and Features
+- Liệt kê danh sách ứng dụng từ Registry (sắp xếp A–Z)
+- Chọn theo số thứ tự để gỡ bỏ phần mềm
+- Tuỳ chọn quét và xóa tàn dư (AppData, ProgramData, Registry) sau khi gỡ
 
 ### ⚡ **Startup Manager**
-- Quản lý ứng dụng khởi động cùng Windows
-- Tắt các chương trình làm chậm máy
+- Mở Task Manager (tab Startup) để quản lý ứng dụng khởi động cùng Windows
+- Hướng dẫn Disable các ứng dụng không cần thiết
 
 ### 🔄 **Toggle Windows Update**
 - Bật/Tắt tạm thời Windows Update
@@ -61,9 +62,9 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - CPU, RAM, GPU, Mainboard, Ổ cứng
 
 ### 🔑 **Windows & Office Activation**
-- Kiểm tra phiên bản Windows/Office
-- Kiểm tra trạng thái bản quyền
-- Hướng dẫn kích hoạt (MAS Script)
+- Kiểm tra phiên bản Windows & Office
+- Kiểm tra trạng thái bản quyền (slmgr /xpr, ospp.vbs)
+- Mở công cụ kích hoạt MAS (Microsoft Activation Scripts – get.activated.win)
 
 ### 🌐 **Internet Boost**
 - Tối ưu TCP/IP settings
@@ -76,7 +77,8 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 
 ### 📦 **Software Health**
 - Cập nhật phần mềm qua Windows Package Manager (Winget)
-- Update tất cả hoặc chọn lọc từng phần mềm
+- **Update All**: cập nhật tất cả phần mềm có bản mới
+- **Update Selected**: nhập ID (ví dụ Google.Chrome) để cập nhật từng phần mềm
 
 ---
 
@@ -91,7 +93,7 @@ cd PC-Ultimate-Optimizer
 Hoặc tải file ZIP: [Download](https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer/archive/refs/heads/main.zip)
 
 ### Bước 2: Chạy script
-1. Click phải vào `optimizer.bat`
+1. Click phải vào `PCOptimizer.bat`
 2. Chọn **"Run as Administrator"** (Chạy với quyền quản trị)
 3. Chọn chức năng từ menu
 
@@ -101,7 +103,7 @@ Hoặc tải file ZIP: [Download](https://github.com/YOUR_USERNAME/PC-Ultimate-O
 1. Mở **Windows Security**
 2. **Virus & threat protection** → **Manage settings**
 3. **Exclusions** → **Add or remove exclusions**
-4. Thêm file `optimizer.bat` hoặc thư mục chứa script
+4. Thêm file `PCOptimizer.bat` hoặc thư mục chứa script
 
 #### **Antivirus khác:**
 - Thêm vào **Whitelist/Exclusions/Trusted Files**
@@ -116,16 +118,16 @@ Hoặc tải file ZIP: [Download](https://github.com/YOUR_USERNAME/PC-Ultimate-O
           CONG CU QUAN TRI & TOI UU PC
                by Brillian Pham
 ======================================================
-[1] Deep Junk Clean (Dọn rác & Giải phóng dung lượng)
-[2] Uninstaller (Gỡ phần mềm)
-[3] Startup Manager (Quản lý khởi động)
-[4] Toggle Windows Update (Bật/Tắt tạm thời)
-[5] Optimize Registry (Tối ưu hóa Registry)
-[6] View PC Specs (Xem cấu hình PC)
-[7] Windows & Office Activation
-[8] Internet Boost (Tối ưu tốc độ mạng)
-[9] Disk Check (Quét lỗi ổ cứng)
-[10] Software Health (Cập nhật phần mềm)
+[1] Deep Junk Clean (Don rac & Giai phong dung luong)
+[2] Uninstaller (Go phan mem)
+[3] Startup Manager (Quan ly cac ung dung khoi dong cung Windows)
+[4] Toggle Windows Update (Bat/Tat tam thoi)
+[5] Optimize Registry (Toi uu hoa Registry)
+[6] View PC Specs (Xem cau hinh PC)
+[7] Windows & Office Activation (Kiem tra & Kich hoat ban quyen)
+[8] Internet Boost (Toi uu toc do mang & Ping)
+[9] Disk Check (Quet loi o cung)
+[10] Software Health (Cap nhat phan mem PC)
 [0] Exit
 ======================================================
 ```
