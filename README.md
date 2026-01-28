@@ -33,9 +33,11 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 ### 🧹 **Deep Junk Clean**
 - Xóa file tạm (Temp, Prefetch)
 - Dọn Windows Cache
-- Làm trống Recycle Bin
-- Xóa System Event Logs
+- Làm trống Recycle Bin (Thùng rác)
+- Xóa System Event Logs (Nhật ký hệ thống)
 - Chạy Windows Disk Cleanup
+- Quét và xóa thư mục rỗng (ProgramData, AppData, Program Files…)
+- **Xóa shortcuts lỗi** – các liên kết (.lnk) trỏ tới file/thư mục đã bị xóa (Desktop, Start Menu, Quick Launch)
 
 ### 🗑️ **Uninstaller**
 - Liệt kê danh sách ứng dụng từ Registry (sắp xếp A–Z)
@@ -195,6 +197,10 @@ Nếu công cụ này hữu ích với bạn, hãy cho 1 ⭐ trên GitHub!
 ---
 
 ## 📜 Changelog
+
+### v1.0.1 (2026-01-28)
+- 🧹 **Deep Junk Clean**: Thêm xóa shortcuts lỗi (Desktop, Start Menu, Quick Launch)
+- 📋 README đồng bộ với danh sách tính năng thực tế
 
 ### v1.0.0 (2026-01-28)
 - 🎉 Phiên bản đầu tiên

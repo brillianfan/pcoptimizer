@@ -218,6 +218,14 @@ if /i "!confirm5!"=="Y" (
 )
 if exist "%emptyDirsList%" del /f /q "%emptyDirsList%" >nul 2>&1
 echo.
+echo [+] Xoa shortcuts loi (lien ket tro toi file/thu muc da bi xoa)...
+set /p confirm6="Ban co muon xoa cac shortcuts loi? (Y/N): "
+if /i "!confirm6!"=="Y" (
+    powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0Remove-BrokenShortcuts.ps1"
+) else (
+    echo [SKIP] Bo qua buoc xoa shortcuts loi.
+)
+echo.
 echo ------------------------------------------------------
 echo === DA DON DEP XONG! ===
 pause
