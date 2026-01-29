@@ -92,11 +92,11 @@ git clone https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer.git
 cd PC-Ultimate-Optimizer
 ```
 
-Hoặc tải file ZIP: [Download](https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer/archive/refs/heads/main.zip)
+Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/archive/refs/heads/main.zip)
 
 ### Bước 2: Chạy script
-1. Click phải vào `PCOptimizer.bat`
-2. Chọn **"Run as Administrator"** (Chạy với quyền quản trị)
+1. Double Click vào `PCOptimizer.bat` để chạy
+2. Chọn Yes để cho phép công cụ (Chạy với quyền quản trị) **"Run as Administrator"**
 3. Chọn chức năng từ menu
 
 ### Bước 3: Xử lý cảnh báo Antivirus (nếu có)
