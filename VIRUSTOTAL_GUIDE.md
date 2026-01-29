@@ -24,7 +24,7 @@
 
 ## Bước 3: Chờ quét
 
-- VirusTotal sẽ quét file với **70+ antivirus engines**
+- VirusTotal sẽ quét file với **60+ antivirus engines**
 - Thời gian: ~2-5 phút
 - **KHÔNG ĐÓNG TAB** trong khi quét
 
@@ -37,9 +37,9 @@
 ### Kết quả mong đợi:
 
 ```
-✅ 0/70+ detections  (HOÀN TOÀN AN TOÀN)
-⚠️ 1-3/70+ detections (An toàn - False Positive)
-❌ 10+/70+ detections (Cần xem xét)
+✅ 0/60+ detections  (HOÀN TẦN AN TOÀN)
+⚠️ 1-3/60+ detections (An toàn - False Positive)
+❌ 10+/60+ detections (Cần xem xét)
 ```
 
 ### Giải thích:
@@ -62,7 +62,7 @@
 
 ### Ví dụ:
 ```
-https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection
+https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection
 ```
 
 ---
@@ -76,7 +76,7 @@ https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd409
 
 ### Bằng:
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F71-brightgreen)](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F60-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
 ```
 
 **Lưu ý**: Thay `YOUR_HASH` bằng link thực tế bạn vừa copy.
@@ -92,7 +92,7 @@ Tìm đoạn này:
 
 Thay bằng:
 ```markdown
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
 ```
 
 ---

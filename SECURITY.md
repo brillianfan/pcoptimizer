@@ -140,7 +140,7 @@ Script này có thể bị một số antivirus cảnh báo vì:
 
 ```bash
 # Clone repo
-git clone https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer.git
+git clone https://github.com/brillianfan/pcoptimizer.git
 
 # Đọc toàn bộ code
 notepad optimizer.bat
@@ -153,8 +153,8 @@ findstr /i "download upload send http" optimizer.bat
 ### 2. Quét VirusTotal
 
 - Link quét: [VirusTotal Scan Results](LINK_VIRUSTOTAL)
-- Engines: 70+ antivirus
-- Kết quả: 0/70+ detections
+- Engines: 60+ antivirus
+- Kết quả: 0/60+ detections
 
 ### 3. Chạy trong Sandbox (nâng cao)
 
@@ -197,7 +197,7 @@ findstr /i "download upload send http" optimizer.bat
 ## Liên hệ
 
 - **Email**: [your-email@example.com]
-- **GitHub Issues**: [Create Issue](https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer/issues)
+- **GitHub Issues**: [Create Issue](https://github.com/brillianfan/pcoptimizer/issues)
 - **PGP Key**: (Nếu cần mã hóa)
 
 ---

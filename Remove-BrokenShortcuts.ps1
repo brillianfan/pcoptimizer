@@ -11,7 +11,7 @@ $SearchPaths = @(
     [Environment]::GetFolderPath("CommonStartMenu"),
     [Environment]::GetFolderPath("Programs"),
     [Environment]::GetFolderPath("CommonPrograms"),
-    [Environment]::GetFolderPath("AppData") + "\Microsoft\Windows\Recent",
+    [Environment]::GetFolderPath("Recent"),
     [Environment]::GetFolderPath("ApplicationData") + "\Microsoft\Internet Explorer\Quick Launch",
     [Environment]::GetFolderPath("ApplicationData") + "\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar"
 )
@@ -34,10 +34,12 @@ foreach ($Path in $SearchPaths) {
                 try {
                     $Link = $WshShell.CreateShortcut($Shortcut.FullName)
                     $TargetPath = $Link.TargetPath
-                } catch {
+                }
+                catch {
                     continue
                 }
-            } elseif ($Shortcut.Extension -eq ".url") {
+            }
+            elseif ($Shortcut.Extension -eq ".url") {
                 try {
                     $Content = Get-Content $Shortcut.FullName -ErrorAction SilentlyContinue
                     foreach ($Line in $Content) {
@@ -46,7 +48,8 @@ foreach ($Path in $SearchPaths) {
                             break
                         }
                     }
-                } catch {
+                }
+                catch {
                     continue
                 }
             }
@@ -59,7 +62,8 @@ foreach ($Path in $SearchPaths) {
                         Remove-Item $Shortcut.FullName -Force -ErrorAction Stop
                         Write-Host "      -> Da xoa!" -ForegroundColor Yellow
                         $count++
-                    } catch {
+                    }
+                    catch {
                         Write-Host "      -> KHONG THE XOA!" -ForegroundColor DarkRed
                     }
                 }

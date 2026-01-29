@@ -16,14 +16,14 @@ Cảm ơn bạn đã quan tâm đến việc đóng góp cho dự án! 🎉
 ```bash
 # Click nút "Fork" trên GitHub
 # Hoặc dùng GitHub CLI:
-gh repo fork YOUR_USERNAME/PC-Ultimate-Optimizer
+gh repo fork brillianfan/pcoptimizer
 ```
 
 ### 2. Clone về máy
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer.git
-cd PC-Ultimate-Optimizer
+git clone https://github.com/brillianfan/pcoptimizer.git
+cd pcoptimizer
 ```
 
 ### 3. Tạo Branch mới
@@ -272,7 +272,7 @@ Danh sách những người đóng góp sẽ được hiển thị trong README.
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START -->
-- [@brillianpham](https://github.com/brillianpham) - Creator
+- [@brillianfan](https://github.com/brillianfan) - Creator
 - [@yourname](https://github.com/yourname) - Feature X
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 ```
@@ -283,8 +283,8 @@ Danh sách những người đóng góp sẽ được hiển thị trong README.
 
 Có câu hỏi? Liên hệ:
 - **Email**: [your-email@example.com]
-- **GitHub Discussions**: [Start Discussion](https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer/discussions)
-- **Issues**: [Create Issue](https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer/issues)
+- **GitHub Discussions**: [Start Discussion](https://github.com/brillianfan/pcoptimizer/discussions)
+- **Issues**: [Create Issue](https://github.com/brillianfan/pcoptimizer/issues)
 
 ---
 

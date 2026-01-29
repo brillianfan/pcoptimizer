@@ -53,9 +53,9 @@ Mở file **README.md** và thay thế:
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Clean-brightgreen)](LINK_VIRUSTOTAL_O_DAY)
 ```
 
-**THAY BẰNG** (ví dụ nếu kết quả là 0/71):
+**THAY BẰNG** (ví dụ nếu kết quả là 0/60):
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](LINK_BẠN_VỪA_COPY_Ở_BƯỚC_2)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F60%20Clean-brightgreen)](LINK_BẠN_VỪA_COPY_Ở_BƯỚC_2)
 ```
 
 **TÌM:**
@@ -84,7 +84,7 @@ git push origin main
 | Tìm | Thay bằng |
 |-----|-----------|
 | `[your-email@example.com]` | Email thật của bạn |
-| `YOUR_USERNAME` | brillianpham (hoặc username GitHub của bạn) |
+| `YOUR_USERNAME` | brillianfan (hoặc username GitHub của bạn) |
 | `[Your LinkedIn]` | Link LinkedIn của bạn |
 | `[@your-username]` | @brillianpham |
 
@@ -169,7 +169,7 @@ PC-Ultimate-Optimizer/
 
 ## 🎉 XEM KẾT QUẢ
 
-Truy cập: `https://github.com/brillianpham/PC-Ultimate-Optimizer`
+Truy cập: `https://github.com/brillianfan/pcoptimizer`
 
 Bạn sẽ thấy một repo chuyên nghiệp với:
 - Badge VirusTotal màu xanh
@@ -195,7 +195,7 @@ Bạn sẽ thấy một repo chuyên nghiệp với:
 
 2. **VirusTotal báo detections?**
    - Đọc SECURITY.md để hiểu về False Positive
-   - Cập nhật badge: `0%2F71%20Clean` → `2%2F71%20False%20Positive`
+   - Cập nhật badge: `0%2F60%20Clean` → `2%2F60%20False%20Positive`
 
 3. **README không hiển thị đẹp?**
    - Kiểm tra markdown syntax

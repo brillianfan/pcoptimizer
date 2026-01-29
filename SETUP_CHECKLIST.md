@@ -49,9 +49,9 @@ git push origin main
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Clean-brightgreen)](LINK_VIRUSTOTAL_O_DAY)
 ```
 
-**Thay bằng** (ví dụ nếu kết quả là 0/71):
+**Thay bằng** (ví dụ nếu kết quả là 0/60):
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F60%20Clean-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
 ```
 
 **Tìm dòng:**
@@ -61,7 +61,7 @@ git push origin main
 
 **Thay bằng:**
 ```markdown
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
 ```
 
 ### 2.5. Commit thay đổi
@@ -99,7 +99,7 @@ https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer
 
 Thành:
 ```markdown
-https://github.com/brillianpham/PC-Ultimate-Optimizer
+https://github.com/brillianfan/pcoptimizer
 ```
 
 ---
@@ -134,7 +134,7 @@ Description:
 - Software Health
 
 ### 🔒 Security:
-- VirusTotal: [0/71 Clean](YOUR_VIRUSTOTAL_LINK)
+- VirusTotal: [0/60 Clean](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
 - Source code: 100% open
 - MIT License
 
@@ -142,11 +142,11 @@ Description:
 Download `optimizer.bat` and run with Administrator privileges.
 
 ### 📚 Documentation:
-See [README.md](https://github.com/brillianpham/PC-Ultimate-Optimizer) for full instructions.
+See [README.md](https://github.com/brillianfan/pcoptimizer) for full instructions.
 
 ---
 
-**Full Changelog**: https://github.com/brillianpham/PC-Ultimate-Optimizer/commits/v1.0.0
+**Full Changelog**: https://github.com/brillianfan/pcoptimizer/commits/v1.0.0
 ```
 
 ### 4.3. Attach files:
@@ -183,11 +183,11 @@ free-tools
 ```markdown
 ![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
-![Release](https://img.shields.io/github/v/release/brillianpham/PC-Ultimate-Optimizer)
-![Downloads](https://img.shields.io/github/downloads/brillianpham/PC-Ultimate-Optimizer/total)
-![Stars](https://img.shields.io/github/stars/brillianpham/PC-Ultimate-Optimizer?style=social)
-![Issues](https://img.shields.io/github/issues/brillianpham/PC-Ultimate-Optimizer)
-![Last Commit](https://img.shields.io/github/last-commit/brillianpham/PC-Ultimate-Optimizer)
+![Release](https://img.shields.io/github/v/release/brillianfan/pcoptimizer)
+![Downloads](https://img.shields.io/github/downloads/brillianfan/pcoptimizer/total)
+![Stars](https://img.shields.io/github/stars/brillianfan/pcoptimizer?style=social)
+![Issues](https://img.shields.io/github/issues/brillianfan/pcoptimizer)
+![Last Commit](https://img.shields.io/github/last-commit/brillianfan/pcoptimizer)
 ```
 
 Thêm vào đầu README.md (sau tiêu đề):
@@ -198,7 +198,7 @@ Thêm vào đầu README.md (sau tiêu đề):
 > Công cụ tối ưu hóa và quản trị hệ thống Windows toàn diện
 
 ![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F60%20Clean-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Release](https://img.shields.io/github/v/release/brillianpham/PC-Ultimate-Optimizer)
 ![Downloads](https://img.shields.io/github/downloads/brillianpham/PC-Ultimate-Optimizer/total)
@@ -295,9 +295,9 @@ Tôi vừa tạo công cụ tối ưu PC miễn phí cho Windows 10/11!
 - Và nhiều hơn nữa!
 
 🔒 100% Open Source & Safe
-🔍 VirusTotal: 0/71 Clean
+🔍 VirusTotal: 0/60 Clean
 
-GitHub: https://github.com/brillianpham/PC-Ultimate-Optimizer
+GitHub: https://github.com/brillianfan/pcoptimizer
 
 #Windows #OpenSource #FreeSoftware
 ```

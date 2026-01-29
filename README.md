@@ -2,7 +2,7 @@
 
 > Công cụ tối ưu hóa và quản trị hệ thống Windows toàn diện
 
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
 
@@ -22,7 +22,7 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 
 ### 🛡️ Bằng chứng An toàn:
 - 📂 **Source code mở 100%** - Bạn có thể đọc và kiểm tra từng dòng code
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
 - 👤 **Tác giả**: Brillian Pham
 - 📧 **Liên hệ**: brillianpham@gmail.com
 
@@ -88,7 +88,7 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 
 ### Bước 1: Tải về
 ```bash
-git clone https://github.com/YOUR_USERNAME/PC-Ultimate-Optimizer.git
+git clone https://github.com/brillianfan/pcoptimizer.git
 cd PC-Ultimate-Optimizer
 ```
 
@@ -185,7 +185,7 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
 
 **Brillian Pham**
 - 📧 Email: [your-email@example.com]
-- 🐙 GitHub: [@your-username](https://github.com/your-username)
+- 🐙 GitHub: [@brillianfan](https://github.com/brillianfan)
 - 💼 LinkedIn: [Your LinkedIn](https://linkedin.com/in/your-profile)
 
 ---

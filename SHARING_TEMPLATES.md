@@ -23,7 +23,7 @@ Sử dụng các template này để chia sẻ dự án trên các nền tảng 
 ✅ VirusTotal: Clean
 ✅ Không thu thập dữ liệu
 
-📥 Tải miễn phí: https://github.com/brillianpham/PC-Ultimate-Optimizer
+📥 Tải miễn phí: https://github.com/brillianfan/pcoptimizer
 
 #Windows #FreeSoftware #PCOptimizer #Vietnamese #OpenSource
 ```
@@ -84,7 +84,7 @@ Mình vừa tạo một công cụ tối ưu hóa Windows hoàn toàn miễn ph�
 
 🔒 100% Safe - VirusTotal Clean
 
-⬇️ https://github.com/brillianpham/PC-Ultimate-Optimizer
+⬇️ https://github.com/brillianfan/pcoptimizer
 
 #Windows #OpenSource #FreeSoftware
 ```
@@ -104,7 +104,7 @@ A comprehensive Windows optimization toolkit:
 ✅ Safe (VirusTotal scanned)
 ✅ Free forever
 
-GitHub: https://github.com/brillianpham/PC-Ultimate-Optimizer
+GitHub: https://github.com/brillianfan/pcoptimizer
 
 #DevTools #Windows
 ```
@@ -138,7 +138,7 @@ I'm excited to share my latest project - a comprehensive Windows optimization to
 • Works on Windows 10/11
 
 📥 Available on GitHub:
-https://github.com/brillianpham/PC-Ultimate-Optimizer
+https://github.com/brillianfan/pcoptimizer
 
 I welcome feedback, contributions, and star ⭐ from the community!
 
@@ -174,7 +174,7 @@ Mình vừa hoàn thành một dự án cá nhân - công cụ tối ưu hóa PC
 - Miễn phí mãi mãi (MIT License)
 
 📥 Tải về tại đây:
-https://github.com/brillianpham/PC-Ultimate-Optimizer
+https://github.com/brillianfan/pcoptimizer
 
 Bạn thử dùng xem sao rồi feedback cho mình nhé! Nếu thấy hay thì cho mình 1 Star trên GitHub nha 😊
 
@@ -214,7 +214,7 @@ I've developed a comprehensive PC optimization tool for Windows 10/11 that I'd l
 - Uses only native Windows tools
 - Full source code review available
 
-**GitHub:** https://github.com/brillianpham/PC-Ultimate-Optimizer
+**GitHub:** https://github.com/brillianfan/pcoptimizer
 
 **Why trust it?**
 All operations are visible in the source code. The tool uses standard Windows commands like cleanmgr, netsh, reg, winget. No hidden executables or downloads.
@@ -245,7 +245,7 @@ Just released PC Ultimate Optimizer, a free and open-source Windows optimization
 ✅ No data collection
 ✅ Uses native Windows tools only
 
-**Link:** https://github.com/brillianpham/PC-Ultimate-Optimizer
+**Link:** https://github.com/brillianfan/pcoptimizer
 
 **Note:** Some AV may show false positives due to admin requirements and registry edits (normal for system tools).
 
@@ -272,7 +272,7 @@ Free Windows optimization tool với 10+ tính năng:
 ✅ VirusTotal Clean
 ✅ No Data Collection
 
-Download: https://github.com/brillianpham/PC-Ultimate-Optimizer
+Download: https://github.com/brillianfan/pcoptimizer
 
 Star ⭐ nếu thấy hữu ích!
 ```
@@ -298,9 +298,9 @@ Trong video này mình sẽ hướng dẫn sử dụng PC Ultimate Optimizer - c
 15:00 - Câu hỏi thường gặp
 
 🔗 LINKS:
-📥 Download: https://github.com/brillianpham/PC-Ultimate-Optimizer
-🔍 VirusTotal Scan: https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection
-📚 Documentation: https://github.com/brillianpham/PC-Ultimate-Optimizer#readme
+📥 Download: https://github.com/brillianfan/pcoptimizer
+🔍 VirusTotal Scan: https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection
+📚 Documentation: https://github.com/brillianfan/pcoptimizer#readme
 
 ✨ TÍNH NĂNG:
 • Deep Junk Clean
@@ -331,11 +331,11 @@ Trong video này mình sẽ hướng dẫn sử dụng PC Ultimate Optimizer - c
 Để theo dõi hiệu quả chia sẻ, thêm UTM parameters:
 
 ```
-Facebook: https://github.com/brillianpham/PC-Ultimate-Optimizer?utm_source=facebook&utm_medium=social
-Twitter: https://github.com/brillianpham/PC-Ultimate-Optimizer?utm_source=twitter&utm_medium=social
-Reddit: https://github.com/brillianpham/PC-Ultimate-Optimizer?utm_source=reddit&utm_medium=forum
-LinkedIn: https://github.com/brillianpham/PC-Ultimate-Optimizer?utm_source=linkedin&utm_medium=professional
-Email: https://github.com/brillianpham/PC-Ultimate-Optimizer?utm_source=email&utm_medium=personal
+Facebook: https://github.com/brillianfan/pcoptimizer?utm_source=facebook&utm_medium=social
+Twitter: https://github.com/brillianfan/pcoptimizer?utm_source=twitter&utm_medium=social
+Reddit: https://github.com/brillianfan/pcoptimizer?utm_source=reddit&utm_medium=forum
+LinkedIn: https://github.com/brillianfan/pcoptimizer?utm_source=linkedin&utm_medium=professional
+Email: https://github.com/brillianfan/pcoptimizer?utm_source=email&utm_medium=personal
 ```
 
 ---

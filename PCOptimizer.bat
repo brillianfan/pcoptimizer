@@ -180,42 +180,47 @@ if /i "%confirm4%"=="Y" (
 )
 echo.
 echo [+] Quet thu muc rong (ProgramData, AppData, Program Files)...
-set "emptyDirsList=%temp%\empty_dirs_%random%.txt"
-set "emptyCountFile=%temp%\empty_count_%random%.txt"
-set emptyCount=0
-powershell -NoProfile -Command ^
-    "$roots = @('C:\ProgramData', $env:APPDATA, $env:LOCALAPPDATA, 'C:\Program Files', 'C:\Program Files (x86)'); " ^
-    "$all = @(); " ^
-    "foreach ($r in $roots) { " ^
-    "  if (Test-Path $r) { " ^
-    "    Get-ChildItem -Path $r -Directory -Recurse -Force -ErrorAction SilentlyContinue | " ^
-    "    Where-Object { (Get-ChildItem $_.FullName -Force -ErrorAction SilentlyContinue).Count -eq 0 } | " ^
-    "    ForEach-Object { $all += $_.FullName } " ^
-    "  } " ^
-    "}; " ^
-    "$all = $all | Sort-Object { $_.Length } -Descending; " ^
-    "if ($all.Count -gt 0) { $all | Set-Content -Path '%emptyDirsList%' -Encoding UTF8 }; " ^
-    "$all.Count | Set-Content -Path '%emptyCountFile%' -Encoding ASCII"
-if exist "%emptyCountFile%" for /f "delims=" %%N in ('type "%emptyCountFile%"') do set emptyCount=%%N
-del /f /q "%emptyCountFile%" >nul 2>&1
-echo So thu muc rong tim thay: !emptyCount!
-if !emptyCount! gtr 0 (
-    echo Vi du mot so duong dan:
-    powershell -NoProfile -Command "Get-Content '%emptyDirsList%' -ErrorAction SilentlyContinue | Select-Object -First 8 | ForEach-Object { Write-Host '  ' $_ }"
-)
-echo.
-set /p confirm5="Ban co muon xoa cac thu muc rong nay? (Y/N): "
-if /i "!confirm5!"=="Y" (
-    if exist "%emptyDirsList%" (
-        powershell -NoProfile -Command "Get-Content '%emptyDirsList%' -ErrorAction SilentlyContinue | ForEach-Object { if (Test-Path $_ -PathType Container) { Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue } }"
-        echo [OK] Da xu ly xong cac thu muc rong!
-    ) else (
-        echo [SKIP] Khong co thu muc rong de xoa.
+set /p confirmScanEmpty="Ban co muon quet tim cac thu muc rong? (Y/N): "
+if /i "%confirmScanEmpty%"=="Y" (
+    set "emptyDirsList=%temp%\empty_dirs_%random%.txt"
+    set "emptyCountFile=%temp%\empty_count_%random%.txt"
+    set emptyCount=0
+    powershell -NoProfile -Command ^
+        "$roots = @('C:\ProgramData', $env:APPDATA, $env:LOCALAPPDATA, 'C:\Program Files', 'C:\Program Files (x86)'); " ^
+        "$all = @(); " ^
+        "foreach ($r in $roots) { " ^
+        "  if (Test-Path $r) { " ^
+        "    Get-ChildItem -Path $r -Directory -Recurse -Force -ErrorAction SilentlyContinue | " ^
+        "    Where-Object { (Get-ChildItem $_.FullName -Force -ErrorAction SilentlyContinue).Count -eq 0 } | " ^
+        "    ForEach-Object { $all += $_.FullName } " ^
+        "  } " ^
+        "}; " ^
+        "$all = $all | Sort-Object { $_.Length } -Descending; " ^
+        "if ($all.Count -gt 0) { $all | Set-Content -Path '%emptyDirsList%' -Encoding UTF8 }; " ^
+        "$all.Count | Set-Content -Path '%emptyCountFile%' -Encoding ASCII"
+    if exist "%emptyCountFile%" for /f "delims=" %%N in ('type "%emptyCountFile%"') do set emptyCount=%%N
+    del /f /q "%emptyCountFile%" >nul 2>&1
+    echo So thu muc rong tim thay: !emptyCount!
+    if !emptyCount! gtr 0 (
+        echo Vi du mot so duong dan:
+        powershell -NoProfile -Command "Get-Content '%emptyDirsList%' -ErrorAction SilentlyContinue | Select-Object -First 8 | ForEach-Object { Write-Host '  ' $_ }"
     )
+    echo.
+    set /p confirm5="Ban co muon xoa cac thu muc rong nay? (Y/N): "
+    if /i "!confirm5!"=="Y" (
+        if exist "%emptyDirsList%" (
+            powershell -NoProfile -Command "Get-Content '%emptyDirsList%' -ErrorAction SilentlyContinue | ForEach-Object { if (Test-Path $_ -PathType Container) { Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue } }"
+            echo [OK] Da xu ly xong cac thu muc rong!
+        ) else (
+            echo [SKIP] Khong co thu muc rong de xoa.
+        )
+    ) else (
+        echo [SKIP] Bo qua buoc xoa thu muc rong.
+    )
+    if exist "%emptyDirsList%" del /f /q "%emptyDirsList%" >nul 2>&1
 ) else (
-    echo [SKIP] Bo qua buoc xoa thu muc rong.
+    echo [SKIP] Bo qua buoc quet thu muc rong.
 )
-if exist "%emptyDirsList%" del /f /q "%emptyDirsList%" >nul 2>&1
 echo.
 echo [+] Xoa shortcuts loi (lien ket tro toi file/thu muc da bi xoa)...
 set /p confirm6="Ban co muon xoa cac shortcuts loi? (Y/N): "
