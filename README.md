@@ -24,7 +24,7 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - 📂 **Source code mở 100%** - Bạn có thể đọc và kiểm tra từng dòng code
 - 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 - 👤 **Tác giả**: Brillian Pham
-- 📧 **Liên hệ**: brillianpham@gmail.com
+- 📧 **Liên hệ**: pcoptimizer.seventy907@slmail.me
 
 ---
 
@@ -96,7 +96,7 @@ Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/arc
 
 ### Bước 2: Chạy script
 1. Double Click vào `PCOptimizer.bat` để chạy
-2. Chọn Yes để cho phép công cụ (Chạy với quyền quản trị) **"Run as Administrator"**
+2. Chọn Yes để cho phép công cụ chạy với quyền quản trị **"Run as Administrator"**
 3. Chọn chức năng từ menu
 
 ### Bước 3: Xử lý cảnh báo Antivirus (nếu có)
@@ -109,7 +109,7 @@ Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/arc
 
 #### **Antivirus khác:**
 - Thêm vào **Whitelist/Exclusions/Trusted Files**
-- Hoặc tạm thời tắt Real-time Protection khi chạy
+- Hoặc tạm thời tắt Real-time Protection trước khi chạy
 
 ---
 
@@ -184,23 +184,17 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
 ## 📞 Liên hệ
 
 **Brillian Pham**
-- 📧 Email: [brillianpham@gmail.com]
+- 📧 Email: [pcoptimizer.seventy907@slmail.me]
 - 🐙 GitHub: [@brillianfan](https://github.com/brillianfan)
-- 💼 LinkedIn: [Your LinkedIn](https://linkedin.com/in/your-profile)
-
----
-
-## ⭐ Hỗ trợ dự án
-
-Nếu công cụ này hữu ích với bạn, hãy cho 1 ⭐ trên GitHub!
-
+- Telegram: @goodlove9179
 ---
 
 ## 📜 Changelog
 
-### v1.0.1 (2026-01-28)
+### v1.0.1 (2026-01-29)
 - 🧹 **Deep Junk Clean**: Thêm xóa shortcuts lỗi (Desktop, Start Menu, Quick Launch)
 - 📋 README đồng bộ với danh sách tính năng thực tế
+- 🔧 Sửa một số lỗi
 
 ### v1.0.0 (2026-01-28)
 - 🎉 Phiên bản đầu tiên
