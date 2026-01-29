@@ -144,7 +144,15 @@ echo ------------------------------------------------------
 echo [+] Xoa Temp, Prefetch ^& Cache...
 set /p confirm1="Ban co muon xoa Temp, Prefetch ^& Cache? (Y/N): "
 if /i "%confirm1%"=="Y" (
-    del /s /f /q %temp%\*.* >nul 2>&1
+    :: Bao ve thu muc hien tai neu dang chay tu Temp
+    set "origDir=%~dp0"
+    for /d %%D in ("%temp%\*") do (
+        set "dirPath=%%~fD\"
+        if /i "!dirPath!" neq "!origDir!" (
+            rd /s /q "%%D" >nul 2>&1
+        )
+    )
+    del /f /q "%temp%\*.*" >nul 2>&1
     del /s /f /q C:\Windows\Temp\*.* >nul 2>&1
     del /s /f /q C:\Windows\Prefetch\*.* >nul 2>&1
     echo [OK] Da xoa Temp, Prefetch ^& Cache!
@@ -182,8 +190,8 @@ echo.
 echo [+] Quet thu muc rong (ProgramData, AppData, Program Files)...
 set /p confirmScanEmpty="Ban co muon quet tim cac thu muc rong? (Y/N): "
 if /i "%confirmScanEmpty%"=="Y" (
-    set "emptyDirsList=%temp%\empty_dirs_%random%.txt"
-    set "emptyCountFile=%temp%\empty_count_%random%.txt"
+    set "emptyDirsList=%temp%\empty_dirs_!random!.txt"
+    set "emptyCountFile=%temp%\empty_count_!random!.txt"
     set emptyCount=0
     powershell -NoProfile -Command ^
         "$roots = @('C:\ProgramData', $env:APPDATA, $env:LOCALAPPDATA, 'C:\Program Files', 'C:\Program Files (x86)'); " ^
@@ -196,28 +204,28 @@ if /i "%confirmScanEmpty%"=="Y" (
         "  } " ^
         "}; " ^
         "$all = $all | Sort-Object { $_.Length } -Descending; " ^
-        "if ($all.Count -gt 0) { $all | Set-Content -Path '%emptyDirsList%' -Encoding UTF8 }; " ^
-        "$all.Count | Set-Content -Path '%emptyCountFile%' -Encoding ASCII"
-    if exist "%emptyCountFile%" for /f "delims=" %%N in ('type "%emptyCountFile%"') do set emptyCount=%%N
-    del /f /q "%emptyCountFile%" >nul 2>&1
+        "if ($all.Count -gt 0) { $all | Set-Content -Path '!emptyDirsList!' -Encoding UTF8 }; " ^
+        "$all.Count | Set-Content -Path '!emptyCountFile!' -Encoding ASCII"
+    if exist "!emptyCountFile!" for /f "delims=" %%N in ('type "!emptyCountFile!"') do set emptyCount=%%N
+    if exist "!emptyCountFile!" del /f /q "!emptyCountFile!" >nul 2>&1
     echo So thu muc rong tim thay: !emptyCount!
     if !emptyCount! gtr 0 (
         echo Vi du mot so duong dan:
-        powershell -NoProfile -Command "Get-Content '%emptyDirsList%' -ErrorAction SilentlyContinue | Select-Object -First 8 | ForEach-Object { Write-Host '  ' $_ }"
-    )
-    echo.
-    set /p confirm5="Ban co muon xoa cac thu muc rong nay? (Y/N): "
-    if /i "!confirm5!"=="Y" (
-        if exist "%emptyDirsList%" (
-            powershell -NoProfile -Command "Get-Content '%emptyDirsList%' -ErrorAction SilentlyContinue | ForEach-Object { if (Test-Path $_ -PathType Container) { Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue } }"
-            echo [OK] Da xu ly xong cac thu muc rong!
+        powershell -NoProfile -Command "Get-Content '!emptyDirsList!' -ErrorAction SilentlyContinue | Select-Object -First 8 | ForEach-Object { Write-Host '  ' $_ }"
+        echo.
+        set /p confirm5="Ban co muon xoa cac thu muc rong nay? (Y/N): "
+        if /i "!confirm5!"=="Y" (
+            if exist "!emptyDirsList!" (
+                powershell -NoProfile -Command "Get-Content '!emptyDirsList!' -ErrorAction SilentlyContinue | ForEach-Object { if (Test-Path $_ -PathType Container) { Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue } }"
+                echo [OK] Da xu ly xong cac thu muc rong!
+            )
         ) else (
-            echo [SKIP] Khong co thu muc rong de xoa.
+            echo [SKIP] Bo qua buoc xoa thu muc rong.
         )
     ) else (
-        echo [SKIP] Bo qua buoc xoa thu muc rong.
+        echo [OK] He thong sach se, khong co thu muc rong nao.
     )
-    if exist "%emptyDirsList%" del /f /q "%emptyDirsList%" >nul 2>&1
+    if exist "!emptyDirsList!" del /f /q "!emptyDirsList!" >nul 2>&1
 ) else (
     echo [SKIP] Bo qua buoc quet thu muc rong.
 )
