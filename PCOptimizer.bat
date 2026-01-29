@@ -1,7 +1,7 @@
 @echo off
 :: ##########################################################################
 :: # PC Ultimate Optimizer
-:: # Version: 2.1.0
+:: # Version: 1.0.1
 :: # Author: Brillian Pham (pcoptimizer.seventy907@slmail.me)
 :: # Description: Advanced system maintenance and optimization tool.
 :: # Site: https://github.com/brillianfan/pcoptimizer
@@ -812,3 +812,4 @@ if %errorlevel% equ 0 (
     goto sw_update_select
 
 )
+
