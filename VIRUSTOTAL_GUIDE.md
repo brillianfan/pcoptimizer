@@ -62,7 +62,7 @@
 
 ### Ví dụ:
 ```
-https://www.virustotal.com/gui/file/a1b2c3d4e5f6.../detection
+https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection
 ```
 
 ---
@@ -76,7 +76,7 @@ https://www.virustotal.com/gui/file/a1b2c3d4e5f6.../detection
 
 ### Bằng:
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F70-brightgreen)](https://www.virustotal.com/gui/file/YOUR_HASH/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F71-brightgreen)](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
 ```
 
 **Lưu ý**: Thay `YOUR_HASH` bằng link thực tế bạn vừa copy.
@@ -92,7 +92,7 @@ Tìm đoạn này:
 
 Thay bằng:
 ```markdown
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/YOUR_HASH/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
 ```
 
 ---

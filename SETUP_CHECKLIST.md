@@ -51,7 +51,7 @@ git push origin main
 
 **Thay bằng** (ví dụ nếu kết quả là 0/71):
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/YOUR_ACTUAL_HASH/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
 ```
 
 **Tìm dòng:**
@@ -61,7 +61,7 @@ git push origin main
 
 **Thay bằng:**
 ```markdown
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/YOUR_ACTUAL_HASH/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
 ```
 
 ### 2.5. Commit thay đổi
@@ -198,7 +198,7 @@ Thêm vào đầu README.md (sau tiêu đề):
 > Công cụ tối ưu hóa và quản trị hệ thống Windows toàn diện
 
 ![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](YOUR_VIRUSTOTAL_LINK)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Release](https://img.shields.io/github/v/release/brillianpham/PC-Ultimate-Optimizer)
 ![Downloads](https://img.shields.io/github/downloads/brillianpham/PC-Ultimate-Optimizer/total)

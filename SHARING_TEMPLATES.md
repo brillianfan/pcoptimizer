@@ -299,7 +299,7 @@ Trong video này mình sẽ hướng dẫn sử dụng PC Ultimate Optimizer - c
 
 🔗 LINKS:
 📥 Download: https://github.com/brillianpham/PC-Ultimate-Optimizer
-🔍 VirusTotal Scan: https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection
+🔍 VirusTotal Scan: https://www.virustotal.com/gui/file/e10c0ded8685a0b0972d62dca79d4e34b0ea0e3bd4092ce79fa67ae48167a5bf/detection
 📚 Documentation: https://github.com/brillianpham/PC-Ultimate-Optimizer#readme
 
 ✨ TÍNH NĂNG:
