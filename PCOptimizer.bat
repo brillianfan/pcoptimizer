@@ -5,7 +5,6 @@ setlocal enabledelayedexpansion
 
 :: ======================================================
 :: TU DONG KICH HOAT QUYEN ADMIN
-::    (Toi uu de khoi bi quet)
 :: ======================================================
 net session >nul 2>&1
 if %errorLevel% neq 0 (
@@ -779,4 +778,5 @@ if %errorlevel% equ 0 (
     set /p re_choice="Lua chon cua ban: "
     if "%re_choice%"=="2" winget upgrade --id "%sw_id%" --force --accept-package-agreements --accept-source-agreements
     goto sw_update_select
+
 )
