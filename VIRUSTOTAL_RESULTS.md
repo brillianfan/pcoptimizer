@@ -4,7 +4,7 @@
 
 **Link của bạn:**
 ```
-https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection
+https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection
 ```
 
 ---
@@ -23,17 +23,17 @@ https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3d
 
 ### Nếu kết quả là 0/71 (HOÀN HẢO):
 ```markdown
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection)
 ```
 
 ### Nếu có 1-3 detections (VẪN AN TOÀN - False Positive):
 ```markdown
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-2%2F71%20Safe-yellow)](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-2%2F71%20Safe-yellow)](https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection)
 ```
 
 ### Nếu có 4-10 detections (CẦN GIẢI THÍCH):
 ```markdown
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-5%2F71%20False%20Positive-orange)](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-5%2F71%20False%20Positive-orange)](https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection)
 ```
 
 ---
@@ -49,7 +49,7 @@ Mở link trong trình duyệt và xem:
 
 Tìm dòng này (ở đầu file):
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection)
 ```
 
 ### Bước 3: Thay thế badge
@@ -68,7 +68,7 @@ badge/VirusTotal-0%2F71%20Clean-brightgreen
 
 **Kết quả cuối cùng:**
 ```markdown
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F71%20Clean-brightgreen)](https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection)
 ```
 
 ---
@@ -106,7 +106,7 @@ Script này có thể được một số antivirus đánh dấu do:
 - **Detections**: 2 (McAfee, Avast)
 - **Đánh giá**: Safe - False Positive
 
-[Xem kết quả đầy đủ →](https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection)
+[Xem kết quả đầy đủ →](https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection)
 ```
 
 ---

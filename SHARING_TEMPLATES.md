@@ -60,7 +60,7 @@ Mình vừa tạo một công cụ tối ưu hóa Windows hoàn toàn miễn ph�
 ✅ MIT License - Miễn phí mãi mãi
 
 📥 Download & Hướng dẫn:
-👉 https://github.com/brillianpham/PC-Ultimate-Optimizer
+👉 https://github.com/brillianfan/pcoptimizer
 
 🙏 Nếu thấy hữu ích, hãy cho mình 1 Star trên GitHub!
 
@@ -299,7 +299,7 @@ Trong video này mình sẽ hướng dẫn sử dụng PC Ultimate Optimizer - c
 
 🔗 LINKS:
 📥 Download: https://github.com/brillianpham/PC-Ultimate-Optimizer
-🔍 VirusTotal Scan: https://www.virustotal.com/gui/file/a60501d9a9c00160aca2c141e216b480ddde70786d3dbe22f2edcf99b2a5dcc2/detection
+🔍 VirusTotal Scan: https://www.virustotal.com/gui/file/a03e33fae7baa0f6252e11e3a38e81a553b6d718bc3705e60c897d79a4d916f6/detection
 📚 Documentation: https://github.com/brillianpham/PC-Ultimate-Optimizer#readme
 
 ✨ TÍNH NĂNG:
