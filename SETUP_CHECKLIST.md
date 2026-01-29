@@ -4,15 +4,20 @@
 
 ```bash
 # Di chuyển các file vừa tạo vào thư mục dự án
-cd /path/to/PC-Ultimate-Optimizer
+cd /path/to/pcoptimizer
 
 # Copy các file từ hướng dẫn này:
 # - README.md
 # - LICENSE
 # - SECURITY.md
 # - CONTRIBUTING.md
+# - QUICK_START.md
+# - VIRUSTOTAL_GUIDE.md
+# - VIRUSTOTAL_RESULTS.md
+# - SHARING_TEMPLATES.md
+# - PCOptimizer.bat (file chính)
+# - Remove-BrokenShortcuts.ps1 (Powershell helper)
 # - .gitignore
-# - optimizer.bat (file chính của bạn)
 
 # Add tất cả files
 git add .
@@ -33,7 +38,7 @@ git push origin main
 - [ ] Click "Choose file"
 
 ### 2.2. Upload file
-- [ ] Chọn file `optimizer.bat`
+- [ ] Chọn file `PCOptimizer.bat`
 - [ ] Click "Confirm upload"
 - [ ] Đợi 2-5 phút
 
@@ -139,7 +144,7 @@ Description:
 - MIT License
 
 ### 📥 Download:
-Download `optimizer.bat` and run with Administrator privileges.
+Download `PCOptimizer.bat` and run with Administrator privileges.
 
 ### 📚 Documentation:
 See [README.md](https://github.com/brillianfan/pcoptimizer) for full instructions.
@@ -150,7 +155,8 @@ See [README.md](https://github.com/brillianfan/pcoptimizer) for full instruction
 ```
 
 ### 4.3. Attach files:
-- [ ] Upload `optimizer.bat`
+- [ ] Upload `PCOptimizer.bat`
+- [ ] Upload `Remove-BrokenShortcuts.ps1`
 - [ ] Click **"Publish release"**
 
 ---
@@ -247,7 +253,8 @@ cd screenshots
 - [ ] SECURITY.md giải thích rõ ràng
 - [ ] CONTRIBUTING.md hướng dẫn đóng góp
 - [ ] .gitignore loại trừ file không cần thiết
-- [ ] optimizer.bat (file chính)
+- [ ] PCOptimizer.bat (file chính)
+- [ ] Remove-BrokenShortcuts.ps1
 
 ### VirusTotal:
 - [ ] Đã upload và quét
@@ -263,7 +270,7 @@ cd screenshots
 
 ### Release:
 - [ ] v1.0.0 đã tạo
-- [ ] File .bat đã attach
+- [ ] File .bat và .ps1 đã attach
 - [ ] Changelog đã viết
 - [ ] Download link hoạt động
 

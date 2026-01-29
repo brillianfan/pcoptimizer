@@ -59,7 +59,26 @@ wevtutil.exe cl                      # Xóa Event Logs
 cleanmgr /sagerun:1                  # Chạy Disk Cleanup
 ```
 
-#### Registry Optimization:
+#### Uninstaller:
+```powershell
+Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, UninstallString
+# Liệt kê apps từ Registry và chạy lệnh gỡ cài đặt tương ứng
+```
+
+#### Startup Manager:
+```powershell
+Start-Process taskmgr; $wshell.SendKeys('^{TAB}') 
+# Mở Task Manager trực tiếp tại tab Startup
+```
+
+#### Toggle Windows Update:
+```batch
+sc config wuauserv start= demand/disabled
+net start/stop wuauserv
+# Điều khiển dịch vụ Windows Update qua lệnh sc và net
+```
+
+#### Optimize Registry:
 ```batch
 WaitToKillAppTimeout = 2000          # Giảm thời gian chờ đóng app
 MenuShowDelay = 0                    # Loại bỏ độ trễ menu
@@ -67,6 +86,20 @@ AutoEndTasks = 1                     # Tự động đóng app không phản h�
 MouseHoverTime = 10                  # Tăng độ nhạy chuột
 NetworkThrottlingIndex = 4294967295  # Tối ưu mạng
 SystemResponsiveness = 0             # Tối ưu phản hồi hệ thống
+```
+
+#### View PC Specs:
+```powershell
+Get-WmiObject Win32_OperatingSystem, Win32_Processor, Win32_PhysicalMemory...
+# Chỉ đọc thông tin phần cứng qua WMI, không sửa đổi
+```
+
+#### Windows & Office Tools:
+```powershell
+# Kiểm tra bản quyền:
+slmgr.vbs /xpr
+# MAS Activation (Mẫu):
+irm https://get.activated.win | iex
 ```
 
 #### Internet Boost:
@@ -78,15 +111,28 @@ netsh interface tcp set global timestamps=disabled
 ipconfig /flushdns
 ```
 
+#### Disk Check:
+```batch
+chkdsk C: /f
+# Lên lịch kiểm tra lỗi ổ cứng hệ thống
+```
+
+#### Software Health:
+```batch
+winget upgrade --all
+# Sử dụng Windows Package Manager chính chủ để cập nhật apps
+```
+
 ### ⚠️ Các thao tác CẦN QUYỀN ADMIN:
 
 | Chức năng | Tại sao cần Admin | An toàn? |
 |-----------|-------------------|----------|
-| Xóa Temp | Xóa file hệ thống | ✅ Có |
+| Dọn rác | Xóa file hệ thống | ✅ Có |
 | Registry | Sửa HKLM keys | ✅ Có |
-| Windows Update | Quản lý dịch vụ | ✅ Có |
-| Disk Cleanup | Chạy cleanmgr | ✅ Có |
-| Event Logs | Xóa logs hệ thống | ✅ Có |
+| Update | Quản lý dịch vụ | ✅ Có |
+| Disk Check | Chạy chkdsk | ✅ Có |
+| Gỡ app | Chạy uninstaller | ✅ Có |
+| Winget | Cài đặt hệ thống | ✅ Có |
 
 ---
 
@@ -143,10 +189,10 @@ Script này có thể bị một số antivirus cảnh báo vì:
 git clone https://github.com/brillianfan/pcoptimizer.git
 
 # Đọc toàn bộ code
-notepad optimizer.bat
+notepad PCOptimizer.bat
 
 # Tìm kiếm từ khóa nguy hiểm
-findstr /i "download upload send http" optimizer.bat
+findstr /i "download upload send http" PCOptimizer.bat
 # Nếu không tìm thấy gì → An toàn
 ```
 

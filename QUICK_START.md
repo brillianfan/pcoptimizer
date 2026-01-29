@@ -8,7 +8,11 @@
 4. **CONTRIBUTING.md** - Hướng dẫn đóng góp
 5. **.gitignore** - Loại trừ files không cần thiết
 6. **VIRUSTOTAL_GUIDE.md** - Hướng dẫn quét VirusTotal chi tiết
-7. **SETUP_CHECKLIST.md** - Checklist hoàn chỉnh
+7. **VIRUSTOTAL_RESULTS.md** - Kết quả quét VirusTotal
+8. **SHARING_TEMPLATES.md** - Mẫu chia sẻ dự án
+9. **SETUP_CHECKLIST.md** - Checklist hoàn chỉnh
+10. **PCOptimizer.bat** - File thực thi chính
+11. **Remove-BrokenShortcuts.ps1** - Helper script
 
 ---
 
@@ -18,12 +22,12 @@
 
 ```bash
 # 1. Mở thư mục dự án của bạn
-cd /path/to/PC-Ultimate-Optimizer
+cd /path/to/pcoptimizer
 
 # 2. Copy tất cả files vừa tải vào thư mục này
-# (Copy 7 files ở trên vào thư mục dự án)
+# (Copy các files ở trên vào thư mục dự án)
 
-# 3. Thêm file optimizer.bat (file chính của bạn) vào
+# 3. Thêm file PCOptimizer.bat và Remove-BrokenShortcuts.ps1 vào
 
 # 4. Git commands:
 git add .
@@ -38,7 +42,7 @@ git push origin main
 **QUAN TRỌNG: Làm ngay bước này!**
 
 1. 🌐 Truy cập: https://www.virustotal.com
-2. 📤 Click "Choose file" và chọn `optimizer.bat`
+2. 📤 Click "Choose file" và chọn `PCOptimizer.bat`
 3. ⏳ Đợi 2-5 phút quét
 4. 📋 Copy link kết quả (dạng: https://www.virustotal.com/gui/file/[HASH]/detection)
 
@@ -119,13 +123,14 @@ git push origin main
 
 ```
 PC-Ultimate-Optimizer/
-├── optimizer.bat          ← File chính của bạn
-├── README.md              ← Mô tả dự án đẹp mắt
-├── LICENSE                ← Giấy phép MIT
-├── SECURITY.md            ← Chính sách bảo mật
-├── CONTRIBUTING.md        ← Hướng dẫn đóng góp
-├── .gitignore             ← Git ignore file
-└── (screenshots/)         ← Thư mục ảnh (tùy chọn)
+├── PCOptimizer.bat          ← File chính của bạn
+├── Remove-BrokenShortcuts.ps1 ← Helper script
+├── README.md                ← Mô tả dự án đẹp mắt
+├── LICENSE                  ← Giấy phép MIT
+├── SECURITY.md              ← Chính sách bảo mật
+├── CONTRIBUTING.md          ← Hướng dẫn đóng góp
+├── .gitignore               ← Git ignore file
+└── (screenshots/)           ← Thư mục ảnh (tùy chọn)
 ```
 
 ### Repo sẽ hiển thị:
@@ -146,7 +151,7 @@ PC-Ultimate-Optimizer/
    - Tag: `v1.0.0`
    - Title: `PC Ultimate Optimizer v1.0.0`
    - Description: (Copy từ SETUP_CHECKLIST.md)
-4. Upload file `optimizer.bat`
+4. Upload file `PCOptimizer.bat` và `Remove-BrokenShortcuts.ps1`
 5. Click **"Publish release"**
 
 ---

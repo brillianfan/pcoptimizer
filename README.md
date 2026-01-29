@@ -89,7 +89,7 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 ### Bước 1: Tải về
 ```bash
 git clone https://github.com/brillianfan/pcoptimizer.git
-cd PC-Ultimate-Optimizer
+cd pcoptimizer
 ```
 
 Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/archive/refs/heads/main.zip)
