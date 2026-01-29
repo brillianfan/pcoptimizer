@@ -1,16 +1,35 @@
 @echo off
+:: ##########################################################################
+:: # PC Ultimate Optimizer
+:: # Version: 2.1.0
+:: # Author: Brillian Pham (pcoptimizer.seventy907@slmail.me)
+:: # Description: Advanced system maintenance and optimization tool.
+:: # Site: https://github.com/brillianfan/pcoptimizer
+:: # 
+:: # [SECURITY NOTICE] 
+:: # This script requires Administrator privileges to perform system 
+:: # cleanups and registry optimizations. All actions are transparent 
+:: # and can be audited by reviewing this code.
+:: ##########################################################################
+
+setlocal enabledelayedexpansion
 title PC Ultimate Optimizer - Brillian Pham
 color 0b
-setlocal enabledelayedexpansion
 
 :: ======================================================
-:: TU DONG KICH HOAT QUYEN ADMIN
+:: CHECK & REQUEST ADMINISTRATOR PRIVILEGES
 :: ======================================================
+:check_privileges
 net session >nul 2>&1
-if %errorLevel% neq 0 (
+if %errorLevel% == 0 (
+    goto :init
+) else (
+    echo [INFO] Yeu cau quyen Administrator de tiep tuc...
     powershell -Command "Start-Process '%~0' -Verb RunAs"
     exit /b
 )
+
+:init
 pushd "%cd%" & CD /D "%~dp0"
 
 :menu

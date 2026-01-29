@@ -1,5 +1,17 @@
-# Remove-BrokenShortcuts.ps1
-# Script to find and delete shortcuts that point to non-existent files or folders.
+<#
+.SYNOPSIS
+    Remove-BrokenShortcuts.ps1
+.DESCRIPTION
+    A utility script to find and safely remove broken shortcuts (.lnk and .url) 
+    that point to non-existent files or folders.
+.VERSION
+    2.1.0
+.AUTHOR
+    Brillian Pham (pcoptimizer.seventy907@slmail.me)
+.LINK
+    https://github.com/brillianfan/pcoptimizer
+#>
+
 
 $WshShell = New-Object -ComObject WScript.Shell
 
