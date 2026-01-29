@@ -6,7 +6,7 @@ Nếu bạn phát hiện lỗ hổng bảo mật trong dự án này, vui lòng 
 
 ### Cách báo cáo:
 
-1. **Email**: Gửi báo cáo chi tiết đến [your-email@example.com]
+1. **Email**: Gửi báo cáo chi tiết đến [pcoptimizer.seventy907@slmail.me]
 2. **Tiêu đề**: `[SECURITY] PC Optimizer - [Mô tả ngắn]`
 3. **Nội dung bao gồm**:
    - Mô tả lỗ hổng
