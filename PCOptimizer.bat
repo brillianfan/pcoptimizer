@@ -278,18 +278,21 @@ echo.
 set "tempAppList=%temp%\applist_%random%.csv"
 set "tempSelectInfo=%temp%\selectinfo_%random%.txt"
 
-:: Dung PowerShell de quet va xuat ra CSV (Fix: Su dung duong dan co dau ngoac kep)
+:: Dung PowerShell de quet va xuat ra CSV
 powershell -NoProfile -Command ^
-    "$apps = @(); " ^
     "$paths = @('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'); " ^
-    "foreach($path in $paths) { " ^
+    "$apps = foreach($path in $paths) { " ^
     "    Get-ItemProperty $path -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName } | ForEach-Object { " ^
-    "        if(-not ($apps | Where-Object { $_.Name -eq $_.DisplayName })) { " ^
-    "            $apps += New-Object PSObject -Property @{ Name = $_.DisplayName; UninstallString = $_.UninstallString; QuietUninstallString = $_.QuietUninstallString; InstallLocation = $_.InstallLocation; Publisher = $_.Publisher }; " ^
+    "        [PSCustomObject]@{ " ^
+    "            Name = $_.DisplayName; " ^
+    "            UninstallString = $_.UninstallString; " ^
+    "            QuietUninstallString = $_.QuietUninstallString; " ^
+    "            InstallLocation = $_.InstallLocation; " ^
+    "            Publisher = $_.Publisher " ^
     "        } " ^
     "    } " ^
     "}; " ^
-    "$apps = $apps | Sort-Object { $_.Name } -Unique; " ^
+    "$apps = $apps | Sort-Object Name -Unique; " ^
     "$apps | Export-Csv -Path '%tempAppList%' -NoTypeInformation -Encoding UTF8"
 
 if not exist "%tempAppList%" (
@@ -325,7 +328,7 @@ if "%appChoice%"=="0" (
     goto menu
 )
 
-:: Trich xuat thong tin ung dung duoc chon vao file tam (Fix: Tranh loi parse Batch voi dau ngoac)
+:: Trich xuat thong tin ung dung duoc chon vao file tam
 powershell -NoProfile -Command ^
     "try { " ^
     "  $csv = Import-Csv '%tempAppList%' -Encoding UTF8; " ^
@@ -333,8 +336,8 @@ powershell -NoProfile -Command ^
     "  $app = if($csv -is [array]) { $csv[$idx] } else { $csv }; " ^
     "  if($app) { " ^
     "    $uninst = if($app.QuietUninstallString) { $app.QuietUninstallString } else { $app.UninstallString }; " ^
-    "    $out = $app.Name + '|' + $app.InstallLocation + '|' + $app.Publisher + '|' + $uninst; " ^
-    "    $out | Out-File -FilePath '%tempSelectInfo%' -Encoding UTF8; " ^
+    "    $lines = @($app.Name, $app.InstallLocation, $app.Publisher, $uninst); " ^
+    "    [System.IO.File]::WriteAllLines('%tempSelectInfo%', $lines, (New-Object System.Text.UTF8Encoding $false)); " ^
     "  } else { exit 1 } " ^
     "} catch { exit 1 }"
 
@@ -344,16 +347,18 @@ if %errorlevel% neq 0 (
     goto show_app_list
 )
 
-:: Doc thong tin tu file tam bang FOR /F an toan
+:: Doc thong tin tu file tam bang SET /P an toan
 set "selectedApp="
 set "installLocation="
 set "publisher="
 set "uninstStr="
-for /f "usebackq tokens=1,2,3,4 delims=|" %%A in ("%tempSelectInfo%") do (
-    set "selectedApp=%%A"
-    set "installLocation=%%B"
-    set "publisher=%%C"
-    set "uninstStr=%%D"
+if exist "%tempSelectInfo%" (
+    < "%tempSelectInfo%" (
+        set /p selectedApp=
+        set /p installLocation=
+        set /p publisher=
+        set /p uninstStr=
+    )
 )
 del /f /q "%tempSelectInfo%" >nul 2>&1
 
@@ -384,22 +389,27 @@ echo.
 echo Dang go bo %selectedApp%...
 echo.
 
-:: Thuc hien go bo (Refactor: Su dung khoi PowerShell an toan)
+:: Thuc hien go bo
+set "tempUninstCmd=%temp%\uninstcmd_%random%.txt"
+(echo !uninstStr!)>"%tempUninstCmd%"
+
 powershell -NoProfile -Command ^
-    "$u = @' " ^
-    "%uninstStr% " ^
-    "'@.Trim(); " ^
-    "if($u) { " ^
+    "$u = (Get-Content '%tempUninstCmd%' -Raw).Trim(); " ^
+    "if($u -and $u -ne 'ECHO is off.') { " ^
     "    Write-Host ('Thuc hien: ' + $u); " ^
-    "    if($u -match '^\"([^\"]+)\"(.*)$') { " ^
-    "        Start-Process $Matches[1] -ArgumentList $Matches[2].Trim() -Wait; " ^
-    "    } elseif($u -match '^([^ ]+)(.*)$') { " ^
-    "        Start-Process ($Matches[1].Trim('\"')) -ArgumentList $Matches[2].Trim() -Wait; " ^
+    "    if($u -match '^\"\"(.+?)\"\"\\s*(.*)$') { " ^
+    "        Start-Process $Matches[1] -ArgumentList $Matches[2].Trim() -Wait -ErrorAction SilentlyContinue; " ^
+    "    } elseif($u -match '^\"(.+?)\"\\s*(.*)$') { " ^
+    "        Start-Process $Matches[1] -ArgumentList $Matches[2].Trim() -Wait -ErrorAction SilentlyContinue; " ^
+    "    } elseif($u -match '^([^\\s]+)\\s+(.*)$') { " ^
+    "        Start-Process $Matches[1] -ArgumentList $Matches[2].Trim() -Wait -ErrorAction SilentlyContinue; " ^
     "    } else { " ^
-    "        Start-Process $u -Wait; " ^
+    "        Start-Process $u -Wait -ErrorAction SilentlyContinue; " ^
     "    } " ^
     "    Write-Host 'Go bo hoan tat.'; " ^
-    "} else { Write-Host 'Khong tim thay lenh go bo.' }"
+    "} else { Write-Host 'Khong tim thay lenh go bo hoac lenh khong hop le.' }"
+
+if exist "%tempUninstCmd%" del /f /q "%tempUninstCmd%" >nul 2>&1
 
 echo.
 set /p checkLeftovers="Ban co muon xoa cac leftover (tan du) cua ung dung nay? (Y/N): "
