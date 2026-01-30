@@ -12,11 +12,15 @@ và dự án này tuân theo [Semantic Versioning](https://semver.org/spec/v2.0.
 ### ✨ Added
 - **Driver Update** - Tính năng mới hoàn toàn
   - Kiểm tra drivers cần cập nhật qua Windows Update API
-  - Cập nhật tất cả drivers (Update All)
-  - Cập nhật từng driver được chọn (Update Selected)
-  - Hiển thị thông tin chi tiết: tên driver, kích thước, ngày phát hành
-  - Thông báo nếu cần khởi động lại sau khi cập nhật
-  - Chỉ sử dụng nguồn drivers chính thức từ Microsoft Windows Update
+  - Cập nhật tất cả drivers (Update All) hoặc Selected
+  - Chỉ sử dụng nguồn drivers chính thức từ Microsoft
+- **Uninstaller Analytics**: Cải thiện trí tuệ nhân tạo của bộ gỡ ứng dụng
+  - Tự động suy luận đường dẫn cài đặt (`InstallLocation`) từ lệnh gỡ nếu thiếu
+  - Thêm fallback cho thông tin `Publisher` (hiển thị 'Unknown' thay vì rỗng)
+- **Stability Fixes**: Sửa các lỗi nghiêm trọng trong Batch/PowerShell
+  - Sửa lỗi ParserError do here-strings trong PowerShell
+  - Sửa lỗi mất đường dẫn khi thư mục chứa dấu ngoặc `()`
+  - Chuyển đổi an toàn kiểu dữ liệu Registry sang String để tránh lỗi UI
 
 ### 🔄 Changed
 - Cập nhật menu chính từ 10 chức năng lên 11 chức năng

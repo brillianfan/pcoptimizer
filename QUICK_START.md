@@ -149,8 +149,8 @@ PC-Ultimate-Optimizer/
 2. Click **"Create a new release"**
 3. Điền:
    - Tag: `v1.0.0`
-   - Title: `PC Ultimate Optimizer v1.0.0`
-   - Description: (Copy từ SETUP_CHECKLIST.md)
+   - Title: `PC Ultimate Optimizer v1.0.2`
+   - Description: (Lấy thông tin từ CHANGELOG.md cho bản 1.0.2)
 4. Upload file `PCOptimizer.bat` và `Remove-BrokenShortcuts.ps1`
 5. Click **"Publish release"**
 
@@ -237,4 +237,4 @@ Sau khi hoàn thành:
 ---
 
 **Made with ❤️ by Brillian Pham**  
-**Date: January 28, 2026**
+**Date: January 30, 2026**

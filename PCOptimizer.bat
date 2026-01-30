@@ -282,13 +282,16 @@ set "tempSelectInfo=%temp%\selectinfo_%random%.txt"
 powershell -NoProfile -Command ^
     "$paths = @('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'); " ^
     "$apps = foreach($path in $paths) { " ^
-    "    Get-ItemProperty $path -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName } | ForEach-Object { " ^
+    "    Get-ItemProperty $path -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -and ($_.UninstallString -or $_.QuietUninstallString) } | ForEach-Object { " ^
+    "        $loc = if ($_.InstallLocation) { $_.InstallLocation } else { " ^
+    "            $u = $_.UninstallString; if ($u -match '\"\"(.+?)\"\"' -or $u -match '\"(.+?)\"') { Split-Path $Matches[1] -Parent } elseif ($u -match '([^\\s]+\\.exe)') { Split-Path $Matches[1] -Parent } else { '' } " ^
+    "        }; " ^
     "        [PSCustomObject]@{ " ^
     "            Name = $_.DisplayName; " ^
-    "            UninstallString = $_.UninstallString; " ^
-    "            QuietUninstallString = $_.QuietUninstallString; " ^
-    "            InstallLocation = $_.InstallLocation; " ^
-    "            Publisher = $_.Publisher " ^
+    "            UninstallString = [string]$_.UninstallString; " ^
+    "            QuietUninstallString = [string]$_.QuietUninstallString; " ^
+    "            InstallLocation = [string]$loc; " ^
+    "            Publisher = if ($_.Publisher) { [string]$_.Publisher } else { 'Unknown' } " ^
     "        } " ^
     "    } " ^
     "}; " ^
@@ -336,7 +339,7 @@ powershell -NoProfile -Command ^
     "  $app = if($csv -is [array]) { $csv[$idx] } else { $csv }; " ^
     "  if($app) { " ^
     "    $uninst = if($app.QuietUninstallString) { $app.QuietUninstallString } else { $app.UninstallString }; " ^
-    "    $lines = @($app.Name, $app.InstallLocation, $app.Publisher, $uninst); " ^
+    "    $lines = @([string]$app.Name, [string]$app.InstallLocation, [string]$app.Publisher, [string]$uninst); " ^
     "    [System.IO.File]::WriteAllLines('%tempSelectInfo%', $lines, (New-Object System.Text.UTF8Encoding $false)); " ^
     "  } else { exit 1 } " ^
     "} catch { exit 1 }"
@@ -460,18 +463,18 @@ if defined installPath (
 set "searchExact=%appName:"=%"
 set "searchPublisher=%appPublisher:"=%"
 
-:: Quet cac thu muc he thong (Fix: Su dung FOR /D an toan voi dau ngoac)
+:: Quet cac thu muc he thong (Fix: Su dung delayed expansion de tranh loi dau ngoac)
 for %%R in ("%appdata%" "%localappdata%" "C:\ProgramData" "C:\Program Files" "C:\Program Files (x86)") do (
     if exist "%%~R" (
-        if exist "%%~R\%searchExact%" (
-            echo [FOUND] %%~R\%searchExact%
-            echo %%~R\%searchExact%>>"%tempScanResult%"
+        if exist "%%~R\!searchExact!" (
+            echo [FOUND] "%%~R\!searchExact!"
+            echo %%~R\!searchExact!>>"%tempScanResult%"
             set foundLeftovers=1
         )
         if defined searchPublisher (
-            if exist "%%~R\%searchPublisher%" (
-                echo [FOUND] %%~R\%searchPublisher%
-                echo %%~R\%searchPublisher%>>"%tempScanResult%"
+            if exist "%%~R\!searchPublisher!" (
+                echo [FOUND] "%%~R\!searchPublisher!"
+                echo %%~R\!searchPublisher!>>"%tempScanResult%"
                 set foundLeftovers=1
             )
         )
@@ -511,14 +514,14 @@ echo.
 echo Dang scan Registry keys...
 set "tempRegResult=%temp%\regresult_%random%.txt"
 
+:: Thiet lap moi truong cho PowerShell de tranh loi ky tu dac biet
+set "SEARCH_EXACT=!searchExact!"
+set "SEARCH_PUB=!searchPublisher!"
+
 powershell -NoProfile -Command ^
     "$found = @(); " ^
-    "$name = @' " ^
-    "%searchExact% " ^
-    "'@.Trim(); " ^
-    "$pub = @' " ^
-    "%searchPublisher% " ^
-    "'@.Trim(); " ^
+    "$name = $env:SEARCH_EXACT; " ^
+    "$pub = $env:SEARCH_PUB; " ^
     "$regPaths = @('HKLM:\SOFTWARE', 'HKLM:\SOFTWARE\WOW6432Node', 'HKCU:\Software'); " ^
     "foreach($path in $regPaths) { " ^
     "    Get-ChildItem $path -ErrorAction SilentlyContinue | Where-Object { $_.PSChildName -eq $name -or ($pub -and $_.PSChildName -eq $pub) } | ForEach-Object { " ^
