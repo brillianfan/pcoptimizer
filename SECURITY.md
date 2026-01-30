@@ -6,7 +6,7 @@ Nếu bạn phát hiện lỗ hổng bảo mật trong dự án này, vui lòng 
 
 ### Cách báo cáo:
 
-1. **Email**: Gửi báo cáo chi tiết đến [pcoptimizer.seventy907@slmail.me]
+1. **Email**: Gửi báo cáo chi tiết đến pcoptimizer.seventy907@slmail.me
 2. **Tiêu đề**: `[SECURITY] PC Optimizer - [Mô tả ngắn]`
 3. **Nội dung bao gồm**:
    - Mô tả lỗ hổng
@@ -123,6 +123,16 @@ winget upgrade --all
 # Sử dụng Windows Package Manager chính chủ để cập nhật apps
 ```
 
+#### Driver Update (NEW):
+```powershell
+# Sử dụng Windows Update API chính thức
+$updateSession = New-Object -ComObject Microsoft.Update.Session
+$updateSearcher = $updateSession.CreateUpdateSearcher()
+$searchResult = $updateSearcher.Search('IsInstalled=0 and Type="Driver"')
+# Chỉ tìm và cài đặt drivers từ Windows Update (Microsoft)
+# KHÔNG tải drivers từ nguồn bên thứ ba
+```
+
 ### ⚠️ Các thao tác CẦN QUYỀN ADMIN:
 
 | Chức năng | Tại sao cần Admin | An toàn? |
@@ -133,6 +143,7 @@ winget upgrade --all
 | Disk Check | Chạy chkdsk | ✅ Có |
 | Gỡ app | Chạy uninstaller | ✅ Có |
 | Winget | Cài đặt hệ thống | ✅ Có |
+| **Driver Update** | Truy cập Windows Update API | ✅ Có |
 
 ---
 
@@ -162,12 +173,18 @@ Script này có thể bị một số antivirus cảnh báo vì:
    del /s /f /q C:\Windows\Temp\*.*
    ```
 
+5. **Truy cập Windows Update API** (NEW)
+   ```powershell
+   New-Object -ComObject Microsoft.Update.Session
+   ```
+
 ### Đây là **FALSE POSITIVE**
 
 - ✅ Tất cả lệnh đều là Windows built-in commands
 - ✅ Không có mã độc
 - ✅ Không tải file từ internet (trừ khi bạn chọn)
 - ✅ Source code mở để kiểm tra
+- ✅ Driver Update chỉ dùng Windows Update chính thức
 
 ### Antivirus thường báo nhầm:
 
@@ -177,6 +194,7 @@ Script này có thể bị một số antivirus cảnh báo vì:
 | McAfee | `Artemis!` | Heuristic detection |
 | Avast | `Win32:Evo-gen` | Generic pattern |
 | AVG | `Generic` | Hành vi yêu cầu Admin |
+| Kaspersky | `not-a-virus:HEUR:RiskTool` | Truy cập Windows Update |
 
 ---
 
@@ -193,14 +211,14 @@ notepad PCOptimizer.bat
 
 # Tìm kiếm từ khóa nguy hiểm
 findstr /i "download upload send http" PCOptimizer.bat
-# Nếu không tìm thấy gì → An toàn
+# Ngoại trừ: get.activated.win (MAS) và Windows Update API
 ```
 
 ### 2. Quét VirusTotal
 
-- Link quét: [VirusTotal Scan Results](LINK_VIRUSTOTAL)
+- Link quét: [VirusTotal Scan Results](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 - Engines: 60+ antivirus
-- Kết quả: 0/60+ detections
+- Kết quả: Chấp nhận được với < 5 detections (False Positive)
 
 ### 3. Chạy trong Sandbox (nâng cao)
 
@@ -231,32 +249,68 @@ findstr /i "download upload send http" PCOptimizer.bat
 3. ✅ Tạo System Restore Point
 4. ✅ Backup Registry (nếu lo lắng)
 5. ✅ Đóng các ứng dụng quan trọng
+6. ✅ Backup drivers quan trọng (nếu dùng Driver Update)
 
 ### Sau khi chạy:
 
-1. ✅ Restart máy tính
+1. ✅ Restart máy tính (đặc biệt sau Driver Update)
 2. ✅ Kiểm tra hệ thống hoạt động bình thường
-3. ✅ Báo cáo nếu có vấn đề
+3. ✅ Kiểm tra devices hoạt động đúng (sau Driver Update)
+4. ✅ Báo cáo nếu có vấn đề
+
+---
+
+## Driver Update - An toàn như thế nào?
+
+### ✅ Nguồn drivers:
+- Chỉ sử dụng **Windows Update** chính thức của Microsoft
+- KHÔNG tải drivers từ bên thứ ba
+- KHÔNG cài đặt drivers không được Microsoft xác minh
+
+### ✅ Quy trình:
+1. Kết nối Windows Update API
+2. Tìm kiếm drivers được Microsoft phê duyệt
+3. Tải về từ máy chủ Microsoft
+4. Xác minh chữ ký số
+5. Cài đặt với quyền Administrator
+
+### ✅ Kiểm soát:
+- Hiển thị đầy đủ thông tin driver trước khi cài
+- Cho phép chọn lựa drivers cụ thể
+- Thông báo khi cần khởi động lại
+- Có thể rollback drivers qua Device Manager
+
+### ⚠️ Lưu ý:
+- Nên backup drivers hiện tại trước khi update
+- Đọc kỹ tên driver trước khi cài
+- Khởi động lại sau khi update để áp dụng đầy đủ
 
 ---
 
 ## Liên hệ
 
-- **Email**: [your-email@example.com]
+- **Email**: pcoptimizer.seventy907@slmail.me
 - **GitHub Issues**: [Create Issue](https://github.com/brillianfan/pcoptimizer/issues)
-- **PGP Key**: (Nếu cần mã hóa)
+- **Telegram**: @goodlove9179
 
 ---
 
 ## Changelog Bảo mật
 
+### v1.0.2 (2026-01-30)
+- ✅ Added Driver Update feature
+- ✅ Uses official Windows Update API only
+- ✅ No third-party driver sources
+- ✅ Full transparency in driver information
+- ✅ User control over driver selection
+
 ### v1.0.0 (2026-01-28)
 - ✅ Initial release
 - ✅ Full source code transparency
-- ✅ No network connections
+- ✅ No network connections (except opt-in features)
 - ✅ No data collection
 - ✅ MIT License
 
 ---
 
-**Last updated**: January 28, 2026
+**Last updated**: January 30, 2026

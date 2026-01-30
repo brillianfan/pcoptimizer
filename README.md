@@ -5,6 +5,7 @@
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
+[![Version](https://img.shields.io/badge/Version-1.0.2-blue)](https://github.com/brillianfan/pcoptimizer/releases)
 
 ---
 
@@ -17,6 +18,7 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - ✅ Tối ưu hóa Registry Windows
 - ✅ Quản lý dịch vụ Windows Update
 - ✅ Thực thi lệnh PowerShell với quyền Admin
+- ✅ Cập nhật drivers thông qua Windows Update
 
 Đây là **hành vi bình thường** của mọi công cụ tối ưu hệ thống (CCleaner, Glary Utilities, etc.)
 
@@ -82,6 +84,13 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - **Update All**: cập nhật tất cả phần mềm có bản mới
 - **Update Selected**: nhập ID (ví dụ Google.Chrome) để cập nhật từng phần mềm
 
+### 🔌 **Driver Update** ✨ MỚI
+- **Kiểm tra drivers** cần cập nhật qua Windows Update
+- **Update All**: cập nhật tất cả drivers tự động
+- **Update Selected**: chọn từng driver để cập nhật
+- Hiển thị thông tin chi tiết: tên driver, kích thước, ngày phát hành
+- Thông báo nếu cần khởi động lại sau khi cập nhật
+
 ---
 
 ## 🚀 Cách sử dụng
@@ -130,6 +139,7 @@ Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/arc
 [8] Internet Boost (Toi uu toc do mang & Ping)
 [9] Disk Check (Quet loi o cung)
 [10] Software Health (Cap nhat phan mem PC)
+[11] Driver Update (Kiem tra & Cap nhat Drivers) ✨ NEW
 [0] Exit
 ======================================================
 ```
@@ -143,6 +153,7 @@ Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/arc
 - 📦 **Dependencies**: 
   - PowerShell 5.1+ (có sẵn trong Windows)
   - Windows Package Manager (Winget) - cho chức năng Software Health
+  - Windows Update Service - cho chức năng Driver Update
 
 ---
 
@@ -157,7 +168,7 @@ Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/arc
 
 ### ✅ Script này CHỈ:
 - ✅ Thực hiện các lệnh Windows chuẩn
-- ✅ Sử dụng công cụ tích hợp sẵn (cleanmgr, chkdsk, winget)
+- ✅ Sử dụng công cụ tích hợp sẵn (cleanmgr, chkdsk, winget, Windows Update)
 - ✅ Chỉnh sửa Registry để tối ưu hiệu suất
 - ✅ Hoàn toàn minh bạch - mã nguồn mở
 
@@ -184,12 +195,22 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
 ## 📞 Liên hệ
 
 **Brillian Pham**
-- 📧 Email: [pcoptimizer.seventy907@slmail.me]
+- 📧 Email: pcoptimizer.seventy907@slmail.me
 - 🐙 GitHub: [@brillianfan](https://github.com/brillianfan)
-- Telegram: @goodlove9179
+- 💬 Telegram: @goodlove9179
+
 ---
 
 ## 📜 Changelog
+
+### v1.0.2 (2026-01-30) ✨ NEW
+- 🔌 **Driver Update**: Tính năng mới - Kiểm tra và cập nhật drivers
+  - Kiem tra drivers can cap nhat qua Windows Update
+  - Cap nhat tat ca drivers hoac chon tung driver
+  - Hien thi thong tin chi tiet (ten, kich thuoc, ngay phat hanh)
+  - Thong bao neu can khoi dong lai sau khi cap nhat
+- 📋 Đồng bộ thông tin giữa các files documentation
+- 🔧 Cải thiện UI/UX trong menu chính
 
 ### v1.0.1 (2026-01-29)
 - 🧹 **Deep Junk Clean**: Thêm xóa shortcuts lỗi (Desktop, Start Menu, Quick Launch)
@@ -206,7 +227,7 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
 ## ❓ FAQ
 
 **Q: Tại sao cần quyền Administrator?**  
-A: Để có thể xóa file hệ thống, chỉnh sửa Registry, và quản lý dịch vụ Windows.
+A: Để có thể xóa file hệ thống, chỉnh sửa Registry, quản lý dịch vụ Windows, và cập nhật drivers.
 
 **Q: Có an toàn không?**  
 A: Hoàn toàn an toàn. Source code mở 100% để bạn kiểm tra.
@@ -215,13 +236,16 @@ A: Hoàn toàn an toàn. Source code mở 100% để bạn kiểm tra.
 A: Có, hoàn toàn tương thích với cả Windows 10 và 11.
 
 **Q: Có cần Internet không?**  
-A: Không bắt buộc. Chỉ cần Internet cho chức năng Software Health (cập nhật phần mềm).
+A: Không bắt buộc. Chỉ cần Internet cho chức năng Software Health (cập nhật phần mềm) và Driver Update (cập nhật drivers).
+
+**Q: Driver Update có an toàn không?**  
+A: Có, chức năng này sử dụng Windows Update chính thức của Microsoft để tìm và cài đặt drivers. Không tải drivers từ nguồn bên thứ ba.
 
 ---
 
 <div align="center">
 
-**Made by ❤️ Brillian Pham**
+**Made with ❤️ by Brillian Pham**
 
 [⬆ Back to top](#-pc-ultimate-optimizer)
 

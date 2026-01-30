@@ -1,7 +1,7 @@
 @echo off
 :: ##########################################################################
 :: # PC Ultimate Optimizer
-:: # Version: 1.0.1
+:: # Version: 1.0.2
 :: # Author: Brillian Pham (pcoptimizer.seventy907@slmail.me)
 :: # Description: Advanced system maintenance and optimization tool.
 :: # Site: https://github.com/brillianfan/pcoptimizer
@@ -48,9 +48,10 @@ echo [7] Windows ^& Office Activation (Kiem tra ^& Kich hoat ban quyen)
 echo [8] Internet Boost (Toi uu toc do mang ^& Ping)
 echo [9] Disk Check (Quet loi o cung)
 echo [10] Software Health (Cap nhat phan mem PC)
+echo [11] Driver Update (Kiem tra ^& Cap nhat Drivers)
 echo [0] Exit
 echo ======================================================
-set /p select="Chon chuc nang (0-10): "
+set /p select="Chon chuc nang (0-11): "
 
 if "%select%"=="1" goto clear_all_junk
 if "%select%"=="2" goto deep_uninstall
@@ -62,6 +63,7 @@ if "%select%"=="7" goto win_office_tools
 if "%select%"=="8" goto internet_boost
 if "%select%"=="9" goto disk_check
 if "%select%"=="10" goto software_health
+if "%select%"=="11" goto driver_update
 if "%select%"=="0" exit
 goto menu
 
@@ -810,5 +812,317 @@ if %errorlevel% equ 0 (
     set /p re_choice="Lua chon cua ban: "
     if "%re_choice%"=="2" winget upgrade --id "%sw_id%" --force --accept-package-agreements --accept-source-agreements
     goto sw_update_select
-
 )
+goto sw_update_select
+
+:driver_update
+cls
+echo ======================================================
+echo              KIEM TRA ^& CAP NHAT DRIVERS
+echo ======================================================
+echo.
+echo [!] Luu y: Chuc nang nay su dung Windows Update de kiem tra drivers.
+echo     Windows Update se tu dong kich hoat tam thoi.
+echo.
+echo [1] Kiem tra Drivers can cap nhat
+echo [2] Cap nhat Tat ca Drivers (Update All)
+echo [3] Cap nhat Drivers da chon (Update Selected)
+echo [0] Quay lai Menu chinh
+echo.
+set /p drv_choice="Chon chuc nang (0-3): "
+
+if "%drv_choice%"=="1" goto driver_check
+if "%drv_choice%"=="2" goto driver_update_all
+if "%drv_choice%"=="3" goto driver_update_select
+if "%drv_choice%"=="0" goto menu
+goto driver_update
+
+:driver_check
+cls
+echo ======================================================
+echo         KIEM TRA DRIVERS CAN CAP NHAT
+echo ======================================================
+echo.
+echo Dang bat Windows Update de kiem tra drivers...
+sc config wuauserv start= demand >nul 2>&1
+net start wuauserv >nul 2>&1
+echo.
+echo Dang quet cac driver co ban cap nhat...
+echo Vui long cho doi, qua trinh nay co the mat vai phut...
+echo.
+echo ------------------------------------------------------
+
+:: Su dung PowerShell de kiem tra drivers qua Windows Update
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$updateSession = New-Object -ComObject Microsoft.Update.Session; " ^
+    "$updateSearcher = $updateSession.CreateUpdateSearcher(); " ^
+    "$updateSearcher.Online = $true; " ^
+    "Write-Host 'Dang tim kiem cap nhat drivers...' -ForegroundColor Yellow; " ^
+    "try { " ^
+    "    $searchResult = $updateSearcher.Search('IsInstalled=0 and Type=''Driver'''); " ^
+    "    $updates = $searchResult.Updates; " ^
+    "    if ($updates.Count -eq 0) { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host 'KHONG CO DRIVER NAO CAN CAP NHAT!' -ForegroundColor Green; " ^
+    "        Write-Host 'Tat ca drivers deu da duoc cap nhat phien ban moi nhat.' -ForegroundColor Green; " ^
+    "    } else { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host \"Tim thay $($updates.Count) driver(s) can cap nhat:\" -ForegroundColor Cyan; " ^
+    "        Write-Host ''; " ^
+    "        $index = 1; " ^
+    "        foreach ($update in $updates) { " ^
+    "            Write-Host \"[$index] $($update.Title)\" -ForegroundColor White; " ^
+    "            Write-Host \"    - Ngay phat hanh: $($update.LastDeploymentChangeTime)\" -ForegroundColor Gray; " ^
+    "            Write-Host \"    - Kich thuoc: $([Math]::Round($update.MaxDownloadSize/1MB, 2)) MB\" -ForegroundColor Gray; " ^
+    "            Write-Host ''; " ^
+    "            $index++; " ^
+    "        } " ^
+    "    } " ^
+    "} catch { " ^
+    "    Write-Host ''; " ^
+    "    Write-Host 'LOI: Khong the kiem tra drivers!' -ForegroundColor Red; " ^
+    "    Write-Host \"Chi tiet: $($_.Exception.Message)\" -ForegroundColor Red; " ^
+    "}"
+
+echo.
+echo ------------------------------------------------------
+pause
+goto driver_update
+
+:driver_update_all
+cls
+echo ======================================================
+echo            CAP NHAT TAT CA DRIVERS
+echo ======================================================
+echo.
+set /p confirm_all="Ban co chac chan muon cap nhat TAT CA drivers? (Y/N): "
+
+if /i not "%confirm_all%"=="Y" (
+    echo Da huy thao tac.
+    pause
+    goto driver_update
+)
+
+echo.
+echo Dang bat Windows Update...
+sc config wuauserv start= demand >nul 2>&1
+net start wuauserv >nul 2>&1
+echo.
+echo Dang tai va cai dat tat ca drivers...
+echo QUA TRINH NAY CO THE MAT NHIEU PHUT, VUI LONG KHONG TAT!
+echo.
+echo ------------------------------------------------------
+
+:: Cap nhat tat ca drivers qua PowerShell
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$updateSession = New-Object -ComObject Microsoft.Update.Session; " ^
+    "$updateSearcher = $updateSession.CreateUpdateSearcher(); " ^
+    "$updateSearcher.Online = $true; " ^
+    "Write-Host 'Dang tim kiem drivers...' -ForegroundColor Yellow; " ^
+    "try { " ^
+    "    $searchResult = $updateSearcher.Search('IsInstalled=0 and Type=''Driver'''); " ^
+    "    $updates = $searchResult.Updates; " ^
+    "    if ($updates.Count -eq 0) { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host 'Khong co driver nao can cap nhat!' -ForegroundColor Green; " ^
+    "    } else { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host \"Da tim thay $($updates.Count) driver(s). Bat dau cai dat...\" -ForegroundColor Cyan; " ^
+    "        Write-Host ''; " ^
+    "        $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
+    "        $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
+    "        foreach ($update in $updates) { " ^
+    "            $updatesToDownload.Add($update) | Out-Null; " ^
+    "        } " ^
+    "        Write-Host 'Dang tai xuong drivers...' -ForegroundColor Yellow; " ^
+    "        $downloader = $updateSession.CreateUpdateDownloader(); " ^
+    "        $downloader.Updates = $updatesToDownload; " ^
+    "        $downloadResult = $downloader.Download(); " ^
+    "        Write-Host 'Hoan tat tai xuong!' -ForegroundColor Green; " ^
+    "        Write-Host ''; " ^
+    "        foreach ($update in $updates) { " ^
+    "            if ($update.IsDownloaded) { " ^
+    "                $updatesToInstall.Add($update) | Out-Null; " ^
+    "            } " ^
+    "        } " ^
+    "        Write-Host 'Dang cai dat drivers...' -ForegroundColor Yellow; " ^
+    "        $installer = $updateSession.CreateUpdateInstaller(); " ^
+    "        $installer.Updates = $updatesToInstall; " ^
+    "        $installResult = $installer.Install(); " ^
+    "        Write-Host ''; " ^
+    "        Write-Host '=== KET QUA CAI DAT ===' -ForegroundColor Cyan; " ^
+    "        if ($installResult.RebootRequired) { " ^
+    "            Write-Host 'CAN KHOI DONG LAI MAY TINH de hoan tat cap nhat!' -ForegroundColor Red; " ^
+    "        } else { " ^
+    "            Write-Host 'Cap nhat hoan tat! Khong can khoi dong lai.' -ForegroundColor Green; " ^
+    "        } " ^
+    "        Write-Host \"Tong so: $($updatesToInstall.Count) drivers da duoc cai dat.\" -ForegroundColor Green; " ^
+    "    } " ^
+    "} catch { " ^
+    "    Write-Host ''; " ^
+    "    Write-Host 'LOI: Khong the cap nhat drivers!' -ForegroundColor Red; " ^
+    "    Write-Host \"Chi tiet: $($_.Exception.Message)\" -ForegroundColor Red; " ^
+    "}"
+
+echo.
+echo ------------------------------------------------------
+pause
+goto driver_update
+
+:driver_update_select
+cls
+echo ======================================================
+echo          TUY CHON DRIVERS DE CAP NHAT
+echo ======================================================
+echo.
+echo Dang bat Windows Update...
+sc config wuauserv start= demand >nul 2>&1
+net start wuauserv >nul 2>&1
+echo.
+echo Dang quet danh sach drivers...
+echo.
+echo ------------------------------------------------------
+
+:: Tao file tam luu danh sach drivers
+set tempDriverList=%temp%\driverlist_%random%.txt
+
+:: Quet va luu danh sach drivers
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$updateSession = New-Object -ComObject Microsoft.Update.Session; " ^
+    "$updateSearcher = $updateSession.CreateUpdateSearcher(); " ^
+    "$updateSearcher.Online = $true; " ^
+    "try { " ^
+    "    $searchResult = $updateSearcher.Search('IsInstalled=0 and Type=''Driver'''); " ^
+    "    $updates = $searchResult.Updates; " ^
+    "    if ($updates.Count -eq 0) { " ^
+    "        Write-Host 'KHONG CO DRIVER NAO CAN CAP NHAT!' -ForegroundColor Green; " ^
+    "        'NO_UPDATES' | Out-File -FilePath '%tempDriverList%' -Encoding UTF8; " ^
+    "    } else { " ^
+    "        Write-Host \"Tim thay $($updates.Count) driver(s):\" -ForegroundColor Cyan; " ^
+    "        Write-Host ''; " ^
+    "        $index = 1; " ^
+    "        $driverData = @(); " ^
+    "        foreach ($update in $updates) { " ^
+    "            Write-Host \"[$index] $($update.Title)\" -ForegroundColor White; " ^
+    "            Write-Host \"    Kich thuoc: $([Math]::Round($update.MaxDownloadSize/1MB, 2)) MB\" -ForegroundColor Gray; " ^
+    "            $driverData += [PSCustomObject]@{ " ^
+    "                Index = $index; " ^
+    "                Title = $update.Title; " ^
+    "                Size = $update.MaxDownloadSize; " ^
+    "                UpdateID = $update.Identity.UpdateID; " ^
+    "            }; " ^
+    "            $index++; " ^
+    "        } " ^
+    "        $driverData | Export-Csv -Path '%tempDriverList%' -NoTypeInformation -Encoding UTF8; " ^
+    "    } " ^
+    "} catch { " ^
+    "    Write-Host 'LOI: Khong the kiem tra drivers!' -ForegroundColor Red; " ^
+    "    'ERROR' | Out-File -FilePath '%tempDriverList%' -Encoding UTF8; " ^
+    "}"
+
+echo.
+echo ------------------------------------------------------
+
+:: Kiem tra ket qua
+if not exist "%tempDriverList%" (
+    echo Loi khi kiem tra drivers.
+    pause
+    goto driver_update
+)
+
+:: Doc file ket qua
+set /p first_line=<"%tempDriverList%"
+if "%first_line%"=="NO_UPDATES" (
+    echo.
+    echo Tat ca drivers da duoc cap nhat!
+    del /f /q "%tempDriverList%" >nul 2>&1
+    pause
+    goto driver_update
+)
+
+if "%first_line%"=="ERROR" (
+    echo.
+    echo Da xay ra loi khi kiem tra drivers.
+    del /f /q "%tempDriverList%" >nul 2>&1
+    pause
+    goto driver_update
+)
+
+echo.
+echo Nhap cac so thu tu cach nhau boi dau phay (vi du: 1,3,5)
+echo Hoac nhap "ALL" de cap nhat tat ca
+echo Hoac nhap "0" de quay lai
+echo.
+set /p driver_selection="Lua chon cua ban: "
+
+if /i "%driver_selection%"=="0" (
+    del /f /q "%tempDriverList%" >nul 2>&1
+    goto driver_update
+)
+
+if /i "%driver_selection%"=="ALL" (
+    del /f /q "%tempDriverList%" >nul 2>&1
+    goto driver_update_all
+)
+
+echo.
+echo Dang cap nhat cac drivers da chon: %driver_selection%
+echo.
+
+:: Cap nhat drivers da chon
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$selection = '%driver_selection%'; " ^
+    "$indices = $selection -split ',' | ForEach-Object { [int]$_.Trim() }; " ^
+    "$updateSession = New-Object -ComObject Microsoft.Update.Session; " ^
+    "$updateSearcher = $updateSession.CreateUpdateSearcher(); " ^
+    "$updateSearcher.Online = $true; " ^
+    "try { " ^
+    "    $searchResult = $updateSearcher.Search('IsInstalled=0 and Type=''Driver'''); " ^
+    "    $updates = $searchResult.Updates; " ^
+    "    $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
+    "    $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
+    "    foreach ($idx in $indices) { " ^
+    "        if ($idx -le $updates.Count -and $idx -gt 0) { " ^
+    "            $update = $updates.Item($idx - 1); " ^
+    "            Write-Host \"Chon: $($update.Title)\" -ForegroundColor Cyan; " ^
+    "            $updatesToDownload.Add($update) | Out-Null; " ^
+    "        } " ^
+    "    } " ^
+    "    if ($updatesToDownload.Count -gt 0) { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host 'Dang tai xuong drivers...' -ForegroundColor Yellow; " ^
+    "        $downloader = $updateSession.CreateUpdateDownloader(); " ^
+    "        $downloader.Updates = $updatesToDownload; " ^
+    "        $downloadResult = $downloader.Download(); " ^
+    "        Write-Host 'Hoan tat tai xuong!' -ForegroundColor Green; " ^
+    "        Write-Host ''; " ^
+    "        foreach ($update in $updatesToDownload) { " ^
+    "            if ($update.IsDownloaded) { " ^
+    "                $updatesToInstall.Add($update) | Out-Null; " ^
+    "            } " ^
+    "        } " ^
+    "        Write-Host 'Dang cai dat drivers...' -ForegroundColor Yellow; " ^
+    "        $installer = $updateSession.CreateUpdateInstaller(); " ^
+    "        $installer.Updates = $updatesToInstall; " ^
+    "        $installResult = $installer.Install(); " ^
+    "        Write-Host ''; " ^
+    "        Write-Host '=== KET QUA ===' -ForegroundColor Cyan; " ^
+    "        if ($installResult.RebootRequired) { " ^
+    "            Write-Host 'CAN KHOI DONG LAI MAY TINH!' -ForegroundColor Red; " ^
+    "        } else { " ^
+    "            Write-Host 'Hoan tat! Khong can khoi dong lai.' -ForegroundColor Green; " ^
+    "        } " ^
+    "        Write-Host \"Da cai dat: $($updatesToInstall.Count) driver(s).\" -ForegroundColor Green; " ^
+    "    } else { " ^
+    "        Write-Host 'Khong co driver nao duoc chon!' -ForegroundColor Yellow; " ^
+    "    } " ^
+    "} catch { " ^
+    "    Write-Host 'LOI: $($_.Exception.Message)' -ForegroundColor Red; " ^
+    "}"
+
+del /f /q "%tempDriverList%" >nul 2>&1
+
+echo.
+echo ------------------------------------------------------
+pause
+goto driver_update

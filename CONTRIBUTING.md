@@ -77,13 +77,14 @@ git push origin feature/amazing-feature
 ## 💡 Ý tưởng đóng góp
 
 ### Chức năng mới:
+- [x] Driver Update - Cập nhật drivers ✨ **COMPLETED v1.0.2**
 - [ ] Tối ưu SSD (TRIM, Optimize)
-- [ ] Quản lý Driver (Update drivers)
 - [ ] Privacy tweaks (Tắt telemetry)
 - [ ] GPU Optimization
 - [ ] RAM Cleaner
 - [ ] Scheduled Tasks Manager
 - [ ] System Backup & Restore
+- [ ] Network Diagnostics
 
 ### Cải tiến:
 - [ ] Thêm Progress Bar
@@ -92,6 +93,7 @@ git push origin feature/amazing-feature
 - [ ] Undo feature (Rollback registry)
 - [ ] Logging system
 - [ ] Config file support
+- [ ] Auto-update checker
 
 ### Bug fixes:
 - [ ] Sửa lỗi encoding tiếng Việt
@@ -223,7 +225,7 @@ Nên xảy ra điều gì.
 
 **Môi trường:**
 - OS: Windows 10/11
-- Version: 1.0.0
+- Version: 1.1.0
 - Antivirus: Windows Defender
 
 **Screenshots:**
@@ -282,9 +284,10 @@ Danh sách những người đóng góp sẽ được hiển thị trong README.
 ## 📧 Liên hệ
 
 Có câu hỏi? Liên hệ:
-- **Email**: [your-email@example.com]
+- **Email**: pcoptimizer.seventy907@slmail.me
 - **GitHub Discussions**: [Start Discussion](https://github.com/brillianfan/pcoptimizer/discussions)
 - **Issues**: [Create Issue](https://github.com/brillianfan/pcoptimizer/issues)
+- **Telegram**: @goodlove9179
 
 ---
 
