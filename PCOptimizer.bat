@@ -80,8 +80,8 @@ powershell -Command ^
     "$board = Get-WmiObject Win32_BaseBoard; " ^
     "Write-Host 'He dieu hanh: ' -NoNewline; Write-Host $os.Caption -ForegroundColor Cyan; " ^
     "Write-Host 'CPU:         ' -NoNewline; Write-Host $cpu.Name -ForegroundColor Cyan; " ^
-    "Write-Host 'RAM:         ' -NoNewline; Write-Host \"$([Math]::Round($mem.Sum / 1GB)) GB\" -ForegroundColor Cyan; " ^
-    "Write-Host 'Mainboard:   ' -NoNewline; Write-Host \"$($board.Manufacturer) $($board.Product)\" -ForegroundColor Cyan; " ^
+    "Write-Host 'RAM:         ' -NoNewline; Write-Host '$([Math]::Round($mem.Sum / 1GB)) GB' -ForegroundColor Cyan; " ^
+    "Write-Host 'Mainboard:   ' -NoNewline; Write-Host '$($board.Manufacturer) $($board.Product)' -ForegroundColor Cyan; " ^
     "Write-Host 'Do hoa (GPU):' -NoNewline; foreach($g in $gpu) { Write-Host \" $($g.Name)\" -ForegroundColor Cyan }; " ^
     "Write-Host 'O cung:      ' -NoNewline; foreach($d in $disk) { Write-Host \" $($d.Model) ($([Math]::Round($d.Size / 1GB)) GB)\" -ForegroundColor Cyan }; "
 echo ------------------------------------------------------
@@ -132,7 +132,7 @@ echo ------------------------------------------------------
 powershell -Command ^
     "$ospp = Get-ChildItem -Path 'C:\Program Files\Microsoft Office', 'C:\Program Files (x86)\Microsoft Office' -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1; " ^
     "if ($ospp) { " ^
-    "   $status = cscript //nologo \"$($ospp.FullName)\" /dstatus; " ^
+    "   $status = cscript //nologo '$($ospp.FullName)' /dstatus; " ^
     "   $status | Select-String 'LICENSE NAME', 'LICENSE STATUS' | ForEach-Object { Write-Host $_.ToString().Trim() -ForegroundColor Cyan }; " ^
     "} else { " ^
     "   Write-Host 'Khong tim thay thong tin ban quyen Office.' -ForegroundColor Red; " ^
@@ -812,7 +812,6 @@ if %errorlevel% equ 0 (
     set /p re_choice="Lua chon cua ban: "
     if "%re_choice%"=="2" winget upgrade --id "%sw_id%" --force --accept-package-agreements --accept-source-agreements
     goto sw_update_select
-    goto sw_update_select
 )
 goto sw_update_select
 
@@ -872,13 +871,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        Write-Host 'Tat ca drivers deu da duoc cap nhat phien ban moi nhat.' -ForegroundColor Green; " ^
     "    } else { " ^
     "        Write-Host ''; " ^
-    "        Write-Host \"Tim thay $($updates.Count) driver(s) can cap nhat:\" -ForegroundColor Cyan; " ^
+    "        Write-Host 'Tim thay $($updates.Count) driver(s) can cap nhat:' -ForegroundColor Cyan; " ^
     "        Write-Host ''; " ^
     "        $index = 1; " ^
     "        foreach ($update in $updates) { " ^
-    "            Write-Host \"[$index] $($update.Title)\" -ForegroundColor White; " ^
-    "            Write-Host \"    - Ngay phat hanh: $($update.LastDeploymentChangeTime)\" -ForegroundColor Gray; " ^
-    "            Write-Host \"    - Kich thuoc: $([Math]::Round($update.MaxDownloadSize/1MB, 2)) MB\" -ForegroundColor Gray; " ^
+    "            Write-Host '[$index] $($update.Title)' -ForegroundColor White; " ^
+    "            Write-Host '    - Ngay phat hanh: $($update.LastDeploymentChangeTime)' -ForegroundColor Gray; " ^
+    "            Write-Host '    - Kich thuoc: $([Math]::Round($update.MaxDownloadSize/1MB, 2)) MB' -ForegroundColor Gray; " ^
     "            Write-Host ''; " ^
     "            $index++; " ^
     "        } " ^
@@ -886,7 +885,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "} catch { " ^
     "    Write-Host ''; " ^
     "    Write-Host 'LOI: Khong the kiem tra drivers!' -ForegroundColor Red; " ^
-    "    Write-Host \"Chi tiet: $($_.Exception.Message)\" -ForegroundColor Red; " ^
+    "    Write-Host 'Chi tiet: $($_.Exception.Message)' -ForegroundColor Red; " ^
     "}"
 
 echo.
@@ -932,7 +931,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        Write-Host 'Khong co driver nao can cap nhat!' -ForegroundColor Green; " ^
     "    } else { " ^
     "        Write-Host ''; " ^
-    "        Write-Host \"Da tim thay $($updates.Count) driver(s). Bat dau cai dat...\" -ForegroundColor Cyan; " ^
+    "        Write-Host 'Da tim thay $($updates.Count) driver(s). Bat dau cai dat...' -ForegroundColor Cyan; " ^
     "        Write-Host ''; " ^
     "        $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
     "        $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
@@ -961,12 +960,12 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        } else { " ^
     "            Write-Host 'Cap nhat hoan tat! Khong can khoi dong lai.' -ForegroundColor Green; " ^
     "        } " ^
-    "        Write-Host \"Tong so: $($updatesToInstall.Count) drivers da duoc cai dat.\" -ForegroundColor Green; " ^
+    "        Write-Host 'Tong so: $($updatesToInstall.Count) drivers da duoc cai dat.' -ForegroundColor Green; " ^
     "    } " ^
     "} catch { " ^
     "    Write-Host ''; " ^
     "    Write-Host 'LOI: Khong the cap nhat drivers!' -ForegroundColor Red; " ^
-    "    Write-Host \"Chi tiet: $($_.Exception.Message)\" -ForegroundColor Red; " ^
+    "    Write-Host 'Chi tiet: $($_.Exception.Message)' -ForegroundColor Red; " ^
     "}"
 
 echo.
@@ -1003,13 +1002,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        Write-Host 'KHONG CO DRIVER NAO CAN CAP NHAT!' -ForegroundColor Green; " ^
     "        'NO_UPDATES' | Out-File -FilePath '%tempDriverList%' -Encoding UTF8; " ^
     "    } else { " ^
-    "        Write-Host \"Tim thay $($updates.Count) driver(s):\" -ForegroundColor Cyan; " ^
+    "        Write-Host 'Tim thay $($updates.Count) driver(s):' -ForegroundColor Cyan; " ^
     "        Write-Host ''; " ^
     "        $index = 1; " ^
     "        $driverData = @(); " ^
     "        foreach ($update in $updates) { " ^
-    "            Write-Host \"[$index] $($update.Title)\" -ForegroundColor White; " ^
-    "            Write-Host \"    Kich thuoc: $([Math]::Round($update.MaxDownloadSize/1MB, 2)) MB\" -ForegroundColor Gray; " ^
+    "            Write-Host '[$index] $($update.Title)' -ForegroundColor White; " ^
+    "            Write-Host '    Kich thuoc: $([Math]::Round($update.MaxDownloadSize/1MB, 2)) MB' -ForegroundColor Gray; " ^
     "            $driverData += [PSCustomObject]@{ " ^
     "                Index = $index; " ^
     "                Title = $update.Title; " ^
@@ -1089,7 +1088,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "    foreach ($idx in $indices) { " ^
     "        if ($idx -le $updates.Count -and $idx -gt 0) { " ^
     "            $update = $updates.Item($idx - 1); " ^
-    "            Write-Host \"Chon: $($update.Title)\" -ForegroundColor Cyan; " ^
+    "            Write-Host 'Chon: $($update.Title)' -ForegroundColor Cyan; " ^
     "            $updatesToDownload.Add($update) | Out-Null; " ^
     "        } " ^
     "    } " ^
@@ -1117,7 +1116,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "        } else { " ^
     "            Write-Host 'Hoan tat! Khong can khoi dong lai.' -ForegroundColor Green; " ^
     "        } " ^
-    "        Write-Host \"Da cai dat: $($updatesToInstall.Count) driver(s).\" -ForegroundColor Green; " ^
+    "        Write-Host 'Da cai dat: $($updatesToInstall.Count) driver(s).' -ForegroundColor Green; " ^
     "    } else { " ^
     "        Write-Host 'Khong co driver nao duoc chon!' -ForegroundColor Yellow; " ^
     "    } " ^
