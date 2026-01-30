@@ -271,16 +271,15 @@ echo ======================================================
 echo        GO BO PHAN MEM (Uninstaller)
 echo ======================================================
 echo.
-echo Dang squet danh sach cac ung dung tren he thong...
+echo Dang quet danh sach cac ung dung tre he thong...
 echo Vui long cho doi...
 echo.
 
-:: Tao file tam thoi de luu danh sach ung dung
-set tempAppList=%temp%\applist_%random%.txt
-set tempAppIndex=%temp%\appindex_%random%.txt
+set "tempAppList=%temp%\applist_%random%.csv"
+set "tempSelectInfo=%temp%\selectinfo_%random%.txt"
 
-:: Su dung PowerShell de quyet danh sach ung dung tu Registry va sap xep A-Z
-powershell -Command ^
+:: Dung PowerShell de quet va xuat ra CSV (Fix: Su dung duong dan co dau ngoac kep)
+powershell -NoProfile -Command ^
     "$apps = @(); " ^
     "$paths = @('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'); " ^
     "foreach($path in $paths) { " ^
@@ -291,55 +290,77 @@ powershell -Command ^
     "    } " ^
     "}; " ^
     "$apps = $apps | Sort-Object { $_.Name } -Unique; " ^
-    "$apps | ForEach-Object { [PSCustomObject]@{ DisplayName = $_.Name; UninstallString = $_.UninstallString; QuietUninstallString = $_.QuietUninstallString; InstallLocation = $_.InstallLocation; Publisher = $_.Publisher } } | Export-Csv -Path '%tempAppList%' -NoTypeInformation -Encoding UTF8"
+    "$apps | Export-Csv -Path '%tempAppList%' -NoTypeInformation -Encoding UTF8"
 
-:: Kiem tra neu ko co ung dung nao
 if not exist "%tempAppList%" (
-    echo Khong tim thay ung dung nao hoac loi trong qua trinh quet.
+    echo [LOI] Khong the lay danh sach ung dung.
     pause
     goto menu
 )
 
-:: Hien thi danh sach ung dung voi so thu tu
+:show_app_list
 cls
 echo ======================================================
 echo              DANH SACH CAC UNG DUNG
 echo ======================================================
 echo.
 
-powershell -Command ^
+powershell -NoProfile -Command ^
     "$csv = Import-Csv '%tempAppList%' -Encoding UTF8; " ^
     "$index = 1; " ^
     "if($csv -is [array]) { " ^
-    "    foreach($app in $csv) { Write-Host \"[$index] $($app.DisplayName)\"; $index++ } " ^
+    "    foreach($app in $csv) { Write-Host \"[$index] $($app.Name)\"; $index++ } " ^
     "} elseif($csv) { " ^
-    "    Write-Host \"[1] $($csv.DisplayName)\"; " ^
+    "    Write-Host \"[1] $($csv.Name)\"; " ^
     "} else { " ^
     "    Write-Host 'Khong co ung dung nao de hien thi.'; " ^
     "}; " ^
-    "Write-Host \"\"; Write-Host \"[0] Quay lai Menu chinh\""
+    "Write-Host ''; Write-Host '[0] Quay lai Menu chinh'"
 
 echo.
 set /p appChoice="Chon so thu tu cua ung dung de go bo (0 de quay lai): "
 
 if "%appChoice%"=="0" (
     del /f /q "%tempAppList%" >nul 2>&1
-    del /f /q "%tempAppIndex%" >nul 2>&1
     goto menu
 )
 
-:: Lay thong tin ung dung duoc chon
-for /f "tokens=*" %%A in ('powershell -Command "try { $csv = Import-Csv '%tempAppList%' -Encoding UTF8; if($csv -is [array]) { $app = $csv[%appChoice% - 1] } else { $app = $csv }; if($app) { Write-Host $app.DisplayName } } catch { Write-Host 'Lua chon khong hop le' }"') do set "selectedApp=%%A"
+:: Trich xuat thong tin ung dung duoc chon vao file tam (Fix: Tranh loi parse Batch voi dau ngoac)
+powershell -NoProfile -Command ^
+    "try { " ^
+    "  $csv = Import-Csv '%tempAppList%' -Encoding UTF8; " ^
+    "  $idx = [int]'%appChoice%' - 1; " ^
+    "  $app = if($csv -is [array]) { $csv[$idx] } else { $csv }; " ^
+    "  if($app) { " ^
+    "    $uninst = if($app.QuietUninstallString) { $app.QuietUninstallString } else { $app.UninstallString }; " ^
+    "    $out = $app.Name + '|' + $app.InstallLocation + '|' + $app.Publisher + '|' + $uninst; " ^
+    "    $out | Out-File -FilePath '%tempSelectInfo%' -Encoding UTF8; " ^
+    "  } else { exit 1 } " ^
+    "} catch { exit 1 }"
 
-:: Lay them InstallLocation va Publisher
-for /f "tokens=*" %%A in ('powershell -Command "try { $csv = Import-Csv '%tempAppList%' -Encoding UTF8; if($csv -is [array]) { $app = $csv[%appChoice% - 1] } else { $app = $csv }; if($app) { Write-Host $app.InstallLocation } } catch { }"') do set "installLocation=%%A"
-
-for /f "tokens=*" %%A in ('powershell -Command "try { $csv = Import-Csv '%tempAppList%' -Encoding UTF8; if($csv -is [array]) { $app = $csv[%appChoice% - 1] } else { $app = $csv }; if($app) { Write-Host $app.Publisher } } catch { }"') do set "publisher=%%A"
-
-if "%selectedApp%"=="" (
+if %errorlevel% neq 0 (
     echo Lua chon khong hop le. Vui long thu lai.
     pause
-    goto deep_uninstall
+    goto show_app_list
+)
+
+:: Doc thong tin tu file tam bang FOR /F an toan
+set "selectedApp="
+set "installLocation="
+set "publisher="
+set "uninstStr="
+for /f "usebackq tokens=1,2,3,4 delims=|" %%A in ("%tempSelectInfo%") do (
+    set "selectedApp=%%A"
+    set "installLocation=%%B"
+    set "publisher=%%C"
+    set "uninstStr=%%D"
+)
+del /f /q "%tempSelectInfo%" >nul 2>&1
+
+if "%selectedApp%"=="" (
+    echo [LOI] Khong the lay thong tin ung dung.
+    pause
+    goto show_app_list
 )
 
 cls
@@ -347,7 +368,7 @@ echo ======================================================
 echo XAC NHAN GO BO UNG DUNG
 echo ======================================================
 echo.
-echo Ung dung: %selectedApp%
+echo Ung dung:  %selectedApp%
 echo Publisher: %publisher%
 echo Duong dan: %installLocation%
 echo.
@@ -356,31 +377,26 @@ set /p confirmUninstall="Ban co chac chan muon go bo ung dung nay? (Y/N): "
 if /i not "%confirmUninstall%"=="Y" (
     echo Huy thao tac.
     pause
-    goto deep_uninstall
+    goto show_app_list
 )
 
 echo.
 echo Dang go bo %selectedApp%...
 echo.
 
-:: Go bo ung dung
-powershell -Command ^
-    "$csv = Import-Csv '%tempAppList%' -Encoding UTF8; " ^
-    "$app = if($csv -is [array]) { $csv[%appChoice% - 1] } else { $csv }; " ^
-    "$u = if($app.QuietUninstallString) { $app.QuietUninstallString } else { $app.UninstallString }; " ^
+:: Thuc hien go bo (Refactor: Su dung khoi PowerShell an toan)
+powershell -NoProfile -Command ^
+    "$u = @' " ^
+    "%uninstStr% " ^
+    "'@.Trim(); " ^
     "if($u) { " ^
     "    Write-Host ('Thuc hien: ' + $u); " ^
-    "    $q = [char]34; " ^
-    "    if($u -like ($q + '*' + $q + ' *')) { " ^
-    "        $m = [regex]::Match($u, '^' + $q + '([^' + $q + ']+)' + $q + '(.*)$'); " ^
-    "        Start-Process $m.Groups[1].Value -ArgumentList $m.Groups[2].Value.Trim() -Wait; " ^
-    "    } elseif($u -like ($q + '*' + $q)) { " ^
-    "        Start-Process $u.Trim($q) -Wait; " ^
+    "    if($u -match '^\"([^\"]+)\"(.*)$') { " ^
+    "        Start-Process $Matches[1] -ArgumentList $Matches[2].Trim() -Wait; " ^
+    "    } elseif($u -match '^([^ ]+)(.*)$') { " ^
+    "        Start-Process ($Matches[1].Trim('\"')) -ArgumentList $Matches[2].Trim() -Wait; " ^
     "    } else { " ^
-    "        $p = $u.Split(' ', 2); " ^
-    "        $exe = $p[0].Trim($q); " ^
-    "        $args = if($p.Count -gt 1) { $p[1].Trim() } else { '' }; " ^
-    "        Start-Process $exe -ArgumentList $args -Wait; " ^
+    "        Start-Process $u -Wait; " ^
     "    } " ^
     "    Write-Host 'Go bo hoan tat.'; " ^
     "} else { Write-Host 'Khong tim thay lenh go bo.' }"
@@ -390,13 +406,9 @@ set /p checkLeftovers="Ban co muon xoa cac leftover (tan du) cua ung dung nay? (
 
 if /i "%checkLeftovers%"=="Y" (
     call :clean_app_leftovers "%selectedApp%" "%installLocation%" "%publisher%"
-) else (
-    echo Bo qua xoa tan du.
 )
 
 del /f /q "%tempAppList%" >nul 2>&1
-del /f /q "%tempAppIndex%" >nul 2>&1
-
 echo.
 pause
 goto deep_uninstall
@@ -407,7 +419,7 @@ set "appName=%~1"
 set "installPath=%~2"
 set "appPublisher=%~3"
 set foundLeftovers=0
-set tempScanResult=%temp%\scanresult_%random%.txt
+set "tempScanResult=%temp%\scanresult_%random%.txt"
 
 if "%appName%"=="" goto :eof
 
@@ -416,116 +428,42 @@ echo ======================================================
 echo                SCAN TAN DU CUA UNG DUNG
 echo ======================================================
 echo.
-echo Ung dung: %appName%
+echo Ung dung:  %appName%
 echo Publisher: %appPublisher%
-echo Duong dan cai dat: %installPath%
+echo Duong dan: %installPath%
 echo.
 echo Dang tim kiem cac tan du lien quan...
 echo.
 
-rem Xoa file ket qua cu
 if exist "%tempScanResult%" del /f /q "%tempScanResult%"
 
-rem Xoa thu muc cai dat chinh (neu ton tai va khac Program Files mac dinh)
+:: Kiem tra thu muc cai dat chinh
 if defined installPath (
     if exist "%installPath%" (
-        echo [FOUND - Install Dir] %installPath%
+        echo [FOUND] %installPath%
         echo %installPath%>>"%tempScanResult%"
         set foundLeftovers=1
     )
 )
 
-rem Tao danh sach cac ten co the tim kiem (chinh xac hon)
+:: Tao ten tim kiem an toan
 set "searchExact=%appName:"=%"
 set "searchPublisher=%appPublisher:"=%"
-if "%searchExact%"=="" goto :eof
 
-:: Scan AppData\Roaming - chi tim thu muc CHINH XAC hoac bat dau bang ten app
-echo Dang scan trong AppData\Roaming...
-if exist "%appdata%" (
-    for /d %%D in ("%appdata%\%searchExact%") do (
-        echo [FOUND - AppData] %%D
-        echo %%D>>"%tempScanResult%"
-        set foundLeftovers=1
-    )
-    if defined searchPublisher (
-        for /d %%D in ("%appdata%\%searchPublisher%") do (
-            echo [FOUND - AppData] %%D
-            echo %%D>>"%tempScanResult%"
+:: Quet cac thu muc he thong (Fix: Su dung FOR /D an toan voi dau ngoac)
+for %%R in ("%appdata%" "%localappdata%" "C:\ProgramData" "C:\Program Files" "C:\Program Files (x86)") do (
+    if exist "%%~R" (
+        if exist "%%~R\%searchExact%" (
+            echo [FOUND] %%~R\%searchExact%
+            echo %%~R\%searchExact%>>"%tempScanResult%"
             set foundLeftovers=1
         )
-    )
-)
-
-:: Scan AppData\Local - chi tim thu muc CHINH XAC
-echo Dang scan trong AppData\Local...
-set "appDataLocal=%localappdata%"
-if exist "%appDataLocal%" (
-    for /d %%D in ("%appDataLocal%\%searchExact%") do (
-        echo [FOUND - Local AppData] %%D
-        echo %%D>>"%tempScanResult%"
-        set foundLeftovers=1
-    )
-    if defined searchPublisher (
-        for /d %%D in ("%appDataLocal%\%searchPublisher%") do (
-            echo [FOUND - Local AppData] %%D
-            echo %%D>>"%tempScanResult%"
-            set foundLeftovers=1
-        )
-    )
-)
-
-:: Scan ProgramData - chi tim thu muc CHINH XAC
-echo Dang scan trong ProgramData...
-if exist "C:\ProgramData" (
-    for /d %%D in ("C:\ProgramData\%searchExact%") do (
-        echo [FOUND - ProgramData] %%D
-        echo %%D>>"%tempScanResult%"
-        set foundLeftovers=1
-    )
-    if defined searchPublisher (
-        for /d %%D in ("C:\ProgramData\%searchPublisher%") do (
-            echo [FOUND - ProgramData] %%D
-            echo %%D>>"%tempScanResult%"
-            set foundLeftovers=1
-        )
-    )
-)
-
-:: Scan Program Files - chi neu khong phai la duong dan cai dat chinh
-echo Dang scan trong Program Files...
-if exist "C:\Program Files" (
-    for /d %%D in ("C:\Program Files\%searchExact%") do (
-        if /i not "%%D"=="%installPath%" (
-            echo [FOUND - Program Files] %%D
-            echo %%D>>"%tempScanResult%"
-            set foundLeftovers=1
-        )
-    )
-    if defined searchPublisher (
-        for /d %%D in ("C:\Program Files\%searchPublisher%") do (
-            echo [FOUND - Program Files] %%D
-            echo %%D>>"%tempScanResult%"
-            set foundLeftovers=1
-        )
-    )
-)
-
-:: Scan Program Files (x86)
-echo Dang scan trong Program Files (x86)...
-if exist "C:\Program Files (x86)" (
-    for /d %%D in ("C:\Program Files (x86)\%searchExact%") do (
-        if /i not "%%D"=="%installPath%" (
-            echo [FOUND - Program Files x86] %%D
-            echo %%D>>"%tempScanResult%"
-            set foundLeftovers=1
-        )
-    )
-    if defined searchPublisher (
-        for /d %%D in ("C:\Program Files (x86)\%searchPublisher%") do (
-            echo [FOUND - Program Files x86] %%D
-            echo %%D>>"%tempScanResult%"
-            set foundLeftovers=1
+        if defined searchPublisher (
+            if exist "%%~R\%searchPublisher%" (
+                echo [FOUND] %%~R\%searchPublisher%
+                echo %%~R\%searchPublisher%>>"%tempScanResult%"
+                set foundLeftovers=1
+            )
         )
     )
 )
@@ -538,76 +476,58 @@ echo.
 
 if %foundLeftovers%==0 (
     echo Khong tim thay tan du nao cua ung dung.
-    echo.
 ) else (
     echo Da tim thay cac thu muc lien quan:
     echo.
     type "%tempScanResult%"
     echo.
-    echo ======================================================
-    echo.
     set /p deleteAll="Ban co muon XOA TAT CA cac thu muc tren? (Y/N): "
     
     if /i "!deleteAll!"=="Y" (
-        echo.
-        echo Dang xoa cac thu muc...
-        if exist "%tempScanResult%" (
-            for /f "usebackq delims=" %%F in ("%tempScanResult%") do (
-                if exist "%%F" (
-                    echo Xoa: %%F
-                    rmdir /s /q "%%F" >nul 2>&1
-                    if exist "%%F" (
-                        echo [!] Khong the xoa: %%F (co the dang duoc su dung)
-                    ) else (
-                        echo [OK] Da xoa: %%F
-                    )
-                )
+        for /f "usebackq delims=" %%F in ("%tempScanResult%") do (
+            if exist "%%F" (
+                echo Dang xoa: %%F
+                rmdir /s /q "%%F" >nul 2>&1
+                if exist "%%F" ( echo [!] Khong the xoa: %%F ) else ( echo [OK] Da xoa: %%F )
             )
         )
     ) else (
-        echo Da huy thao tac xoa.
+        echo Da huy thao tac xoa thu muc.
     )
 )
 
-:: Scan Registry
+:: Scan Registry (Refactor: Su dung cau truc an toan hon)
 echo.
-echo ======================================================
-echo Dang scan Registry keys lien quan...
-echo ======================================================
+echo Dang scan Registry keys...
 set "tempRegResult=%temp%\regresult_%random%.txt"
-if exist "%tempRegResult%" del /f /q "%tempRegResult%"
 
-powershell -Command ^
+powershell -NoProfile -Command ^
     "$found = @(); " ^
-    "$name = $env:searchExact; " ^
-    "$pub = $env:searchPublisher; " ^
+    "$name = @' " ^
+    "%searchExact% " ^
+    "'@.Trim(); " ^
+    "$pub = @' " ^
+    "%searchPublisher% " ^
+    "'@.Trim(); " ^
     "$regPaths = @('HKLM:\SOFTWARE', 'HKLM:\SOFTWARE\WOW6432Node', 'HKCU:\Software'); " ^
     "foreach($path in $regPaths) { " ^
-    "    try { " ^
-    "        Get-ChildItem $path -ErrorAction SilentlyContinue | Where-Object { $_.PSChildName -eq $name -or ($pub -and $_.PSChildName -eq $pub) } | ForEach-Object { " ^
-    "            $found += $_.PSPath; " ^
-    "            Write-Host ('[FOUND] ' + $_.PSPath); " ^
-    "        } " ^
-    "    } catch { } " ^
+    "    Get-ChildItem $path -ErrorAction SilentlyContinue | Where-Object { $_.PSChildName -eq $name -or ($pub -and $_.PSChildName -eq $pub) } | ForEach-Object { " ^
+    "        $found += $_.PSPath; " ^
+    "        Write-Host ('[FOUND REG] ' + $_.PSPath); " ^
+    "    } " ^
     "}; " ^
-    "if($found.Count -gt 0) { $found | Out-File -FilePath '%tempRegResult%' -Encoding UTF8 } else { Write-Host 'Khong tim thay Registry key nao.' }"
+    "if($found.Count -gt 0) { $found | Out-File -FilePath '%tempRegResult%' -Encoding UTF8 }"
 
 if exist "%tempRegResult%" (
     echo.
-    set /p deleteReg="Ban co muon XOA cac Registry key nay khong? (Y/N): "
+    set /p deleteReg="Ban co muon XOA cac Registry key nay? (Y/N): "
     if /i "!deleteReg!"=="Y" (
-        echo.
-        echo Dang xoa Registry keys...
-        powershell -Command "Get-Content '%tempRegResult%' | ForEach-Object { if(Test-Path $_) { Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue; Write-Host ('[OK] Da xoa: ' + $_) } }"
-    ) else (
-        echo Da huy thao tac xoa Registry.
+        powershell -NoProfile -Command "Get-Content '%tempRegResult%' | ForEach-Object { if(Test-Path $_) { Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue; Write-Host ('[OK] Da xoa Reg: ' + $_) } }"
     )
-    del /f /q "%tempRegResult%"
+    del /f /q "%tempRegResult%" >nul 2>&1
 )
 
-:: Xoa file ket quả tam
-if exist "%tempScanResult%" del /f /q "%tempScanResult%"
-
+if exist "%tempScanResult%" del /f /q "%tempScanResult%" >nul 2>&1
 echo.
 endlocal
 goto :eof
