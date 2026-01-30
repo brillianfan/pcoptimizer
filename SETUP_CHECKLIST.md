@@ -23,7 +23,7 @@ cd /path/to/pcoptimizer
 git add .
 
 # Commit
-git commit -m "Initial release - v1.0.0"
+git commit -m "Initial release - v1.0.2"
 
 # Push lên GitHub
 git push origin main
@@ -54,9 +54,9 @@ git push origin main
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Clean-brightgreen)](LINK_VIRUSTOTAL_O_DAY)
 ```
 
-**Thay bằng** (ví dụ nếu kết quả là 0/60):
+**Thay bằng** (ví dụ nếu kết quả là 0/94):
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F60%20Clean-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F94%20Clean-brightgreen)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 **Tìm dòng:**
@@ -66,7 +66,7 @@ git push origin main
 
 **Thay bằng:**
 ```markdown
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 ### 2.5. Commit thay đổi
@@ -117,14 +117,14 @@ https://github.com/brillianfan/pcoptimizer
 
 ### 4.2. Điền thông tin:
 ```
-Tag version: v1.0.0
-Release title: PC Ultimate Optimizer v1.0.0
+Tag version: v1.0.2
+Release title: PC Ultimate Optimizer v1.0.2
 Description:
 ```
 
 **Nội dung description:**
 ```markdown
-## 🎉 Initial Release - v1.0.0
+## 🎉 Release - v1.0.2
 
 ### ✨ Features:
 - Deep Junk Clean
@@ -137,9 +137,10 @@ Description:
 - Internet Boost
 - Disk Check
 - Software Health
+- Driver Update
 
 ### 🔒 Security:
-- VirusTotal: [0/60 Clean](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+- VirusTotal: [0/94 Clean](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 - Source code: 100% open
 - MIT License
 
@@ -151,7 +152,7 @@ See [README.md](https://github.com/brillianfan/pcoptimizer) for full instruction
 
 ---
 
-**Full Changelog**: https://github.com/brillianfan/pcoptimizer/commits/v1.0.0
+**Full Changelog**: https://github.com/brillianfan/pcoptimizer/commits/v1.0.2
 ```
 
 ### 4.3. Attach files:
@@ -204,11 +205,11 @@ Thêm vào đầu README.md (sau tiêu đề):
 > Công cụ tối ưu hóa và quản trị hệ thống Windows toàn diện
 
 ![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6?logo=windows)
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F60%20Clean-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F94%20Clean-brightgreen)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-![Release](https://img.shields.io/github/v/release/brillianpham/PC-Ultimate-Optimizer)
-![Downloads](https://img.shields.io/github/downloads/brillianpham/PC-Ultimate-Optimizer/total)
-![Stars](https://img.shields.io/github/stars/brillianpham/PC-Ultimate-Optimizer?style=social)
+![Release](https://img.shields.io/github/v/release/brillianfan/pcoptimizer)
+![Downloads](https://img.shields.io/github/downloads/brillianfan/pcoptimizer/total)
+![Stars](https://img.shields.io/github/stars/brillianfan/pcoptimizer?style=social)
 
 ---
 ```
@@ -269,7 +270,7 @@ cd screenshots
 - [ ] Copyright year đúng (2026)
 
 ### Release:
-- [ ] v1.0.0 đã tạo
+- [ ] v1.0.2 đã tạo
 - [ ] File .bat và .ps1 đã attach
 - [ ] Changelog đã viết
 - [ ] Download link hoạt động
@@ -302,7 +303,7 @@ Tôi vừa tạo công cụ tối ưu PC miễn phí cho Windows 10/11!
 - Và nhiều hơn nữa!
 
 🔒 100% Open Source & Safe
-🔍 VirusTotal: 0/60 Clean
+🔍 VirusTotal: 0/94 Clean
 
 GitHub: https://github.com/brillianfan/pcoptimizer
 
@@ -370,5 +371,5 @@ Nếu gặp vấn đề trong quá trình setup:
 ---
 
 **Tạo bởi**: Brillian Pham  
-**Ngày**: January 28, 2026  
-**Version**: 1.0.0
+**Ngày**: January 30, 2026  
+**Version**: 1.0.2

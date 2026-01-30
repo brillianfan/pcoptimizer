@@ -20,7 +20,8 @@ Sử dụng các template này để chia sẻ dự án trên các nền tảng 
 
 🔒 100% An toàn:
 ✅ Open Source
-✅ VirusTotal: Clean
+✅ Open Source
+✅ VirusTotal: 0/94 Clean
 ✅ Không thu thập dữ liệu
 
 📥 Tải miễn phí: https://github.com/brillianfan/pcoptimizer
@@ -40,7 +41,7 @@ Mình vừa tạo một công cụ tối ưu hóa Windows hoàn toàn miễn ph�
 - Muốn tăng tốc Internet
 - Cần quản lý startup apps
 
-⚡ 10 tính năng chính:
+⚡ 11 tính năng chính:
 1. Deep Junk Clean - Giải phóng dung lượng
 2. Uninstaller - Gỡ phần mềm
 3. Startup Manager - Tăng tốc khởi động
@@ -51,10 +52,11 @@ Mình vừa tạo một công cụ tối ưu hóa Windows hoàn toàn miễn ph�
 8. Disk Check - Quét lỗi ổ cứng
 9. Software Updater - Cập nhật phần mềm
 10. Toggle Windows Update - Bật/tắt update
+11. Driver Update - Cập nhật Driver ✨ NEW
 
 🔐 Tại sao an toàn?
 ✅ Source code công khai 100%
-✅ Quét trên VirusTotal: Clean
+✅ Quét trên VirusTotal: 0/94 Clean
 ✅ Không kết nối internet trái phép
 ✅ Không thu thập dữ liệu cá nhân
 ✅ MIT License - Miễn phí mãi mãi
@@ -127,7 +129,7 @@ I'm excited to share my latest project - a comprehensive Windows optimization to
 
 🔐 Security & Transparency:
 ✅ 100% Open Source (MIT License)
-✅ VirusTotal Verified - Clean scan results
+✅ VirusTotal Verified - 0/94 Clean scan results
 ✅ No data collection or telemetry
 ✅ Complete source code transparency
 
@@ -169,7 +171,7 @@ Mình vừa hoàn thành một dự án cá nhân - công cụ tối ưu hóa PC
 
 🔒 An toàn 100%:
 - Source code công khai, bạn có thể xem và kiểm tra
-- Đã quét trên VirusTotal - không virus
+- Đã quét trên VirusTotal - 0/94 Clean
 - Không thu thập dữ liệu, không có quảng cáo
 - Miễn phí mãi mãi (MIT License)
 
@@ -209,7 +211,7 @@ I've developed a comprehensive PC optimization tool for Windows 10/11 that I'd l
 
 **Safety & Transparency:**
 - 100% open source (MIT License)
-- VirusTotal scanned - Clean
+- VirusTotal scanned - 0/94 Clean
 - No telemetry or data collection
 - Uses only native Windows tools
 - Full source code review available
@@ -241,7 +243,7 @@ Just released PC Ultimate Optimizer, a free and open-source Windows optimization
 
 **Why it's safe:**
 ✅ Open source - MIT License
-✅ VirusTotal clean scan
+✅ VirusTotal: 0/94 Clean scan
 ✅ No data collection
 ✅ Uses native Windows tools only
 
@@ -259,17 +261,18 @@ Looking for feedback and testers!
 ```
 🚀 **PC Ultimate Optimizer** - New Release!
 
-Free Windows optimization tool với 10+ tính năng:
+Free Windows optimization tool với 11+ tính năng:
 
 🧹 Deep Clean
 ⚙️ Registry Optimizer
 🌐 Internet Boost
 ⚡ Startup Manager
 📦 Software Updater
+🔌 Driver Update ✨
 ... và nhiều hơn nữa!
 
 ✅ Open Source
-✅ VirusTotal Clean
+✅ VirusTotal: 0/94 Clean
 ✅ No Data Collection
 
 Download: https://github.com/brillianfan/pcoptimizer
@@ -299,7 +302,7 @@ Trong video này mình sẽ hướng dẫn sử dụng PC Ultimate Optimizer - c
 
 🔗 LINKS:
 📥 Download: https://github.com/brillianfan/pcoptimizer
-🔍 VirusTotal Scan: https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection
+🔍 VirusTotal Scan: https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection
 📚 Documentation: https://github.com/brillianfan/pcoptimizer#readme
 
 ✨ TÍNH NĂNG:
@@ -311,10 +314,11 @@ Trong video này mình sẽ hướng dẫn sử dụng PC Ultimate Optimizer - c
 • Software Updater
 • Disk Check
 • PC Specs Viewer
+• Driver Update ✨ NEW
 
 🔒 AN TOÀN:
 ✅ Open Source (MIT License)
-✅ VirusTotal Clean
+✅ VirusTotal: 0/94 Clean
 ✅ Không thu thập dữ liệu
 ✅ Source code 100% công khai
 

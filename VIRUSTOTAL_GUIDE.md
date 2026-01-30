@@ -10,12 +10,12 @@
 ## Bước 2: Upload file .bat
 
 ### Cách 1: Kéo thả file
-1. Kéo file `optimizer.bat` vào vùng "Choose file"
+1. Kéo file `PCOptimizer.bat` vào vùng "Choose file"
 2. Chờ upload hoàn tất
 
 ### Cách 2: Chọn file thủ công
 1. Click nút **"Choose file"**
-2. Tìm và chọn file `optimizer.bat`
+2. Tìm và chọn file `PCOptimizer.bat`
 3. Click **"Open"**
 
 ![Upload file](https://i.imgur.com/example.png)
@@ -24,7 +24,7 @@
 
 ## Bước 3: Chờ quét
 
-- VirusTotal sẽ quét file với **60+ antivirus engines**
+- VirusTotal sẽ quét file với **90+ antivirus engines**
 - Thời gian: ~2-5 phút
 - **KHÔNG ĐÓNG TAB** trong khi quét
 
@@ -37,9 +37,9 @@
 ### Kết quả mong đợi:
 
 ```
-✅ 0/60+ detections  (HOÀN TẦN AN TOÀN)
-⚠️ 1-3/60+ detections (An toàn - False Positive)
-❌ 10+/60+ detections (Cần xem xét)
+✅ 0/94 detections  (HOÀN TOÀN AN TOÀN)
+⚠️ 1-3/94 detections (An toàn - False Positive)
+❌ 10+/94 detections (Cần xem xét)
 ```
 
 ### Giải thích:
@@ -62,7 +62,7 @@
 
 ### Ví dụ:
 ```
-https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection
+https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection
 ```
 
 ---
@@ -76,7 +76,7 @@ https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325
 
 ### Bằng:
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F60-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F94-brightgreen)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 **Lưu ý**: Thay `YOUR_HASH` bằng link thực tế bạn vừa copy.
@@ -92,7 +92,7 @@ Tìm đoạn này:
 
 Thay bằng:
 ```markdown
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 ---
@@ -101,7 +101,7 @@ Thay bằng:
 
 ```bash
 # Di chuyển vào thư mục dự án
-cd PC-Ultimate-Optimizer
+cd pcoptimizer
 
 # Thêm file README.md đã cập nhật
 git add README.md
@@ -124,7 +124,7 @@ git push origin main
 │  ┌───────────────────────────────────┐  │
 │  │   Choose file or drag & drop      │  │
 │  │                                   │  │
-│  │   [optimizer.bat]                 │  │
+│  │   [PCOptimizer.bat]               │  │
 │  └───────────────────────────────────┘  │
 │          [Confirm upload]               │
 └─────────────────────────────────────────┘
@@ -133,7 +133,7 @@ git push origin main
 ### 2. Kết quả quét:
 ```
 ┌─────────────────────────────────────────┐
-│  Detection ratio: 0 / 71                │
+│  Detection ratio: 0 / 94                │
 │                                         │
 │  ✅ No security vendors flagged this   │
 │     file as malicious                   │
@@ -189,14 +189,14 @@ git push origin main
 
 ### Tạo badge động:
 
-Nếu kết quả là **0/70**:
+Nếu kết quả là **0/94**:
 ```markdown
-![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F70%20Clean-brightgreen)
+![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F94%20Clean-brightgreen)
 ```
 
-Nếu có **2/70**:
+Nếu có **2/94**:
 ```markdown
-![VirusTotal](https://img.shields.io/badge/VirusTotal-2%2F70%20False%20Positive-yellow)
+![VirusTotal](https://img.shields.io/badge/VirusTotal-2%2F94%20False%20Positive-yellow)
 ```
 
 ### Re-scan định kỳ:

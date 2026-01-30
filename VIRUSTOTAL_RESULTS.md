@@ -4,7 +4,7 @@
 
 **Link của bạn:**
 ```
-https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection
+https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection
 ```
 
 ---
@@ -13,7 +13,7 @@ https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325
 
 1. **Mở link trong trình duyệt**
 2. Bạn sẽ thấy trang VirusTotal với thông tin:
-   - **Detection ratio**: 0/60 (hoặc tương tự)
+   - **Detection ratio**: 0/94 (hoặc tương tự)
    - Danh sách antivirus engines
    - Chi tiết từng detection (nếu có)
 
@@ -21,19 +21,19 @@ https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325
 
 ## 🎨 Cập nhật Badge dựa trên kết quả:
 
-### Nếu kết quả là 0/60 (HOÀN HẢO):
+### Nếu kết quả là 0/94 (HOÀN HẢO):
 ```markdown
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F60%20Clean-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F94%20Clean-brightgreen)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 ### Nếu có 1-3 detections (VẪN AN TOÀN - False Positive):
 ```markdown
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-2%2F60%20Safe-yellow)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-2%2F94%20Safe-yellow)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 ### Nếu có 4-10 detections (CẦN GIẢI THÍCH):
 ```markdown
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-5%2F60%20False%20Positive-orange)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-5%2F94%20False%20Positive-orange)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 ---
@@ -42,19 +42,19 @@ https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325
 
 ### Bước 1: Xem kết quả thực tế
 Mở link trong trình duyệt và xem:
-- Tỷ lệ detection (ví dụ: 0/60, 2/60, 5/60)
+- Tỷ lệ detection (ví dụ: 0/94, 2/94, 5/94)
 - Tên các antivirus đánh dấu (nếu có)
 
 ### Bước 2: Mở file README.md
 
 Tìm dòng này (ở đầu file):
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 ### Bước 3: Thay thế badge
 
-**Ví dụ:** Nếu kết quả là **0/60**:
+**Ví dụ:** Nếu kết quả là **0/94**:
 
 **Thay:**
 ```markdown
@@ -63,12 +63,12 @@ badge/VirusTotal-Scanned-brightgreen
 
 **Bằng:**
 ```markdown
-badge/VirusTotal-0%2F60%20Clean-brightgreen
+badge/VirusTotal-0%2F94%20Clean-brightgreen
 ```
 
 **Kết quả cuối cùng:**
 ```markdown
-[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F60%20Clean-brightgreen)](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[![VirusTotal](https://img.shields.io/badge/VirusTotal-0%2F94%20Clean-brightgreen)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 ---
@@ -102,11 +102,11 @@ Script này có thể được một số antivirus đánh dấu do:
 - ❌ Không cài đặt malware
 
 ### Kết quả VirusTotal chi tiết:
-- **Tổng số engines**: 60
-- **Detections**: 2 (McAfee, Avast)
-- **Đánh giá**: Safe - False Positive
+- **Tổng số engines**: 94
+- **Detections**: 0
+- **Đánh giá**: Safe - Clean
 
-[Xem kết quả đầy đủ →](https://www.virustotal.com/gui/file/b706b2adb07778a6d99fadd56b210a772d0fabb2e325d6d5248ff72e52a2894c/detection)
+[Xem kết quả đầy đủ →](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
 ```
 
 ---
