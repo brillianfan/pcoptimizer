@@ -53,18 +53,18 @@ echo [0] Exit
 echo ======================================================
 set /p select="Chon chuc nang (0-11): "
 
-if "%select%"=="1" goto clear_all_junk
-if "%select%"=="2" goto deep_uninstall
-if "%select%"=="3" goto startup_manager
-if "%select%"=="4" goto toggle_update
-if "%select%"=="5" goto optimize_registry
-if "%select%"=="6" goto view_pc_specs
-if "%select%"=="7" goto win_office_tools
-if "%select%"=="8" goto internet_boost
-if "%select%"=="9" goto disk_check
-if "%select%"=="10" goto software_health
-if "%select%"=="11" goto driver_update
-if "%select%"=="0" exit
+if "!select!"=="1" goto clear_all_junk
+if "!select!"=="2" goto deep_uninstall
+if "!select!"=="3" goto startup_manager
+if "!select!"=="4" goto toggle_update
+if "!select!"=="5" goto optimize_registry
+if "!select!"=="6" goto view_pc_specs
+if "!select!"=="7" goto win_office_tools
+if "!select!"=="8" goto internet_boost
+if "!select!"=="9" goto disk_check
+if "!select!"=="10" goto software_health
+if "!select!"=="11" goto driver_update
+if "!select!"=="0" exit
 goto menu
 
 :view_pc_specs
@@ -812,10 +812,15 @@ if %errorlevel% equ 0 (
     set /p re_choice="Lua chon cua ban: "
     if "%re_choice%"=="2" winget upgrade --id "%sw_id%" --force --accept-package-agreements --accept-source-agreements
     goto sw_update_select
+    goto sw_update_select
 )
 goto sw_update_select
 
+:: ------------------------------------------------------
+:: DRIVER UPDATE FUNCTIONS
+:: ------------------------------------------------------
 :driver_update
+chcp 65001 >nul
 cls
 echo ======================================================
 echo              KIEM TRA ^& CAP NHAT DRIVERS
