@@ -400,17 +400,38 @@ powershell -NoProfile -Command ^
     "$u = (Get-Content '%tempUninstCmd%' -Raw).Trim(); " ^
     "if($u -and $u -ne 'ECHO is off.') { " ^
     "    Write-Host ('Thuc hien: ' + $u); " ^
-    "    if($u -match '^\"\"(.+?)\"\"\\s*(.*)$') { " ^
-    "        Start-Process $Matches[1] -ArgumentList $Matches[2].Trim() -Wait -ErrorAction SilentlyContinue; " ^
-    "    } elseif($u -match '^\"(.+?)\"\\s*(.*)$') { " ^
-    "        Start-Process $Matches[1] -ArgumentList $Matches[2].Trim() -Wait -ErrorAction SilentlyContinue; " ^
-    "    } elseif($u -match '^([^\\s]+)\\s+(.*)$') { " ^
-    "        Start-Process $Matches[1] -ArgumentList $Matches[2].Trim() -Wait -ErrorAction SilentlyContinue; " ^
-    "    } else { " ^
-    "        Start-Process $u -Wait -ErrorAction SilentlyContinue; " ^
+    "    try { " ^
+    "        $path = ''; " ^
+    "        $args = ''; " ^
+    "        if($u -match '^\"\s*\"([^\"]+)\"\s*\"(.*)$') { " ^
+    "            $path = $Matches[1]; " ^
+    "            $args = $Matches[2].Trim(); " ^
+    "        } elseif($u -match '^\"([^\"]+)\"(.*)$') { " ^
+    "            $path = $Matches[1]; " ^
+    "            $args = $Matches[2].Trim(); " ^
+    "        } elseif($u -match '^([^\\s]+\\.exe|[^\\s]+\\.msi)\\s+(.*)$') { " ^
+    "            $path = $Matches[1]; " ^
+    "            $args = $Matches[2].Trim(); " ^
+    "        } elseif($u -match '^msiexec(.*)$') { " ^
+    "            $path = 'msiexec.exe'; " ^
+    "            $args = $Matches[1].Trim(); " ^
+    "        } else { " ^
+    "            $path = $u; " ^
+    "        } " ^
+    "        if(!(Test-Path $path) -and $path -notmatch '^msiexec') { " ^
+    "            Write-Host ('CANH BAO: Duong dan khong ton tai: ' + $path) -ForegroundColor Yellow; " ^
+    "        } " ^
+    "        if($args) { " ^
+    "            Start-Process -FilePath $path -ArgumentList $args -Wait -NoNewWindow -ErrorAction Stop; " ^
+    "        } else { " ^
+    "            Start-Process -FilePath $path -Wait -NoNewWindow -ErrorAction Stop; " ^
+    "        } " ^
+    "        Write-Host 'Go bo hoan tat.' -ForegroundColor Green; " ^
+    "    } catch { " ^
+    "        Write-Host ('LOI khi go bo: ' + $_.Exception.Message) -ForegroundColor Red; " ^
+    "        Write-Host 'Vui long go bo thu cong qua Control Panel.' -ForegroundColor Yellow; " ^
     "    } " ^
-    "    Write-Host 'Go bo hoan tat.'; " ^
-    "} else { Write-Host 'Khong tim thay lenh go bo hoac lenh khong hop le.' }"
+    "} else { Write-Host 'Khong tim thay lenh go bo hoac lenh khong hop le.' -ForegroundColor Red }"
 
 if exist "%tempUninstCmd%" del /f /q "%tempUninstCmd%" >nul 2>&1
 
@@ -434,16 +455,20 @@ set "appPublisher=%~3"
 set foundLeftovers=0
 set "tempScanResult=%temp%\scanresult_%random%.txt"
 
-if "%appName%"=="" goto :eof
+:: Validate input
+if "!appName!"=="" (
+    echo [LOI] Ten ung dung khong hop le.
+    goto :clean_leftovers_end
+)
 
 cls
 echo ======================================================
 echo                SCAN TAN DU CUA UNG DUNG
 echo ======================================================
 echo.
-echo Ung dung:  %appName%
-echo Publisher: %appPublisher%
-echo Duong dan: %installPath%
+echo Ung dung:  !appName!
+echo Publisher: !appPublisher!
+echo Duong dan: !installPath!
 echo.
 echo Dang tim kiem cac tan du lien quan...
 echo.
@@ -452,26 +477,35 @@ if exist "%tempScanResult%" del /f /q "%tempScanResult%"
 
 :: Kiem tra thu muc cai dat chinh
 if defined installPath (
-    if exist "%installPath%" (
-        echo [FOUND] %installPath%
-        echo %installPath%>>"%tempScanResult%"
+    if exist "!installPath!" (
+        echo [FOUND] !installPath!
+        echo !installPath!>>"%tempScanResult%"
         set foundLeftovers=1
     )
 )
 
-:: Tao ten tim kiem an toan
-set "searchExact=%appName:"=%"
-set "searchPublisher=%appPublisher:"=%"
+:: Tao ten tim kiem an toan (loai bo cac ky tu dac biet)
+set "searchExact=!appName:"=!"
+set "searchExact=!searchExact:^=!"
+set "searchExact=!searchExact:(=!"
+set "searchExact=!searchExact:)=!"
 
-:: Quet cac thu muc he thong (Fix: Su dung delayed expansion de tranh loi dau ngoac)
+set "searchPublisher=!appPublisher:"=!"
+set "searchPublisher=!searchPublisher:^=!"
+set "searchPublisher=!searchPublisher:(=!"
+set "searchPublisher=!searchPublisher:)=!"
+
+:: Quet cac thu muc he thong
 for %%R in ("%appdata%" "%localappdata%" "C:\ProgramData" "C:\Program Files" "C:\Program Files (x86)") do (
     if exist "%%~R" (
-        if exist "%%~R\!searchExact!" (
-            echo [FOUND] "%%~R\!searchExact!"
-            echo %%~R\!searchExact!>>"%tempScanResult%"
-            set foundLeftovers=1
+        if "!searchExact!" neq "" (
+            if exist "%%~R\!searchExact!" (
+                echo [FOUND] "%%~R\!searchExact!"
+                echo %%~R\!searchExact!>>"%tempScanResult%"
+                set foundLeftovers=1
+            )
         )
-        if defined searchPublisher (
+        if "!searchPublisher!" neq "" (
             if exist "%%~R\!searchPublisher!" (
                 echo [FOUND] "%%~R\!searchPublisher!"
                 echo %%~R\!searchPublisher!>>"%tempScanResult%"
@@ -487,16 +521,18 @@ echo           KET QUA SCAN TAN DU
 echo ======================================================
 echo.
 
-if %foundLeftovers%==0 (
+if !foundLeftovers!==0 (
     echo Khong tim thay tan du nao cua ung dung.
 ) else (
     echo Da tim thay cac thu muc lien quan:
     echo.
     type "%tempScanResult%"
     echo.
+    echo.
     set /p deleteAll="Ban co muon XOA TAT CA cac thu muc tren? (Y/N): "
     
     if /i "!deleteAll!"=="Y" (
+        echo.
         for /f "usebackq delims=" %%F in ("%tempScanResult%") do (
             if exist "%%F" (
                 echo Dang xoa: %%F
@@ -509,12 +545,12 @@ if %foundLeftovers%==0 (
     )
 )
 
-:: Scan Registry (Refactor: Su dung cau truc an toan hon)
+:: Scan Registry
 echo.
 echo Dang scan Registry keys...
 set "tempRegResult=%temp%\regresult_%random%.txt"
 
-:: Thiet lap moi truong cho PowerShell de tranh loi ky tu dac biet
+:: Thiet lap bien moi truong cho PowerShell
 set "SEARCH_EXACT=!searchExact!"
 set "SEARCH_PUB=!searchPublisher!"
 
@@ -522,25 +558,32 @@ powershell -NoProfile -Command ^
     "$found = @(); " ^
     "$name = $env:SEARCH_EXACT; " ^
     "$pub = $env:SEARCH_PUB; " ^
-    "$regPaths = @('HKLM:\SOFTWARE', 'HKLM:\SOFTWARE\WOW6432Node', 'HKCU:\Software'); " ^
-    "foreach($path in $regPaths) { " ^
-    "    Get-ChildItem $path -ErrorAction SilentlyContinue | Where-Object { $_.PSChildName -eq $name -or ($pub -and $_.PSChildName -eq $pub) } | ForEach-Object { " ^
-    "        $found += $_.PSPath; " ^
-    "        Write-Host ('[FOUND REG] ' + $_.PSPath); " ^
-    "    } " ^
-    "}; " ^
-    "if($found.Count -gt 0) { $found | Out-File -FilePath '%tempRegResult%' -Encoding UTF8 }"
+    "if($name) { " ^
+    "    $regPaths = @('HKLM:\SOFTWARE', 'HKLM:\SOFTWARE\WOW6432Node', 'HKCU:\Software'); " ^
+    "    foreach($path in $regPaths) { " ^
+    "        try { " ^
+    "            Get-ChildItem $path -ErrorAction SilentlyContinue | Where-Object { $_.PSChildName -eq $name -or ($pub -and $_.PSChildName -eq $pub) } | ForEach-Object { " ^
+    "                $found += $_.PSPath; " ^
+    "                Write-Host ('[FOUND REG] ' + $_.PSPath); " ^
+    "            } " ^
+    "        } catch { } " ^
+    "    }; " ^
+    "    if($found.Count -gt 0) { $found | Out-File -FilePath '%tempRegResult%' -Encoding UTF8 }; " ^
+    "}"
 
 if exist "%tempRegResult%" (
     echo.
     set /p deleteReg="Ban co muon XOA cac Registry key nay? (Y/N): "
     if /i "!deleteReg!"=="Y" (
-        powershell -NoProfile -Command "Get-Content '%tempRegResult%' | ForEach-Object { if(Test-Path $_) { Remove-Item $_ -Recurse -Force -ErrorAction SilentlyContinue; Write-Host ('[OK] Da xoa Reg: ' + $_) } }"
+        echo.
+        powershell -NoProfile -Command "Get-Content '%tempRegResult%' -ErrorAction SilentlyContinue | ForEach-Object { if(Test-Path $_) { try { Remove-Item $_ -Recurse -Force -ErrorAction Stop; Write-Host ('[OK] Da xoa Reg: ' + $_) } catch { Write-Host ('[ERROR] Khong the xoa: ' + $_) -ForegroundColor Red } } }"
     )
     del /f /q "%tempRegResult%" >nul 2>&1
 )
 
+:clean_leftovers_end
 if exist "%tempScanResult%" del /f /q "%tempScanResult%" >nul 2>&1
+if exist "%tempRegResult%" del /f /q "%tempRegResult%" >nul 2>&1
 echo.
 endlocal
 goto :eof
