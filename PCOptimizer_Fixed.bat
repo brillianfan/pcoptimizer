@@ -1,0 +1,1129 @@
+@echo off
+:: ##########################################################################
+:: # PC Ultimate Optimizer
+:: # Version: 1.0.2
+:: # Author: Brillian Pham (pcoptimizer.seventy907@slmail.me)
+:: # Description: Advanced system maintenance and optimization tool.
+:: # Site: https://github.com/brillianfan/pcoptimizer
+:: # 
+:: # [SECURITY NOTICE] 
+:: # This script requires Administrator privileges to perform system 
+:: # cleanups and registry optimizations. All actions are transparent 
+:: # and can be audited by reviewing this code.
+:: ##########################################################################
+
+setlocal enabledelayedexpansion
+title PC Ultimate Optimizer - Brillian Pham
+color 0b
+
+:: ======================================================
+:: CHECK & REQUEST ADMINISTRATOR PRIVILEGES
+:: ======================================================
+:check_privileges
+net session >nul 2>&1
+if %errorLevel% == 0 (
+    goto :init
+) else (
+    echo [INFO] Yeu cau quyen Administrator de tiep tuc...
+    powershell -Command "Start-Process '%~0' -Verb RunAs"
+    exit /b
+)
+
+:init
+pushd "%cd%" & CD /D "%~dp0"
+
+:menu
+cls
+echo ======================================================
+echo           CONG CU QUAN TRI ^& TOI UU PC
+echo                by Brillian Pham
+echo ======================================================
+echo [1] Deep Junk Clean (Don rac ^& Giai phong dung luong)
+echo [2] Uninstaller (Go phan mem)
+echo [3] Startup Manager (Quan ly cac ung dung khoi dong cung Windows)
+echo [4] Toggle Windows Update (Bat/Tat tam thoi)
+echo [5] Optimize Registry (Toi uu hoa Registry)
+echo [6] View PC Specs (Xem cau hinh PC)
+echo [7] Windows ^& Office Activation (Kiem tra ^& Kich hoat ban quyen)
+echo [8] Internet Boost (Toi uu toc do mang ^& Ping)
+echo [9] Disk Check (Quet loi o cung)
+echo [10] Software Health (Cap nhat phan mem PC)
+echo [11] Driver Update (Kiem tra ^& Cap nhat Drivers)
+echo [0] Exit
+echo ======================================================
+set /p select="Chon chuc nang (0-11): "
+
+if "!select!"=="1" goto clear_all_junk
+if "!select!"=="2" goto deep_uninstall
+if "!select!"=="3" goto startup_manager
+if "!select!"=="4" goto toggle_update
+if "!select!"=="5" goto optimize_registry
+if "!select!"=="6" goto view_pc_specs
+if "!select!"=="7" goto win_office_tools
+if "!select!"=="8" goto internet_boost
+if "!select!"=="9" goto disk_check
+if "!select!"=="10" goto software_health
+if "!select!"=="11" goto driver_update
+if "!select!"=="0" exit
+goto menu
+
+:view_pc_specs
+cls
+echo Dang lay thong tin cau hinh PC...
+echo ------------------------------------------------------
+powershell -Command ^
+    "$os = Get-WmiObject Win32_OperatingSystem; " ^
+    "$cpu = Get-WmiObject Win32_Processor; " ^
+    "$mem = Get-WmiObject Win32_PhysicalMemory | Measure-Object Capacity -Sum; " ^
+    "$gpu = Get-WmiObject Win32_VideoController; " ^
+    "$disk = Get-WmiObject Win32_DiskDrive; " ^
+    "$board = Get-WmiObject Win32_BaseBoard; " ^
+    "Write-Host 'He dieu hanh: ' -NoNewline; Write-Host $os.Caption -ForegroundColor Cyan; " ^
+    "Write-Host 'CPU:         ' -NoNewline; Write-Host $cpu.Name -ForegroundColor Cyan; " ^
+    "Write-Host 'RAM:         ' -NoNewline; Write-Host '$([Math]::Round($mem.Sum / 1GB)) GB' -ForegroundColor Cyan; " ^
+    "Write-Host 'Mainboard:   ' -NoNewline; Write-Host '$($board.Manufacturer) $($board.Product)' -ForegroundColor Cyan; " ^
+    "Write-Host 'Do hoa (GPU):' -NoNewline; foreach($g in $gpu) { Write-Host \" $($g.Name)\" -ForegroundColor Cyan }; " ^
+    "Write-Host 'O cung:      ' -NoNewline; foreach($d in $disk) { Write-Host \" $($d.Model) ($([Math]::Round($d.Size / 1GB)) GB)\" -ForegroundColor Cyan }; "
+echo ------------------------------------------------------
+pause
+goto menu
+
+:win_office_tools
+cls
+echo ======================================================
+echo           CONG CU WINDOWS ^& OFFICE
+echo ======================================================
+echo [1] Kiem tra phien ban Windows ^& Office
+echo [2] Kiem tra trang thai ban quyen (XPR)
+echo [3] MO CONG CU KICH HOAT (MAS Script)
+echo [0] Quay lai menu chinh
+echo ======================================================
+set /p wo_select="Chon chuc nang (0-3): "
+
+if "%wo_select%"=="1" goto check_version
+if "%wo_select%"=="2" goto check_license
+if "%wo_select%"=="3" goto activate_all
+if "%wo_select%"=="0" goto menu
+goto win_office_tools
+
+:check_version
+cls
+echo KIEM TRA PHIEN BAN:
+echo ------------------------------------------------------
+echo Dang lay thong tin...
+powershell -Command ^
+    "$os = Get-WmiObject Win32_OperatingSystem; " ^
+    "$office = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*' -ErrorAction SilentlyContinue | Where-Object { ($_.DisplayName -like '*Microsoft Office*') -and ($_.DisplayName -notlike '*Update*') -and ($_.DisplayName -notlike '*MUI*') -and ($_.DisplayName -notlike '*Language Pack*') } | Select-Object -First 1; " ^
+    "Write-Host 'He dieu hanh: ' -NoNewline; Write-Host $os.Caption -ForegroundColor Cyan; " ^
+    "if ($office) { Write-Host 'Office:       ' -NoNewline; Write-Host $office.DisplayName -ForegroundColor Cyan } else { Write-Host 'Office:       ' -NoNewline; Write-Host 'Khong tim thay Office' -ForegroundColor Red }"
+echo ------------------------------------------------------
+pause
+goto win_office_tools
+
+:check_license
+cls
+echo KIEM TRA BAN QUYEN WINDOWS:
+echo ------------------------------------------------------
+cscript //nologo %systemroot%\system32\slmgr.vbs /xpr
+echo ------------------------------------------------------
+echo.
+echo KIEM TRA BAN QUYEN OFFICE:
+echo ------------------------------------------------------
+powershell -Command ^
+    "$ospp = Get-ChildItem -Path 'C:\Program Files\Microsoft Office', 'C:\Program Files (x86)\Microsoft Office' -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1; " ^
+    "if ($ospp) { " ^
+    "   $status = cscript //nologo '$($ospp.FullName)' /dstatus; " ^
+    "   $status | Select-String 'LICENSE NAME', 'LICENSE STATUS' | ForEach-Object { Write-Host $_.ToString().Trim() -ForegroundColor Cyan }; " ^
+    "} else { " ^
+    "   Write-Host 'Khong tim thay thong tin ban quyen Office.' -ForegroundColor Red; " ^
+    "}"
+echo ------------------------------------------------------
+pause
+goto win_office_tools
+
+:activate_all
+cls
+echo Ket noi den may chu kich hoat (get.activated.win)...
+echo ------------------------------------------------------
+echo.
+echo Lam theo huong dan trong cua so Microsoft Activation Script (MAS)
+:: Chay lenh kich hoat moi qua PowerShell
+powershell -Command "irm https://get.activated.win | iex"
+echo ------------------------------------------------------
+
+pause
+goto win_office_tools
+
+:clear_all_junk
+cls
+echo ======================================================
+echo                     DEEP JUNK CLEAN
+echo ======================================================
+echo.
+echo Dang thuc hien Deep Clean...
+echo ------------------------------------------------------
+echo [+] Xoa Temp, Prefetch ^& Cache...
+set /p confirm1="Ban co muon xoa Temp, Prefetch ^& Cache? (Y/N): "
+if /i "%confirm1%"=="Y" (
+    :: Bao ve thu muc hien tai neu dang chay tu Temp
+    set "origDir=%~dp0"
+    for /d %%D in ("%temp%\*") do (
+        set "dirPath=%%~fD\"
+        if /i "!dirPath!" neq "!origDir!" (
+            rd /s /q "%%D" >nul 2>&1
+        )
+    )
+    del /f /q "%temp%\*.*" >nul 2>&1
+    del /s /f /q C:\Windows\Temp\*.* >nul 2>&1
+    del /s /f /q C:\Windows\Prefetch\*.* >nul 2>&1
+    echo [OK] Da xoa Temp, Prefetch ^& Cache!
+) else (
+    echo [SKIP] Bo qua buoc xoa Temp, Prefetch ^& Cache.
+)
+echo.
+echo [+] Lam trong Thung rac...
+set /p confirm2="Ban co muon lam trong Thung rac? (Y/N): "
+if /i "%confirm2%"=="Y" (
+    powershell -Command "Clear-RecycleBin -Force -ErrorAction SilentlyContinue"
+    echo [OK] Da lam trong Thung rac!
+) else (
+    echo [SKIP] Bo qua buoc lam trong Thung rac.
+)
+echo.
+echo [+] Xoa System Logs (Nhat ky he thong)...
+set /p confirm3="Ban co muon xoa System Logs? (Y/N): "
+if /i "%confirm3%"=="Y" (
+    for /F "tokens=*" %%G in ('wevtutil.exe el') do (wevtutil.exe cl "%%G") >nul 2>&1
+    echo [OK] Da xoa System Logs!
+) else (
+    echo [SKIP] Bo qua buoc xoa System Logs.
+)
+echo.
+echo [+] Chay Windows Disk Cleanup...
+set /p confirm4="Ban co muon chay Windows Disk Cleanup? (Y/N): "
+if /i "%confirm4%"=="Y" (
+    cleanmgr /sagerun:1 >nul 2>&1
+    echo [OK] Da chay Windows Disk Cleanup!
+) else (
+    echo [SKIP] Bo qua buoc Windows Disk Cleanup.
+)
+echo.
+echo [+] Quet thu muc rong (ProgramData, AppData, Program Files)...
+set /p confirmScanEmpty="Ban co muon quet tim cac thu muc rong? (Y/N): "
+if /i "%confirmScanEmpty%"=="Y" (
+    set "emptyDirsList=%temp%\empty_dirs_!random!.txt"
+    set "emptyCountFile=%temp%\empty_count_!random!.txt"
+    set emptyCount=0
+    powershell -NoProfile -Command ^
+        "$roots = @('C:\ProgramData', $env:APPDATA, $env:LOCALAPPDATA, 'C:\Program Files', 'C:\Program Files (x86)'); " ^
+        "$all = @(); " ^
+        "foreach ($r in $roots) { " ^
+        "  if (Test-Path $r) { " ^
+        "    Get-ChildItem -Path $r -Directory -Recurse -Force -ErrorAction SilentlyContinue | " ^
+        "    Where-Object { (Get-ChildItem $_.FullName -Force -ErrorAction SilentlyContinue).Count -eq 0 } | " ^
+        "    ForEach-Object { $all += $_.FullName } " ^
+        "  } " ^
+        "}; " ^
+        "$all = $all | Sort-Object { $_.Length } -Descending; " ^
+        "if ($all.Count -gt 0) { $all | Set-Content -Path '!emptyDirsList!' -Encoding UTF8 }; " ^
+        "$all.Count | Set-Content -Path '!emptyCountFile!' -Encoding ASCII"
+    if exist "!emptyCountFile!" for /f "delims=" %%N in ('type "!emptyCountFile!"') do set emptyCount=%%N
+    if exist "!emptyCountFile!" del /f /q "!emptyCountFile!" >nul 2>&1
+    echo So thu muc rong tim thay: !emptyCount!
+    if !emptyCount! gtr 0 (
+        echo Vi du mot so duong dan:
+        powershell -NoProfile -Command "Get-Content '!emptyDirsList!' -ErrorAction SilentlyContinue | Select-Object -First 8 | ForEach-Object { Write-Host '  ' $_ }"
+        echo.
+        set /p confirm5="Ban co muon xoa cac thu muc rong nay? (Y/N): "
+        if /i "!confirm5!"=="Y" (
+            if exist "!emptyDirsList!" (
+                powershell -NoProfile -Command "Get-Content '!emptyDirsList!' -ErrorAction SilentlyContinue | ForEach-Object { if (Test-Path $_ -PathType Container) { Remove-Item $_ -Force -Recurse -ErrorAction SilentlyContinue } }"
+                echo [OK] Da xu ly xong cac thu muc rong!
+            )
+        ) else (
+            echo [SKIP] Bo qua buoc xoa thu muc rong.
+        )
+    ) else (
+        echo [OK] He thong sach se, khong co thu muc rong nao.
+    )
+    if exist "!emptyDirsList!" del /f /q "!emptyDirsList!" >nul 2>&1
+) else (
+    echo [SKIP] Bo qua buoc quet thu muc rong.
+)
+echo.
+echo [+] Xoa shortcuts loi (lien ket tro toi file/thu muc da bi xoa)...
+set /p confirm6="Ban co muon xoa cac shortcuts loi? (Y/N): "
+if /i "!confirm6!"=="Y" (
+    powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0Remove-BrokenShortcuts.ps1"
+) else (
+    echo [SKIP] Bo qua buoc xoa shortcuts loi.
+)
+echo.
+echo ------------------------------------------------------
+echo === DA DON DEP XONG! ===
+pause
+goto menu
+
+:deep_uninstall
+chcp 65001 >nul
+cls
+echo ======================================================
+echo        GO BO PHAN MEM (Uninstaller)
+echo ======================================================
+echo.
+echo Dang quet danh sach cac ung dung tre he thong...
+echo Vui long cho doi...
+echo.
+
+set "tempAppList=%temp%\applist_%random%.csv"
+set "tempSelectInfo=%temp%\selectinfo_%random%.txt"
+
+:: Dung PowerShell de quet va xuat ra CSV
+powershell -NoProfile -Command ^
+    "$paths = @('HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*', 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*'); " ^
+    "$apps = foreach($path in $paths) { " ^
+    "    Get-ItemProperty $path -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -and ($_.UninstallString -or $_.QuietUninstallString) } | ForEach-Object { " ^
+    "        $loc = if ($_.InstallLocation) { $_.InstallLocation } else { " ^
+    "            $u = $_.UninstallString; if ($u -match '\"\"(.+?)\"\"' -or $u -match '\"(.+?)\"') { Split-Path $Matches[1] -Parent } elseif ($u -match '([^\\s]+\\.exe)') { Split-Path $Matches[1] -Parent } else { '' } " ^
+    "        }; " ^
+    "        [PSCustomObject]@{ " ^
+    "            Name = $_.DisplayName; " ^
+    "            UninstallString = [string]$_.UninstallString; " ^
+    "            QuietUninstallString = [string]$_.QuietUninstallString; " ^
+    "            InstallLocation = [string]$loc; " ^
+    "            Publisher = if ($_.Publisher) { [string]$_.Publisher } else { 'Unknown' } " ^
+    "        } " ^
+    "    } " ^
+    "}; " ^
+    "$apps = $apps | Sort-Object Name -Unique; " ^
+    "$apps | Export-Csv -Path '%tempAppList%' -NoTypeInformation -Encoding UTF8"
+
+if not exist "%tempAppList%" (
+    echo [LOI] Khong the lay danh sach ung dung.
+    pause
+    goto menu
+)
+
+:show_app_list
+cls
+echo ======================================================
+echo              DANH SACH CAC UNG DUNG
+echo ======================================================
+echo.
+
+powershell -NoProfile -Command ^
+    "$csv = Import-Csv '%tempAppList%' -Encoding UTF8; " ^
+    "$index = 1; " ^
+    "if($csv -is [array]) { " ^
+    "    foreach($app in $csv) { Write-Host \"[$index] $($app.Name)\"; $index++ } " ^
+    "} elseif($csv) { " ^
+    "    Write-Host \"[1] $($csv.Name)\"; " ^
+    "} else { " ^
+    "    Write-Host 'Khong co ung dung nao de hien thi.'; " ^
+    "}; " ^
+    "Write-Host ''; Write-Host '[0] Quay lai Menu chinh'"
+
+echo.
+set /p appChoice="Chon so thu tu cua ung dung de go bo (0 de quay lai): "
+
+if "%appChoice%"=="0" (
+    del /f /q "%tempAppList%" >nul 2>&1
+    goto menu
+)
+
+:: Trich xuat thong tin ung dung duoc chon vao file tam
+powershell -NoProfile -Command ^
+    "try { " ^
+    "  $csv = Import-Csv '%tempAppList%' -Encoding UTF8; " ^
+    "  $idx = [int]'%appChoice%' - 1; " ^
+    "  $app = if($csv -is [array]) { $csv[$idx] } else { $csv }; " ^
+    "  if($app) { " ^
+    "    $uninst = if($app.QuietUninstallString) { $app.QuietUninstallString } else { $app.UninstallString }; " ^
+    "    $lines = @([string]$app.Name, [string]$app.InstallLocation, [string]$app.Publisher, [string]$uninst); " ^
+    "    [System.IO.File]::WriteAllLines('%tempSelectInfo%', $lines, (New-Object System.Text.UTF8Encoding $false)); " ^
+    "  } else { exit 1 } " ^
+    "} catch { exit 1 }"
+
+if %errorlevel% neq 0 (
+    echo Lua chon khong hop le. Vui long thu lai.
+    pause
+    goto show_app_list
+)
+
+:: Doc thong tin tu file tam bang SET /P an toan
+set "selectedApp="
+set "installLocation="
+set "publisher="
+set "uninstStr="
+if exist "%tempSelectInfo%" (
+    < "%tempSelectInfo%" (
+        set /p selectedApp=
+        set /p installLocation=
+        set /p publisher=
+        set /p uninstStr=
+    )
+)
+del /f /q "%tempSelectInfo%" >nul 2>&1
+
+if "%selectedApp%"=="" (
+    echo [LOI] Khong the lay thong tin ung dung.
+    pause
+    goto show_app_list
+)
+
+cls
+echo ======================================================
+echo XAC NHAN GO BO UNG DUNG
+echo ======================================================
+echo.
+echo Ung dung:  %selectedApp%
+echo Publisher: %publisher%
+echo Duong dan: %installLocation%
+echo.
+set /p confirmUninstall="Ban co chac chan muon go bo ung dung nay? (Y/N): "
+
+if /i not "%confirmUninstall%"=="Y" (
+    echo Huy thao tac.
+    pause
+    goto show_app_list
+)
+
+echo.
+echo Dang go bo %selectedApp%...
+echo.
+
+:: Thuc hien go bo
+set "tempUninstCmd=%temp%\uninstcmd_%random%.txt"
+(echo !uninstStr!)>"%tempUninstCmd%"
+
+powershell -NoProfile -Command ^
+    "$u = (Get-Content '%tempUninstCmd%' -Raw).Trim(); " ^
+    "if($u -and $u -ne 'ECHO is off.') { " ^
+    "    Write-Host ('Thuc hien: ' + $u); " ^
+    "    try { " ^
+    "        $path = ''; " ^
+    "        $args = ''; " ^
+    "        if($u -match '^\"\s*\"([^\"]+)\"\s*\"(.*)$') { " ^
+    "            $path = $Matches[1]; " ^
+    "            $args = $Matches[2].Trim(); " ^
+    "        } elseif($u -match '^\"([^\"]+)\"(.*)$') { " ^
+    "            $path = $Matches[1]; " ^
+    "            $args = $Matches[2].Trim(); " ^
+    "        } elseif($u -match '^([^\\s]+\\.exe|[^\\s]+\\.msi)\\s+(.*)$') { " ^
+    "            $path = $Matches[1]; " ^
+    "            $args = $Matches[2].Trim(); " ^
+    "        } elseif($u -match '^msiexec(.*)$') { " ^
+    "            $path = 'msiexec.exe'; " ^
+    "            $args = $Matches[1].Trim(); " ^
+    "        } else { " ^
+    "            $path = $u; " ^
+    "        } " ^
+    "        if(!(Test-Path $path) -and $path -notmatch '^msiexec') { " ^
+    "            Write-Host ('CANH BAO: Duong dan khong ton tai: ' + $path) -ForegroundColor Yellow; " ^
+    "        } " ^
+    "        if($args) { " ^
+    "            Start-Process -FilePath $path -ArgumentList $args -Wait -NoNewWindow -ErrorAction Stop; " ^
+    "        } else { " ^
+    "            Start-Process -FilePath $path -Wait -NoNewWindow -ErrorAction Stop; " ^
+    "        } " ^
+    "        Write-Host 'Go bo hoan tat.' -ForegroundColor Green; " ^
+    "    } catch { " ^
+    "        Write-Host ('LOI khi go bo: ' + $_.Exception.Message) -ForegroundColor Red; " ^
+    "        Write-Host 'Vui long go bo thu cong qua Control Panel.' -ForegroundColor Yellow; " ^
+    "    } " ^
+    "} else { Write-Host 'Khong tim thay lenh go bo hoac lenh khong hop le.' -ForegroundColor Red }"
+
+if exist "%tempUninstCmd%" del /f /q "%tempUninstCmd%" >nul 2>&1
+
+echo.
+set /p checkLeftovers="Ban co muon xoa cac leftover (tan du) cua ung dung nay? (Y/N): "
+
+if /i "%checkLeftovers%"=="Y" (
+    call :clean_app_leftovers "%selectedApp%" "%installLocation%" "%publisher%"
+)
+
+del /f /q "%tempAppList%" >nul 2>&1
+echo.
+pause
+goto deep_uninstall
+
+:clean_app_leftovers
+setlocal enabledelayedexpansion
+set "appName=%~1"
+set "installPath=%~2"
+set "appPublisher=%~3"
+set foundLeftovers=0
+set "tempScanResult=%temp%\scanresult_%random%.txt"
+
+:: Validate input
+if "!appName!"=="" (
+    echo [LOI] Ten ung dung khong hop le.
+    goto :clean_leftovers_end
+)
+
+cls
+echo ======================================================
+echo                SCAN TAN DU CUA UNG DUNG
+echo ======================================================
+echo.
+echo Ung dung:  !appName!
+echo Publisher: !appPublisher!
+echo Duong dan: !installPath!
+echo.
+echo Dang tim kiem cac tan du lien quan...
+echo.
+
+if exist "%tempScanResult%" del /f /q "%tempScanResult%"
+
+:: Kiem tra thu muc cai dat chinh
+if defined installPath (
+    if exist "!installPath!" (
+        echo [FOUND] !installPath!
+        echo !installPath!>>"%tempScanResult%"
+        set foundLeftovers=1
+    )
+)
+
+:: Tao ten tim kiem an toan (loai bo cac ky tu dac biet)
+set "searchExact=!appName:"=!"
+set "searchExact=!searchExact:^=!"
+set "searchExact=!searchExact:(=!"
+set "searchExact=!searchExact:)=!"
+
+set "searchPublisher=!appPublisher:"=!"
+set "searchPublisher=!searchPublisher:^=!"
+set "searchPublisher=!searchPublisher:(=!"
+set "searchPublisher=!searchPublisher:)=!"
+
+:: Quet cac thu muc he thong
+for %%R in ("%appdata%" "%localappdata%" "C:\ProgramData" "C:\Program Files" "C:\Program Files (x86)") do (
+    if exist "%%~R" (
+        if "!searchExact!" neq "" (
+            if exist "%%~R\!searchExact!" (
+                echo [FOUND] "%%~R\!searchExact!"
+                echo %%~R\!searchExact!>>"%tempScanResult%"
+                set foundLeftovers=1
+            )
+        )
+        if "!searchPublisher!" neq "" (
+            if exist "%%~R\!searchPublisher!" (
+                echo [FOUND] "%%~R\!searchPublisher!"
+                echo %%~R\!searchPublisher!>>"%tempScanResult%"
+                set foundLeftovers=1
+            )
+        )
+    )
+)
+
+echo.
+echo ======================================================
+echo           KET QUA SCAN TAN DU
+echo ======================================================
+echo.
+
+if !foundLeftovers!==0 (
+    echo Khong tim thay tan du nao cua ung dung.
+) else (
+    echo Da tim thay cac thu muc lien quan:
+    echo.
+    type "%tempScanResult%"
+    echo.
+    echo.
+    set /p deleteAll="Ban co muon XOA TAT CA cac thu muc tren? (Y/N): "
+    
+    if /i "!deleteAll!"=="Y" (
+        echo.
+        for /f "usebackq delims=" %%F in ("%tempScanResult%") do (
+            if exist "%%F" (
+                echo Dang xoa: %%F
+                rmdir /s /q "%%F" >nul 2>&1
+                if exist "%%F" ( echo [!] Khong the xoa: %%F ) else ( echo [OK] Da xoa: %%F )
+            )
+        )
+    ) else (
+        echo Da huy thao tac xoa thu muc.
+    )
+)
+
+:: Scan Registry
+echo.
+echo Dang scan Registry keys...
+set "tempRegResult=%temp%\regresult_%random%.txt"
+
+:: Thiet lap bien moi truong cho PowerShell
+set "SEARCH_EXACT=!searchExact!"
+set "SEARCH_PUB=!searchPublisher!"
+
+powershell -NoProfile -Command ^
+    "$found = @(); " ^
+    "$name = $env:SEARCH_EXACT; " ^
+    "$pub = $env:SEARCH_PUB; " ^
+    "if($name) { " ^
+    "    $regPaths = @('HKLM:\SOFTWARE', 'HKLM:\SOFTWARE\WOW6432Node', 'HKCU:\Software'); " ^
+    "    foreach($path in $regPaths) { " ^
+    "        try { " ^
+    "            Get-ChildItem $path -ErrorAction SilentlyContinue | Where-Object { $_.PSChildName -eq $name -or ($pub -and $_.PSChildName -eq $pub) } | ForEach-Object { " ^
+    "                $found += $_.PSPath; " ^
+    "                Write-Host ('[FOUND REG] ' + $_.PSPath); " ^
+    "            } " ^
+    "        } catch { } " ^
+    "    }; " ^
+    "    if($found.Count -gt 0) { $found | Out-File -FilePath '%tempRegResult%' -Encoding UTF8 }; " ^
+    "}"
+
+if exist "%tempRegResult%" (
+    echo.
+    set /p deleteReg="Ban co muon XOA cac Registry key nay? (Y/N): "
+    if /i "!deleteReg!"=="Y" (
+        echo.
+        powershell -NoProfile -Command "Get-Content '%tempRegResult%' -ErrorAction SilentlyContinue | ForEach-Object { if(Test-Path $_) { try { Remove-Item $_ -Recurse -Force -ErrorAction Stop; Write-Host ('[OK] Da xoa Reg: ' + $_) } catch { Write-Host ('[ERROR] Khong the xoa: ' + $_) -ForegroundColor Red } } }"
+    )
+    del /f /q "%tempRegResult%" >nul 2>&1
+)
+
+:clean_leftovers_end
+if exist "%tempScanResult%" del /f /q "%tempScanResult%" >nul 2>&1
+if exist "%tempRegResult%" del /f /q "%tempRegResult%" >nul 2>&1
+echo.
+endlocal
+goto :eof
+
+
+:startup_manager
+cls
+echo ======================================================
+echo    QUAN LY CAC UNG DUNG KHOI DONG CUNG HE THONG
+echo ======================================================
+echo.
+echo [1] Mo Task Manager (Startup) va chinh sua
+echo.
+echo [2] Quay ve Menu chinh
+echo.
+set /p sm_select="Chon chuc nang (1-2): "
+
+if "%sm_select%"=="1" goto startup_manager_run
+if "%sm_select%"=="2" goto menu
+goto startup_manager
+
+:startup_manager_run
+:: Lenh mo Task Manager va tu dong chuyen sang tab Startup (Tab so 4)
+powershell -Command "Start-Process taskmgr; Start-Sleep -Milliseconds 500; $wshell = New-Object -ComObject WScript.Shell; $wshell.SendKeys('^{TAB}'); $wshell.SendKeys('^{TAB}'); $wshell.SendKeys('^{TAB}');"
+cls
+echo Huong dan: Sau khi Task Manager (Tab Startup) mo ra, click chuot phai vao ung dung khong can thiet va chon Disable.
+echo.
+echo [!] Nhan bat ky phim nao de quay lai menu chinh...
+pause
+goto menu
+
+
+:toggle_update
+cls
+echo ======================================================
+echo           QUAN LY WINDOWS UPDATE (HIEN TAI)
+echo ======================================================
+echo.
+
+:: Kiem tra trang thai dich vu
+sc query wuauserv | findstr /i "STATE" > "%temp%\updatestate.txt"
+set /p state= < "%temp%\updatestate.txt"
+
+echo Trang thai he thong: %state%
+echo ------------------------------------------------------
+echo [1] Bat Update (Enable ^& Start)
+echo [2] Tat Update (Disable ^& Stop)
+echo [0] Quay lai Menu
+echo.
+
+set /p upd="Lua chon cua ban: "
+
+if "%upd%"=="1" (
+    echo Dang bat Windows Update...
+    sc config wuauserv start= demand >nul 2>&1
+    net start wuauserv >nul 2>&1
+    echo [OK] Da bat Windows Update thanh cong!
+    pause
+)
+if "%upd%"=="2" (
+    echo Dang tat Windows Update...
+    sc config wuauserv start= disabled >nul 2>&1
+    net stop wuauserv /y >nul 2>&1
+    echo [OK] Da vo hieu hoa Windows Update!
+    pause
+)
+if "%upd%"=="0" goto menu
+goto toggle_update
+
+:optimize_registry
+cls
+echo ======================================================
+echo          DANG TOI UU HOA REGISTRY HE THONG
+echo ======================================================
+echo.
+
+:: 1. Giam thoi gian cho de tat cac ung dung bi treo (Giam tu 20s xuong 2s)
+reg add "HKCU\Control Panel\Desktop" /v "WaitToKillAppTimeout" /t REG_SZ /d "2000" /f >nul
+echo Giam thoi gian cho de tat cac ung dung bi treo...
+
+:: 2. Loai bo do tre khi mo Menu (Mac dinh 400ms -> 0ms)
+reg add "HKCU\Control Panel\Desktop" /v "MenuShowDelay" /t REG_SZ /d "0" /f >nul
+echo Loai bo do tre khi mo Menu...
+
+:: 3. Tu dong tat cac ung dung khong phan hoi khi Shutdown
+reg add "HKCU\Control Panel\Desktop" /v "AutoEndTasks" /t REG_SZ /d "1" /f >nul
+echo Tu dong tat cac ung dung khong phan hoi khi Shutdown...
+
+:: 4. Tang toc do phan hoi cua chuot va ban phim
+reg add "HKCU\Control Panel\Mouse" /v "MouseHoverTime" /t REG_SZ /d "10" /f >nul
+echo Tang toc do phan hoi cua chuot va ban phim...
+
+:: 5. Toi uu hoa luu luong mang (Network Throttling Index)
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "NetworkThrottlingIndex" /t REG_DWORD /d 4294967295 /f >nul
+echo Toi uu hoa luu luong mang (Network Throttling Index)...
+
+:: 6. Toi uu hoa he thong phan hoi (System Responsiveness)
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_DWORD /d 0 /f >nul
+echo Toi uu hoa he thong phan hoi (System Responsiveness)...
+echo.
+echo [THANH CONG] Da toi uu hoa xong cac thong so Registry!
+echo Luu y: Ban nen Restart lai may tinh de thay doi co hieu luc.
+echo.
+pause
+goto menu
+
+:internet_boost
+cls
+echo ======================================================
+echo                       INTERNET BOOST
+echo ======================================================
+echo.
+echo Dang toi uu thong so mang (TCP/IP Optimization)...
+echo ------------------------------------------------------
+netsh int tcp set global autotuninglevel=normal >nul
+netsh int tcp set global rss=enabled >nul
+netsh int tcp set global fastopen=enabled >nul
+netsh interface tcp set global timestamps=disabled >nul
+ipconfig /flushdns >nul
+echo [+] Da toi uu Autotuning ^& RSS
+echo [+] Da lam moi DNS Cache
+echo ------------------------------------------------------
+echo Da xong! Internet se on dinh va nhanh hon.
+pause
+goto menu
+
+:disk_check
+cls
+echo He thong se kiem tra loi o cung vao lan khoi dong ke tiep.
+echo Ban co muon tiep tuc? (Y/N)
+set /p dc="Lua chon: "
+if /i "%dc%"=="Y" ( chkdsk C: /f )
+goto menu
+
+:software_health
+cls
+:: Tu dong kich hoat Update de Winget hoat dong
+sc config wuauserv start= demand >nul 2>&1
+net start wuauserv >nul 2>&1
+
+echo ======================================================
+echo           CAP NHAT PHAN MEM (SOFTWARE HEALTH)
+echo ======================================================
+echo.
+echo [1] Update All (Cap nhat tat ca phan mem)
+echo [2] Update Selected (Tu chon phan mem de cap nhat)
+echo [0] Quay lai Menu chinh
+echo.
+set /p sw_choice="Chon chuc nang (0/1/2): "
+
+if "%sw_choice%"=="1" goto sw_update_all
+if "%sw_choice%"=="2" goto sw_update_select
+if "%sw_choice%"=="0" goto menu
+goto software_health
+
+:sw_update_all
+cls
+echo Dang kiem tra va cap nhat tat ca phan mem...
+echo ------------------------------------------------------
+winget upgrade --all
+echo.
+echo === HOAN TAT CAP NHAT TAT CA! ===
+pause
+goto software_health
+
+:sw_update_select
+chcp 65001 >nul
+cls
+echo ======================================================
+echo             TUY CHON PHAN MEM DE CAP NHAT
+echo ======================================================
+echo.
+echo Dang ket noi den he thong Windows Package Manager...
+echo Vui long doi trong giay lat...
+echo.
+
+:: Hien thi danh sach phan mem co ban cap nhat
+winget list --upgrade-available
+if %errorlevel% neq 0 (
+    echo.
+    echo LOI: Khong the ket noi den may chu Winget hoac khong co ban cap nhat nao.
+    pause
+    goto software_health
+)
+
+echo.
+echo ------------------------------------------------------
+echo Huong dan: Copy "ID" o cot thu 2 va Paste vao day.
+echo Vi du: Google.Chrome
+echo.
+echo 0 - Quay lai Menu chinh
+echo 1 - Thoat
+echo.
+
+set "sw_id="
+set /p sw_id="Nhap ID phan mem: "
+
+if "%sw_id%"=="" (
+    echo Hay nhap ID hop le!
+    timeout /t 2 >nul
+    goto sw_update_select
+)
+
+if /i "%sw_id%"=="0" goto menu
+if /i "%sw_id%"=="1" goto software_health
+
+echo.
+echo Dang tai va cai dat ban cap nhat cho: %sw_id%
+echo.
+:: Them --silent de cai dat ngam neu ho tro
+winget upgrade --id "%sw_id%" --accept-package-agreements --accept-source-agreements
+if %errorlevel% equ 0 (
+    echo.
+    echo THANH CONG: Cap nhat %sw_id% hoan tat!
+    pause
+) else (
+    echo.
+    echo LOI: Khong the cap nhat %sw_id%.
+    echo.
+    echo [1] Thu lai
+    echo [2] Bo qua kiem tra hash (--force)
+    echo [3] Quay lai
+    set /p re_choice="Lua chon cua ban: "
+    if "%re_choice%"=="2" winget upgrade --id "%sw_id%" --force --accept-package-agreements --accept-source-agreements
+    goto sw_update_select
+)
+goto sw_update_select
+
+:: ------------------------------------------------------
+:: DRIVER UPDATE FUNCTIONS
+:: ------------------------------------------------------
+:driver_update
+chcp 65001 >nul
+cls
+echo ======================================================
+echo              KIEM TRA ^& CAP NHAT DRIVERS
+echo ======================================================
+echo.
+echo [!] Luu y: Chuc nang nay su dung Windows Update de kiem tra drivers.
+echo     Windows Update se tu dong kich hoat tam thoi.
+echo.
+echo [1] Kiem tra Drivers can cap nhat
+echo [2] Cap nhat Tat ca Drivers (Update All)
+echo [3] Cap nhat Drivers da chon (Update Selected)
+echo [0] Quay lai Menu chinh
+echo.
+set /p drv_choice="Chon chuc nang (0-3): "
+
+if "%drv_choice%"=="1" goto driver_check
+if "%drv_choice%"=="2" goto driver_update_all
+if "%drv_choice%"=="3" goto driver_update_select
+if "%drv_choice%"=="0" goto menu
+goto driver_update
+
+:driver_check
+cls
+echo ======================================================
+echo         KIEM TRA DRIVERS CAN CAP NHAT
+echo ======================================================
+echo.
+echo Dang bat Windows Update de kiem tra drivers...
+sc config wuauserv start= demand >nul 2>&1
+net start wuauserv >nul 2>&1
+echo.
+echo Dang quet cac driver co ban cap nhat...
+echo Vui long cho doi, qua trinh nay co the mat vai phut...
+echo.
+echo ------------------------------------------------------
+
+:: Su dung PowerShell de kiem tra drivers qua Windows Update
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$updateSession = New-Object -ComObject Microsoft.Update.Session; " ^
+    "$updateSearcher = $updateSession.CreateUpdateSearcher(); " ^
+    "$updateSearcher.Online = $true; " ^
+    "Write-Host 'Dang tim kiem cap nhat drivers...' -ForegroundColor Yellow; " ^
+    "try { " ^
+    "    $searchResult = $updateSearcher.Search('IsInstalled=0 and Type=''Driver'''); " ^
+    "    $updates = $searchResult.Updates; " ^
+    "    if ($updates.Count -eq 0) { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host 'KHONG CO DRIVER NAO CAN CAP NHAT' -ForegroundColor Green; " ^
+    "        Write-Host 'Tat ca drivers deu da duoc cap nhat phien ban moi nhat.' -ForegroundColor Green; " ^
+    "    } else { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host ('Tim thay ' + $updates.Count + ' driver(s) can cap nhat:') -ForegroundColor Cyan; " ^
+    "        Write-Host ''; " ^
+    "        $index = 1; " ^
+    "        foreach ($update in $updates) { " ^
+    "            Write-Host ('[' + $index + '] ' + $update.Title) -ForegroundColor White; " ^
+    "            Write-Host ('    - Ngay phat hanh: ' + $update.LastDeploymentChangeTime) -ForegroundColor Gray; " ^
+    "            Write-Host ('    - Kich thuoc: ' + [Math]::Round($update.MaxDownloadSize/1MB, 2) + ' MB') -ForegroundColor Gray; " ^
+    "            Write-Host ''; " ^
+    "            $index++; " ^
+    "        } " ^
+    "    } " ^
+    "} catch { " ^
+    "    Write-Host ''; " ^
+    "    Write-Host 'LOI: Khong the kiem tra drivers' -ForegroundColor Red; " ^
+    "    Write-Host ('Chi tiet: ' + $_.Exception.Message) -ForegroundColor Red; " ^
+    "}"
+
+echo.
+echo ------------------------------------------------------
+pause
+goto driver_update
+
+:driver_update_all
+cls
+echo ======================================================
+echo            CAP NHAT TAT CA DRIVERS
+echo ======================================================
+echo.
+set /p confirm_all="Ban co chac chan muon cap nhat TAT CA drivers? (Y/N): "
+
+if /i not "%confirm_all%"=="Y" (
+    echo Da huy thao tac.
+    pause
+    goto driver_update
+)
+
+echo.
+echo Dang bat Windows Update...
+sc config wuauserv start= demand >nul 2>&1
+net start wuauserv >nul 2>&1
+echo.
+echo Dang tai va cai dat tat ca drivers...
+echo QUA TRINH NAY CO THE MAT NHIEU PHUT, VUI LONG KHONG TAT!
+echo.
+echo ------------------------------------------------------
+
+:: Cap nhat tat ca drivers qua PowerShell
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$updateSession = New-Object -ComObject Microsoft.Update.Session; " ^
+    "$updateSearcher = $updateSession.CreateUpdateSearcher(); " ^
+    "$updateSearcher.Online = $true; " ^
+    "Write-Host 'Dang tim kiem drivers...' -ForegroundColor Yellow; " ^
+    "try { " ^
+    "    $searchResult = $updateSearcher.Search('IsInstalled=0 and Type=''Driver'''); " ^
+    "    $updates = $searchResult.Updates; " ^
+    "    if ($updates.Count -eq 0) { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host 'Khong co driver nao can cap nhat' -ForegroundColor Green; " ^
+    "    } else { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host ('Da tim thay ' + $updates.Count + ' driver(s). Bat dau cai dat...') -ForegroundColor Cyan; " ^
+    "        Write-Host ''; " ^
+    "        $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
+    "        $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
+    "        foreach ($update in $updates) { " ^
+    "            $updatesToDownload.Add($update) | Out-Null; " ^
+    "        } " ^
+    "        Write-Host 'Dang tai xuong drivers...' -ForegroundColor Yellow; " ^
+    "        $downloader = $updateSession.CreateUpdateDownloader(); " ^
+    "        $downloader.Updates = $updatesToDownload; " ^
+    "        $downloadResult = $downloader.Download(); " ^
+    "        Write-Host 'Hoan tat tai xuong' -ForegroundColor Green; " ^
+    "        Write-Host ''; " ^
+    "        foreach ($update in $updates) { " ^
+    "            if ($update.IsDownloaded) { " ^
+    "                $updatesToInstall.Add($update) | Out-Null; " ^
+    "            } " ^
+    "        } " ^
+    "        Write-Host 'Dang cai dat drivers...' -ForegroundColor Yellow; " ^
+    "        $installer = $updateSession.CreateUpdateInstaller(); " ^
+    "        $installer.Updates = $updatesToInstall; " ^
+    "        $installResult = $installer.Install(); " ^
+    "        Write-Host ''; " ^
+    "        Write-Host '=== KET QUA CAI DAT ===' -ForegroundColor Cyan; " ^
+    "        if ($installResult.RebootRequired) { " ^
+    "            Write-Host 'CAN KHOI DONG LAI MAY TINH de hoan tat cap nhat' -ForegroundColor Red; " ^
+    "        } else { " ^
+    "            Write-Host 'Cap nhat hoan tat. Khong can khoi dong lai.' -ForegroundColor Green; " ^
+    "        } " ^
+    "        Write-Host ('Tong so: ' + $updatesToInstall.Count + ' driver(s) da duoc cai dat.') -ForegroundColor Green; " ^
+    "    } " ^
+    "} catch { " ^
+    "    Write-Host ''; " ^
+    "    Write-Host 'LOI: Khong the cap nhat drivers' -ForegroundColor Red; " ^
+    "    Write-Host ('Chi tiet: ' + $_.Exception.Message) -ForegroundColor Red; " ^
+    "}"
+
+echo.
+echo ------------------------------------------------------
+pause
+goto driver_update
+
+:driver_update_select
+cls
+echo ======================================================
+echo          TUY CHON DRIVERS DE CAP NHAT
+echo ======================================================
+echo.
+echo Dang bat Windows Update...
+sc config wuauserv start= demand >nul 2>&1
+net start wuauserv >nul 2>&1
+echo.
+echo Dang quet danh sach drivers...
+echo.
+echo ------------------------------------------------------
+
+:: Tao file tam luu danh sach drivers
+set tempDriverList=%temp%\driverlist_%random%.txt
+
+:: Quet va luu danh sach drivers
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$updateSession = New-Object -ComObject Microsoft.Update.Session; " ^
+    "$updateSearcher = $updateSession.CreateUpdateSearcher(); " ^
+    "$updateSearcher.Online = $true; " ^
+    "try { " ^
+    "    $searchResult = $updateSearcher.Search('IsInstalled=0 and Type=''Driver'''); " ^
+    "    $updates = $searchResult.Updates; " ^
+    "    if ($updates.Count -eq 0) { " ^
+    "        Write-Host 'KHONG CO DRIVER NAO CAN CAP NHAT' -ForegroundColor Green; " ^
+    "        'NO_UPDATES' | Out-File -FilePath '%tempDriverList%' -Encoding UTF8; " ^
+    "    } else { " ^
+    "        Write-Host ('Tim thay ' + $updates.Count + ' driver(s):') -ForegroundColor Cyan; " ^
+    "        Write-Host ''; " ^
+    "        $index = 1; " ^
+    "        $driverData = @(); " ^
+    "        foreach ($update in $updates) { " ^
+    "            Write-Host ('[' + $index + '] ' + $update.Title) -ForegroundColor White; " ^
+    "            Write-Host ('    Kich thuoc: ' + [Math]::Round($update.MaxDownloadSize/1MB, 2) + ' MB') -ForegroundColor Gray; " ^
+    "            $driverData += [PSCustomObject]@{ " ^
+    "                Index = $index; " ^
+    "                Title = $update.Title; " ^
+    "                Size = $update.MaxDownloadSize; " ^
+    "                UpdateID = $update.Identity.UpdateID; " ^
+    "            }; " ^
+    "            $index++; " ^
+    "        } " ^
+    "        $driverData | Export-Csv -Path '%tempDriverList%' -NoTypeInformation -Encoding UTF8; " ^
+    "    } " ^
+    "} catch { " ^
+    "    Write-Host 'LOI: Khong the kiem tra drivers' -ForegroundColor Red; " ^
+    "    'ERROR' | Out-File -FilePath '%tempDriverList%' -Encoding UTF8; " ^
+    "}"
+
+echo.
+echo ------------------------------------------------------
+
+:: Kiem tra ket qua
+if not exist "%tempDriverList%" (
+    echo Loi khi kiem tra drivers.
+    pause
+    goto driver_update
+)
+
+:: Doc file ket qua
+set /p first_line=<"%tempDriverList%"
+if "%first_line%"=="NO_UPDATES" (
+    echo.
+    echo Tat ca drivers da duoc cap nhat!
+    del /f /q "%tempDriverList%" >nul 2>&1
+    pause
+    goto driver_update
+)
+
+if "%first_line%"=="ERROR" (
+    echo.
+    echo Da xay ra loi khi kiem tra drivers.
+    del /f /q "%tempDriverList%" >nul 2>&1
+    pause
+    goto driver_update
+)
+
+echo.
+echo Nhap cac so thu tu cach nhau boi dau phay (vi du: 1,3,5)
+echo Hoac nhap "ALL" de cap nhat tat ca
+echo Hoac nhap "0" de quay lai
+echo.
+set /p driver_selection="Lua chon cua ban: "
+
+if /i "%driver_selection%"=="0" (
+    del /f /q "%tempDriverList%" >nul 2>&1
+    goto driver_update
+)
+
+if /i "%driver_selection%"=="ALL" (
+    del /f /q "%tempDriverList%" >nul 2>&1
+    goto driver_update_all
+)
+
+echo.
+echo Dang cap nhat cac drivers da chon: %driver_selection%
+echo.
+
+:: Cap nhat drivers da chon
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+    "$selection = '%driver_selection%'; " ^
+    "$indices = $selection -split ',' | ForEach-Object { [int]$_.Trim() }; " ^
+    "$updateSession = New-Object -ComObject Microsoft.Update.Session; " ^
+    "$updateSearcher = $updateSession.CreateUpdateSearcher(); " ^
+    "$updateSearcher.Online = $true; " ^
+    "try { " ^
+    "    $searchResult = $updateSearcher.Search('IsInstalled=0 and Type=''Driver'''); " ^
+    "    $updates = $searchResult.Updates; " ^
+    "    $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
+    "    $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl; " ^
+    "    foreach ($idx in $indices) { " ^
+    "        if ($idx -le $updates.Count -and $idx -gt 0) { " ^
+    "            $update = $updates.Item($idx - 1); " ^
+    "            Write-Host ('Chon: ' + $update.Title) -ForegroundColor Cyan; " ^
+    "            $updatesToDownload.Add($update) | Out-Null; " ^
+    "        } " ^
+    "    } " ^
+    "    if ($updatesToDownload.Count -gt 0) { " ^
+    "        Write-Host ''; " ^
+    "        Write-Host 'Dang tai xuong drivers...' -ForegroundColor Yellow; " ^
+    "        $downloader = $updateSession.CreateUpdateDownloader(); " ^
+    "        $downloader.Updates = $updatesToDownload; " ^
+    "        $downloadResult = $downloader.Download(); " ^
+    "        Write-Host 'Hoan tat tai xuong' -ForegroundColor Green; " ^
+    "        Write-Host ''; " ^
+    "        foreach ($update in $updatesToDownload) { " ^
+    "            if ($update.IsDownloaded) { " ^
+    "                $updatesToInstall.Add($update) | Out-Null; " ^
+    "            } " ^
+    "        } " ^
+    "        Write-Host 'Dang cai dat drivers...' -ForegroundColor Yellow; " ^
+    "        $installer = $updateSession.CreateUpdateInstaller(); " ^
+    "        $installer.Updates = $updatesToInstall; " ^
+    "        $installResult = $installer.Install(); " ^
+    "        Write-Host ''; " ^
+    "        Write-Host '=== KET QUA ===' -ForegroundColor Cyan; " ^
+    "        if ($installResult.RebootRequired) { " ^
+    "            Write-Host 'CAN KHOI DONG LAI MAY TINH' -ForegroundColor Red; " ^
+    "        } else { " ^
+    "            Write-Host 'Hoan tat. Khong can khoi dong lai.' -ForegroundColor Green; " ^
+    "        } " ^
+    "        Write-Host ('Da cai dat: ' + $updatesToInstall.Count + ' driver(s).') -ForegroundColor Green; " ^
+    "    } else { " ^
+    "        Write-Host 'Khong co driver nao duoc chon' -ForegroundColor Yellow; " ^
+    "    } " ^
+    "} catch { " ^
+    "    Write-Host ('LOI: ' + $_.Exception.Message) -ForegroundColor Red; " ^
+    "}"
+
+del /f /q "%tempDriverList%" >nul 2>&1
+
+echo.
+echo ------------------------------------------------------
+pause
+goto driver_update
