@@ -31,14 +31,15 @@ function Clean-TempFiles {
     # Clean user temp
     try {
         Get-ChildItem $env:TEMP -Directory -ErrorAction SilentlyContinue | 
-            Where-Object { $_.FullName -ne $origDir } | 
-            Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+        Where-Object { $_.FullName -ne $origDir } | 
+        Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
         
         Get-ChildItem $env:TEMP -File -ErrorAction SilentlyContinue | 
-            Remove-Item -Force -ErrorAction SilentlyContinue
+        Remove-Item -Force -ErrorAction SilentlyContinue
         
         Write-Host "[OK] User Temp cleaned!" -ForegroundColor Green
-    } catch {
+    }
+    catch {
         Write-Host "[WARNING] Some temp files could not be deleted (in use)" -ForegroundColor Yellow
     }
     
@@ -46,7 +47,8 @@ function Clean-TempFiles {
     try {
         Remove-Item "C:\Windows\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
         Write-Host "[OK] Windows Temp cleaned!" -ForegroundColor Green
-    } catch {
+    }
+    catch {
         Write-Host "[WARNING] Some Windows temp files could not be deleted" -ForegroundColor Yellow
     }
     
@@ -54,19 +56,33 @@ function Clean-TempFiles {
     try {
         Remove-Item "C:\Windows\Prefetch\*" -Force -ErrorAction SilentlyContinue
         Write-Host "[OK] Prefetch cleaned!" -ForegroundColor Green
-    } catch {
+    }
+    catch {
         Write-Host "[WARNING] Prefetch could not be cleaned" -ForegroundColor Yellow
     }
 }
 
-function Clear-RecycleBin {
+function Invoke-RecycleBinCleanup {
     Write-Host "`n[+] Emptying Recycle Bin..." -ForegroundColor Cyan
     
     try {
-        Clear-RecycleBin -Force -ErrorAction Stop
+        # Try built-in cmdlet with silent error handling (handles "path not found" quirks)
+        Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+        
+        # Manual deep clean for each drive to ensure thoroughness and handle edge cases
+        $drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Root -match '^[a-zA-Z]:\\$' }
+        foreach ($drive in $drives) {
+            $binPath = Join-Path $drive.Root '$Recycle.Bin'
+            if (Test-Path $binPath) {
+                # Force delete everything inside $Recycle.Bin
+                Remove-Item -Path "$binPath\*" -Recurse -Force -ErrorAction SilentlyContinue 2>$null
+            }
+        }
+        
         Write-Host "[OK] Recycle Bin emptied!" -ForegroundColor Green
-    } catch {
-        Write-Host "[ERROR] Could not empty Recycle Bin: $_" -ForegroundColor Red
+    }
+    catch {
+        Write-Host "[WARNING] Could not completely empty Recycle Bin: $_" -ForegroundColor Yellow
     }
 }
 
@@ -74,14 +90,15 @@ function Clear-SystemLogs {
     Write-Host "`n[+] Clearing System Event Logs..." -ForegroundColor Cyan
     
     $logs = Get-WinEvent -ListLog * -ErrorAction SilentlyContinue | 
-            Where-Object { $_.RecordCount -gt 0 }
+    Where-Object { $_.RecordCount -gt 0 }
     
     $cleared = 0
     foreach ($log in $logs) {
         try {
             wevtutil.exe cl $log.LogName 2>$null
             $cleared++
-        } catch {
+        }
+        catch {
             # Silently continue
         }
     }
@@ -95,7 +112,8 @@ function Start-DiskCleanup {
     try {
         Start-Process cleanmgr -ArgumentList "/sagerun:1" -Wait -NoNewWindow
         Write-Host "[OK] Disk Cleanup completed!" -ForegroundColor Green
-    } catch {
+    }
+    catch {
         Write-Host "[ERROR] Could not run Disk Cleanup: $_" -ForegroundColor Red
     }
 }
@@ -118,8 +136,8 @@ function Remove-EmptyFolders {
             Write-Host "  Scanning: $root" -ForegroundColor Gray
             
             Get-ChildItem -Path $root -Directory -Recurse -Force -ErrorAction SilentlyContinue |
-                Where-Object { (Get-ChildItem $_.FullName -Force -ErrorAction SilentlyContinue).Count -eq 0 } |
-                ForEach-Object { $emptyFolders += $_.FullName }
+            Where-Object { (Get-ChildItem $_.FullName -Force -ErrorAction SilentlyContinue).Count -eq 0 } |
+            ForEach-Object { $emptyFolders += $_.FullName }
         }
     }
     
@@ -143,15 +161,18 @@ function Remove-EmptyFolders {
                         Remove-Item $folder -Force -Recurse -ErrorAction Stop
                         $removed++
                     }
-                } catch {
+                }
+                catch {
                     # Silently continue
                 }
             }
             Write-Host "[OK] Removed $removed empty folders!" -ForegroundColor Green
-        } else {
+        }
+        else {
             Write-Host "[SKIP] Skipped empty folder removal" -ForegroundColor Yellow
         }
-    } else {
+    }
+    else {
         Write-Host "[OK] No empty folders found!" -ForegroundColor Green
     }
 }
@@ -164,10 +185,12 @@ function Remove-BrokenShortcuts {
     if (Test-Path $scriptPath) {
         try {
             & $scriptPath
-        } catch {
+        }
+        catch {
             Write-Host "[ERROR] Could not run Remove-BrokenShortcuts.ps1: $_" -ForegroundColor Red
         }
-    } else {
+    }
+    else {
         Write-Host "[WARNING] Remove-BrokenShortcuts.ps1 not found in script directory" -ForegroundColor Yellow
     }
 }
@@ -179,14 +202,15 @@ Write-Host "======================================================"
 
 if ($All) {
     Clean-TempFiles
-    Clear-RecycleBin
+    Invoke-RecycleBinCleanup
     Clear-SystemLogs
     Start-DiskCleanup
     Remove-EmptyFolders
     Remove-BrokenShortcuts
-} else {
+}
+else {
     if ($TempFiles) { Clean-TempFiles }
-    if ($RecycleBin) { Clear-RecycleBin }
+    if ($RecycleBin) { Invoke-RecycleBinCleanup }
     if ($SystemLogs) { Clear-SystemLogs }
     if ($DiskCleanup) { Start-DiskCleanup }
     if ($EmptyFolders) { Remove-EmptyFolders }

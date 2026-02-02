@@ -36,7 +36,8 @@ function Set-RegistryValue {
         
         Write-Host "[OK] $Description" -ForegroundColor Green
         return $true
-    } catch {
+    }
+    catch {
         Write-Host "[ERROR] Failed to set $Description : $($_.Exception.Message)" -ForegroundColor Red
         return $false
     }
@@ -49,45 +50,45 @@ function Optimize-SystemResponsiveness {
     
     $optimizations = @(
         @{
-            Path = 'HKCU:\Control Panel\Desktop'
-            Name = 'WaitToKillAppTimeout'
-            Value = '2000'
-            Type = 'String'
-            Description = 'Reduce app close timeout (20s → 2s)'
+            Path        = 'HKCU:\Control Panel\Desktop'
+            Name        = 'WaitToKillAppTimeout'
+            Value       = '2000'
+            Type        = 'String'
+            Description = 'Reduce app close timeout (20s -> 2s)'
         },
         @{
-            Path = 'HKCU:\Control Panel\Desktop'
-            Name = 'MenuShowDelay'
-            Value = '0'
-            Type = 'String'
-            Description = 'Remove menu delay (400ms → 0ms)'
+            Path        = 'HKCU:\Control Panel\Desktop'
+            Name        = 'MenuShowDelay'
+            Value       = '0'
+            Type        = 'String'
+            Description = 'Remove menu delay (400ms -> 0ms)'
         },
         @{
-            Path = 'HKCU:\Control Panel\Desktop'
-            Name = 'AutoEndTasks'
-            Value = '1'
-            Type = 'String'
+            Path        = 'HKCU:\Control Panel\Desktop'
+            Name        = 'AutoEndTasks'
+            Value       = '1'
+            Type        = 'String'
             Description = 'Auto-close unresponsive apps on shutdown'
         },
         @{
-            Path = 'HKCU:\Control Panel\Mouse'
-            Name = 'MouseHoverTime'
-            Value = '10'
-            Type = 'String'
+            Path        = 'HKCU:\Control Panel\Mouse'
+            Name        = 'MouseHoverTime'
+            Value       = '10'
+            Type        = 'String'
             Description = 'Increase mouse/keyboard responsiveness'
         },
         @{
-            Path = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile'
-            Name = 'NetworkThrottlingIndex'
-            Value = '4294967295'
-            Type = 'DWord'
+            Path        = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile'
+            Name        = 'NetworkThrottlingIndex'
+            Value       = '4294967295'
+            Type        = 'DWord'
             Description = 'Optimize network throttling'
         },
         @{
-            Path = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile'
-            Name = 'SystemResponsiveness'
-            Value = '0'
-            Type = 'DWord'
+            Path        = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile'
+            Name        = 'SystemResponsiveness'
+            Value       = '0'
+            Type        = 'DWord'
             Description = 'Maximize system responsiveness'
         }
     )
@@ -110,7 +111,8 @@ function Optimize-SystemResponsiveness {
     
     if ($successCount -eq $totalCount) {
         Write-Host "`n[SUCCESS] All registry optimizations applied!" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "`n[WARNING] Some optimizations failed. Run as Administrator." -ForegroundColor Yellow
     }
     
@@ -124,37 +126,38 @@ function Show-CurrentSettings {
     
     $settings = @(
         @{
-            Path = 'HKCU:\Control Panel\Desktop'
-            Name = 'WaitToKillAppTimeout'
+            Path        = 'HKCU:\Control Panel\Desktop'
+            Name        = 'WaitToKillAppTimeout'
             Description = 'App Close Timeout'
-            Default = '20000'
-            Optimal = '2000'
+            Default     = '20000'
+            Optimal     = '2000'
         },
         @{
-            Path = 'HKCU:\Control Panel\Desktop'
-            Name = 'MenuShowDelay'
+            Path        = 'HKCU:\Control Panel\Desktop'
+            Name        = 'MenuShowDelay'
             Description = 'Menu Show Delay'
-            Default = '400'
-            Optimal = '0'
+            Default     = '400'
+            Optimal     = '0'
         },
         @{
-            Path = 'HKCU:\Control Panel\Desktop'
-            Name = 'AutoEndTasks'
+            Path        = 'HKCU:\Control Panel\Desktop'
+            Name        = 'AutoEndTasks'
             Description = 'Auto End Tasks'
-            Default = '0'
-            Optimal = '1'
+            Default     = '0'
+            Optimal     = '1'
         }
     )
     
     foreach ($setting in $settings) {
         try {
             $currentValue = Get-ItemProperty -Path $setting.Path -Name $setting.Name -ErrorAction SilentlyContinue |
-                           Select-Object -ExpandProperty $setting.Name
+            Select-Object -ExpandProperty $setting.Name
             
             $status = if ($currentValue -eq $setting.Optimal) {
                 "[OPTIMIZED]"
                 $color = "Green"
-            } else {
+            }
+            else {
                 "[NOT OPTIMIZED]"
                 $color = "Yellow"
             }
@@ -162,7 +165,8 @@ function Show-CurrentSettings {
             Write-Host "$($setting.Description): " -NoNewline
             Write-Host "$status " -ForegroundColor $color -NoNewline
             Write-Host "Current: $currentValue, Optimal: $($setting.Optimal)"
-        } catch {
+        }
+        catch {
             Write-Host "$($setting.Description): [NOT SET]" -ForegroundColor Red
         }
     }
@@ -191,11 +195,13 @@ function Backup-RegistrySettings {
         if (Test-Path $backupPath) {
             Write-Host "[OK] Registry backup created: $backupPath" -ForegroundColor Green
             return $true
-        } else {
+        }
+        else {
             Write-Host "[WARNING] Could not create backup" -ForegroundColor Yellow
             return $false
         }
-    } catch {
+    }
+    catch {
         Write-Host "[ERROR] Backup failed: $($_.Exception.Message)" -ForegroundColor Red
         return $false
     }
@@ -229,7 +235,8 @@ switch ($choice) {
         
         if ($confirm -eq 'Y' -or $confirm -eq 'y') {
             Optimize-SystemResponsiveness
-        } else {
+        }
+        else {
             Write-Host "`nOptimization cancelled." -ForegroundColor Yellow
         }
     }
@@ -241,10 +248,12 @@ switch ($choice) {
         if ($confirm -eq 'Y' -or $confirm -eq 'y') {
             if (Backup-RegistrySettings) {
                 Optimize-SystemResponsiveness
-            } else {
+            }
+            else {
                 Write-Host "`nOptimization cancelled due to backup failure." -ForegroundColor Red
             }
-        } else {
+        }
+        else {
             Write-Host "`nOptimization cancelled." -ForegroundColor Yellow
         }
     }

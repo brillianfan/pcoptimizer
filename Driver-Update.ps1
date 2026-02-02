@@ -12,34 +12,61 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 function Enable-WindowsUpdate {
-    Write-Host "`nEnabling Windows Update service..." -ForegroundColor Cyan
+    Write-Host "`n[+] Initializing Windows Update service..." -ForegroundColor Cyan
     try {
-        sc.exe config wuauserv start= demand | Out-Null
-        net start wuauserv 2>&1 | Out-Null
-        Write-Host "[OK] Windows Update service enabled" -ForegroundColor Green
-        Start-Sleep -Seconds 2
-    } catch {
-        Write-Host "[WARNING] Could not enable Windows Update" -ForegroundColor Yellow
+        $service = Get-Service -Name wuauserv -ErrorAction SilentlyContinue
+        if ($null -eq $service) {
+            Write-Host "[ERROR] Windows Update service (wuauserv) not found!" -ForegroundColor Red
+            return $false
+        }
+
+        if ($service.StartType -eq 'Disabled') {
+            Write-Host "Service is disabled. Enabling..." -ForegroundColor Yellow
+            sc.exe config wuauserv start= demand | Out-Null
+        }
+
+        if ($service.Status -ne 'Running') {
+            Write-Host "Starting service..." -ForegroundColor Yellow
+            Start-Service -Name wuauserv -ErrorAction Stop
+        }
+
+        Write-Host "[OK] Windows Update service is ready" -ForegroundColor Green
+        return $true
+    }
+    catch {
+        Write-Host "[ERROR] Failed to prepare Windows Update service: $($_.Exception.Message)" -ForegroundColor Red
+        return $false
     }
 }
 
 function Get-AvailableDrivers {
-    Write-Host "`nSearching for available driver updates..." -ForegroundColor Yellow
-    Write-Host "This may take several minutes, please wait..." -ForegroundColor Gray
-    Write-Host ""
+    Write-Host "`n[+] Searching for available driver updates..." -ForegroundColor Cyan
+    Write-Host "    This process uses official Windows Update servers." -ForegroundColor Gray
+    Write-Host "    It may take 1-3 minutes depending on your connection..." -ForegroundColor Gray
     
     try {
+        Write-Host "    Initializing update session..." -ForegroundColor Gray
         $updateSession = New-Object -ComObject Microsoft.Update.Session
+        if ($null -eq $updateSession) { 
+            throw "Could not create Microsoft.Update.Session COM object" 
+        }
+
         $updateSearcher = $updateSession.CreateUpdateSearcher()
         $updateSearcher.Online = $true
         
+        Write-Host "    Querying update database..." -ForegroundColor Gray
         $searchResult = $updateSearcher.Search("IsInstalled=0 and Type='Driver'")
         $updates = $searchResult.Updates
         
+        Write-Host "    Search completed!" -ForegroundColor Gray
         return $updates
         
-    } catch {
-        Write-Host "`n[ERROR] Could not search for drivers: $($_.Exception.Message)" -ForegroundColor Red
+    }
+    catch {
+        Write-Host "`n[ERROR] Driver search failed: $($_.Exception.Message)" -ForegroundColor Red
+        if ($_.Exception.Message -match "0x8024402C" -or $_.Exception.Message -match "0x80072EFD") {
+            Write-Host "    (Hint: Check your internet connection or firewall settings)" -ForegroundColor Yellow
+        }
         return $null
     }
 }
@@ -49,18 +76,22 @@ function Show-AvailableDrivers {
     Write-Host "         CHECK AVAILABLE DRIVER UPDATES" -ForegroundColor Cyan
     Write-Host "======================================================`n" -ForegroundColor Cyan
     
-    Enable-WindowsUpdate
+    if (-not (Enable-WindowsUpdate)) {
+        return
+    }
     
     $updates = Get-AvailableDrivers
     
     if ($null -eq $updates) {
+        Write-Host "[INFO] Driver search could not be completed at this time." -ForegroundColor Yellow
         return
     }
     
     if ($updates.Count -eq 0) {
         Write-Host "`n[SUCCESS] NO DRIVERS NEED UPDATE" -ForegroundColor Green
         Write-Host "All drivers are up to date!`n" -ForegroundColor Green
-    } else {
+    }
+    else {
         Write-Host "Found $($updates.Count) driver(s) needing update:`n" -ForegroundColor Cyan
         
         $index = 1
@@ -88,19 +119,19 @@ function Install-AllDrivers {
         return
     }
     
-    Enable-WindowsUpdate
+    if (-not (Enable-WindowsUpdate)) {
+        return
+    }
     
     Write-Host "`nDownloading and installing drivers..." -ForegroundColor Cyan
     Write-Host "THIS MAY TAKE SEVERAL MINUTES, DO NOT CLOSE THIS WINDOW!" -ForegroundColor Red
     Write-Host ""
     
     try {
-        $updateSession = New-Object -ComObject Microsoft.Update.Session
-        $updateSearcher = $updateSession.CreateUpdateSearcher()
-        $updateSearcher.Online = $true
+        $updates = Get-AvailableDrivers
+        if ($null -eq $updates) { return }
         
-        $searchResult = $updateSearcher.Search("IsInstalled=0 and Type='Driver'")
-        $updates = $searchResult.Updates
+        $updateSession = New-Object -ComObject Microsoft.Update.Session
         
         if ($updates.Count -eq 0) {
             Write-Host "[INFO] No driver updates available" -ForegroundColor Green
@@ -146,14 +177,16 @@ function Install-AllDrivers {
         if ($installResult.RebootRequired) {
             Write-Host "[IMPORTANT] RESTART REQUIRED!" -ForegroundColor Red
             Write-Host "Please restart your computer to complete driver installation.`n" -ForegroundColor Yellow
-        } else {
+        }
+        else {
             Write-Host "[SUCCESS] Installation completed!" -ForegroundColor Green
             Write-Host "No restart required.`n" -ForegroundColor Green
         }
         
         Write-Host "Total installed: $($updatesToInstall.Count) driver(s)" -ForegroundColor Green
         
-    } catch {
+    }
+    catch {
         Write-Host "`n[ERROR] Driver update failed: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
@@ -163,11 +196,14 @@ function Install-SelectedDrivers {
     Write-Host "         SELECT DRIVERS TO UPDATE" -ForegroundColor Cyan
     Write-Host "======================================================`n" -ForegroundColor Cyan
     
-    Enable-WindowsUpdate
+    if (-not (Enable-WindowsUpdate)) {
+        return
+    }
     
     $updates = Get-AvailableDrivers
     
     if ($null -eq $updates) {
+        Write-Host "[INFO] Driver search could not be completed at this time." -ForegroundColor Yellow
         return
     }
     
@@ -247,16 +283,19 @@ function Install-SelectedDrivers {
             
             if ($installResult.RebootRequired) {
                 Write-Host "[IMPORTANT] RESTART REQUIRED!" -ForegroundColor Red
-            } else {
+            }
+            else {
                 Write-Host "[SUCCESS] Installation completed!" -ForegroundColor Green
             }
             
             Write-Host "Installed: $($updatesToInstall.Count) driver(s)" -ForegroundColor Green
-        } else {
+        }
+        else {
             Write-Host "`nNo drivers selected." -ForegroundColor Yellow
         }
         
-    } catch {
+    }
+    catch {
         Write-Host "`n[ERROR] $($_.Exception.Message)" -ForegroundColor Red
     }
 }
