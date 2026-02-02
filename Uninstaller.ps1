@@ -20,30 +20,33 @@ function Get-InstalledApplications {
     
     $apps = foreach ($path in $paths) {
         Get-ItemProperty $path -ErrorAction SilentlyContinue |
-            Where-Object { $_.DisplayName -and ($_.UninstallString -or $_.QuietUninstallString) } |
-            ForEach-Object {
-                # Infer install location if missing
-                $location = if ($_.InstallLocation) { 
-                    $_.InstallLocation 
-                } else {
-                    $uninstStr = $_.UninstallString
-                    if ($uninstStr -match '"([^"]+)"') {
-                        Split-Path $Matches[1] -Parent
-                    } elseif ($uninstStr -match '([^\s]+\.exe)') {
-                        Split-Path $Matches[1] -Parent
-                    } else {
-                        ''
-                    }
+        Where-Object { $_.DisplayName -and ($_.UninstallString -or $_.QuietUninstallString) } |
+        ForEach-Object {
+            # Infer install location if missing
+            $location = if ($_.InstallLocation) { 
+                $_.InstallLocation 
+            }
+            else {
+                $uninstStr = $_.UninstallString
+                if ($uninstStr -match '"([^"]+)"') {
+                    Split-Path $Matches[1] -Parent
                 }
-                
-                [PSCustomObject]@{
-                    Name = [string]$_.DisplayName
-                    UninstallString = [string]$_.UninstallString
-                    QuietUninstallString = [string]$_.QuietUninstallString
-                    InstallLocation = [string]$location
-                    Publisher = if ($_.Publisher) { [string]$_.Publisher } else { 'Unknown' }
+                elseif ($uninstStr -match '([^\s]+\.exe)') {
+                    Split-Path $Matches[1] -Parent
+                }
+                else {
+                    ''
                 }
             }
+                
+            [PSCustomObject]@{
+                Name                 = [string]$_.DisplayName
+                UninstallString      = [string]$_.UninstallString
+                QuietUninstallString = [string]$_.QuietUninstallString
+                InstallLocation      = [string]$location
+                Publisher            = if ($_.Publisher) { [string]$_.Publisher } else { 'Unknown' }
+            }
+        }
     }
     
     return $apps | Sort-Object Name -Unique
@@ -88,7 +91,8 @@ function Invoke-Uninstall {
     
     $uninstallCmd = if ($app.QuietUninstallString) { 
         $app.QuietUninstallString 
-    } else { 
+    }
+    else { 
         $app.UninstallString 
     }
     
@@ -100,13 +104,16 @@ function Invoke-Uninstall {
         if ($uninstallCmd -match '"([^"]+)"(.*)') {
             $filePath = $Matches[1]
             $arguments = $Matches[2].Trim()
-        } elseif ($uninstallCmd -match '^([^\s]+\.exe|[^\s]+\.msi)\s+(.*)$') {
+        }
+        elseif ($uninstallCmd -match '^([^\s]+\.exe|[^\s]+\.msi)\s+(.*)$') {
             $filePath = $Matches[1]
             $arguments = $Matches[2].Trim()
-        } elseif ($uninstallCmd -match '^msiexec(.*)$') {
+        }
+        elseif ($uninstallCmd -match '^msiexec(.*)$') {
             $filePath = 'msiexec.exe'
             $arguments = $Matches[1].Trim()
-        } else {
+        }
+        else {
             $filePath = $uninstallCmd
         }
         
@@ -114,13 +121,15 @@ function Invoke-Uninstall {
         
         if ($arguments) {
             Start-Process -FilePath $filePath -ArgumentList $arguments -Wait -NoNewWindow -ErrorAction Stop
-        } else {
+        }
+        else {
             Start-Process -FilePath $filePath -Wait -NoNewWindow -ErrorAction Stop
         }
         
         Write-Host "`n[OK] Uninstall completed successfully!" -ForegroundColor Green
         
-    } catch {
+    }
+    catch {
         Write-Host "`n[ERROR] Uninstall failed: $($_.Exception.Message)" -ForegroundColor Red
         Write-Host "Please try uninstalling manually via Control Panel." -ForegroundColor Yellow
     }
@@ -130,27 +139,24 @@ function Remove-Leftovers {
     param($app)
     
     Write-Host "`n======================================================" -ForegroundColor Cyan
-    Write-Host "           SCANNING FOR LEFTOVERS" -ForegroundColor Cyan
+    Write-Host "           ADVANCED LEFTOVER SCANNING" -ForegroundColor Cyan
     Write-Host "======================================================`n" -ForegroundColor Cyan
     
     Write-Host "Application: $($app.Name)" -ForegroundColor White
     Write-Host "Publisher:   $($app.Publisher)" -ForegroundColor White
-    Write-Host "`nScanning for leftover files..." -ForegroundColor Cyan
     
-    $leftovers = @()
+    # 1. SCAN DIRECTORIES
+    Write-Host "`n[+] Searching for leftover folders..." -ForegroundColor Cyan
     
-    # Check install location
-    if ($app.InstallLocation -and (Test-Path $app.InstallLocation)) {
-        $leftovers += $app.InstallLocation
-        Write-Host "[FOUND] $($app.InstallLocation)" -ForegroundColor Yellow
+    $searchTerms = @()
+    # Add app name and publisher name as search terms
+    $searchTerms += ($app.Name -replace '["\^()\[\]{}]', '').Split(' ') | Where-Object { $_.Length -gt 3 }
+    if ($app.Publisher -and $app.Publisher -ne 'Unknown') {
+        $searchTerms += ($app.Publisher -replace '["\^()\[\]{}]', '').Split(' ') | Where-Object { $_.Length -gt 3 }
     }
+    $searchTerms = $searchTerms | Select-Object -Unique
     
-    # Sanitize search names
-    $searchName = $app.Name -replace '["\^()]', ''
-    $searchPublisher = $app.Publisher -replace '["\^()]', ''
-    
-    # Check common locations
-    $locations = @(
+    $commonLocations = @(
         $env:APPDATA,
         $env:LOCALAPPDATA,
         'C:\ProgramData',
@@ -158,108 +164,94 @@ function Remove-Leftovers {
         'C:\Program Files (x86)'
     )
     
-    foreach ($location in $locations) {
-        if (Test-Path $location) {
-            # Search by app name
-            if ($searchName) {
-                $path = Join-Path $location $searchName
-                if (Test-Path $path) {
-                    $leftovers += $path
-                    Write-Host "[FOUND] $path" -ForegroundColor Yellow
-                }
-            }
-            
-            # Search by publisher
-            if ($searchPublisher -and $searchPublisher -ne 'Unknown') {
-                $path = Join-Path $location $searchPublisher
-                if (Test-Path $path) {
-                    $leftovers += $path
-                    Write-Host "[FOUND] $path" -ForegroundColor Yellow
-                }
-            }
-        }
+    $foundFolders = @()
+    
+    # Add known install location if it still exists
+    if ($app.InstallLocation -and (Test-Path $app.InstallLocation)) {
+        $foundFolders += $app.InstallLocation
     }
     
-    # Remove duplicates
-    $leftovers = $leftovers | Select-Object -Unique
-    
-    Write-Host "`n======================================================" -ForegroundColor Cyan
-    Write-Host "           LEFTOVER SCAN RESULTS" -ForegroundColor Cyan
-    Write-Host "======================================================`n" -ForegroundColor Cyan
-    
-    if ($leftovers.Count -eq 0) {
-        Write-Host "No leftovers found!" -ForegroundColor Green
-        return
-    }
-    
-    Write-Host "Found $($leftovers.Count) leftover folder(s):`n" -ForegroundColor Yellow
-    $leftovers | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
-    
-    Write-Host "`nDelete ALL these folders? (Y/N): " -ForegroundColor Yellow -NoNewline
-    $confirm = Read-Host
-    
-    if ($confirm -eq 'Y' -or $confirm -eq 'y') {
-        Write-Host ""
-        foreach ($folder in $leftovers) {
-            if (Test-Path $folder) {
-                Write-Host "Deleting: $folder" -ForegroundColor Cyan
-                try {
-                    Remove-Item $folder -Recurse -Force -ErrorAction Stop
-                    Write-Host "[OK] Deleted successfully" -ForegroundColor Green
-                } catch {
-                    Write-Host "[!] Could not delete: $folder" -ForegroundColor Red
-                }
-            }
-        }
-    } else {
-        Write-Host "`nLeftover cleanup cancelled." -ForegroundColor Yellow
-    }
-    
-    # Scan Registry
-    Write-Host "`n======================================================" -ForegroundColor Cyan
-    Write-Host "           SCANNING REGISTRY" -ForegroundColor Cyan
-    Write-Host "======================================================`n" -ForegroundColor Cyan
-    
-    $regKeys = @()
-    $regPaths = @(
-        'HKLM:\SOFTWARE',
-        'HKLM:\SOFTWARE\WOW6432Node',
-        'HKCU:\Software'
-    )
-    
-    foreach ($regPath in $regPaths) {
-        try {
-            Get-ChildItem $regPath -ErrorAction SilentlyContinue |
-                Where-Object { 
-                    $_.PSChildName -eq $searchName -or 
-                    ($searchPublisher -and $_.PSChildName -eq $searchPublisher) 
-                } |
-                ForEach-Object {
-                    $regKeys += $_.PSPath
-                    Write-Host "[FOUND REG] $($_.PSPath)" -ForegroundColor Yellow
-                }
-        } catch {
-            # Silently continue
-        }
-    }
-    
-    if ($regKeys.Count -gt 0) {
-        Write-Host "`nDelete these registry keys? (Y/N): " -ForegroundColor Yellow -NoNewline
-        $confirmReg = Read-Host
-        
-        if ($confirmReg -eq 'Y' -or $confirmReg -eq 'y') {
-            Write-Host ""
-            foreach ($key in $regKeys) {
-                if (Test-Path $key) {
-                    try {
-                        Remove-Item $key -Recurse -Force -ErrorAction Stop
-                        Write-Host "[OK] Deleted registry: $key" -ForegroundColor Green
-                    } catch {
-                        Write-Host "[ERROR] Could not delete: $key" -ForegroundColor Red
+    # Wildcard search in common locations
+    foreach ($loc in $commonLocations) {
+        if (Test-Path $loc) {
+            foreach ($term in $searchTerms) {
+                Get-ChildItem -Path "$loc\*$term*" -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+                    # Safety check: Avoid adding the root common locations or critical system folders
+                    if ($_.FullName -notin $commonLocations -and $_.FullName -notmatch 'Windows|System32|Users$') {
+                        $foundFolders += $_.FullName
                     }
                 }
             }
         }
+    }
+    
+    $foundFolders = $foundFolders | Select-Object -Unique
+    
+    if ($foundFolders.Count -gt 0) {
+        Write-Host "Found $($foundFolders.Count) possible leftover folder(s):" -ForegroundColor Yellow
+        $foundFolders | ForEach-Object { Write-Host "  [DIR] $_" -ForegroundColor Gray }
+        
+        Write-Host "`nDelete these folders? (Y/N): " -ForegroundColor Yellow -NoNewline
+        if ((Read-Host) -match '^[Yy]$') {
+            foreach ($folder in $foundFolders) {
+                try {
+                    if (Test-Path $folder) {
+                        Remove-Item $folder -Recurse -Force -ErrorAction Stop
+                        Write-Host "[OK] Deleted: $folder" -ForegroundColor Green
+                    }
+                }
+                catch {
+                    Write-Host "[!] Access Denied: $folder" -ForegroundColor Red
+                }
+            }
+        }
+    }
+    else {
+        Write-Host "No leftover folders found." -ForegroundColor Gray
+    }
+    
+    # 2. SCAN REGISTRY
+    Write-Host "`n[+] Searching for leftover Registry keys..." -ForegroundColor Cyan
+    
+    $regHives = @('HKLM:\SOFTWARE', 'HKLM:\SOFTWARE\WOW6432Node', 'HKCU:\Software')
+    $foundKeys = @()
+    
+    foreach ($hive in $regHives) {
+        if (Test-Path $hive) {
+            foreach ($term in $searchTerms) {
+                Get-ChildItem -Path $hive -ErrorAction SilentlyContinue | Where-Object { $_.Name -match $term } | ForEach-Object {
+                    # Safety check for common high-level keys
+                    if ($_.PSChildName -notmatch 'Microsoft|Windows|Classes|Clients') {
+                        $foundKeys += $_.PSPath
+                    }
+                }
+            }
+        }
+    }
+    
+    $foundKeys = $foundKeys | Select-Object -Unique
+    
+    if ($foundKeys.Count -gt 0) {
+        Write-Host "`nFound $($foundKeys.Count) possible Registry key(s):" -ForegroundColor Yellow
+        $foundKeys | ForEach-Object { Write-Host "  [REG] $_" -ForegroundColor Gray }
+        
+        Write-Host "`nDelete these Registry keys? (Y/N): " -ForegroundColor Yellow -NoNewline
+        if ((Read-Host) -match '^[Yy]$') {
+            foreach ($key in $foundKeys) {
+                try {
+                    if (Test-Path $key) {
+                        Remove-Item $key -Recurse -Force -ErrorAction Stop
+                        Write-Host "[OK] Deleted: $key" -ForegroundColor Green
+                    }
+                }
+                catch {
+                    Write-Host "[!] Failed to delete Registry key: $key" -ForegroundColor Red
+                }
+            }
+        }
+    }
+    else {
+        Write-Host "No leftover Registry keys found." -ForegroundColor Gray
     }
 }
 
@@ -303,11 +295,13 @@ do {
             
             Write-Host "`nPress any key to continue..." -ForegroundColor Gray
             $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
-        } else {
+        }
+        else {
             Write-Host "`nInvalid selection!" -ForegroundColor Red
             Start-Sleep -Seconds 2
         }
-    } catch {
+    }
+    catch {
         Write-Host "`nInvalid input!" -ForegroundColor Red
         Start-Sleep -Seconds 2
     }

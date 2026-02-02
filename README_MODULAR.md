@@ -58,9 +58,11 @@ PCOptimizer/
 ### 🗑️ **Uninstaller** (Uninstaller.ps1)
 - List installed applications from Registry
 - Smart uninstall with command parsing
-- Leftover scanner (AppData, ProgramData, Registry)
+- Advanced leftover scanner (AppData, ProgramData, Registry) using wildcards
+- Pattern-matching Registry cleanup
+- Safety filters for system paths
 - Interactive cleanup confirmation
-- Publisher and location detection
+
 
 **Usage:**
 ```powershell
