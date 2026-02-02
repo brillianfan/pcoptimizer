@@ -2,15 +2,16 @@
 
 ## 📁 Files bạn vừa nhận được:
 
-1. **README.md** - File mô tả chính của dự án
-2. **LICENSE** - Giấy phép MIT
-3. **SECURITY.md** - Chính sách bảo mật
-4. **CONTRIBUTING.md** - Hướng dẫn đóng góp
-5. **.gitignore** - Loại trừ files không cần thiết
-6. **VIRUSTOTAL_GUIDE.md** - Hướng dẫn quét VirusTotal chi tiết
-7. **VIRUSTOTAL_RESULTS.md** - Kết quả quét VirusTotal
-8. **PCOptimizer.bat** - File thực thi chính
-9. **Remove-BrokenShortcuts.ps1** - Helper script
+1.  **README.md** - File mô tả chính
+2.  **PCOptimizer.bat** - Launcher chính (Batch)
+3.  **Deep-JunkClean.ps1** - Module dọn rác
+4.  **Optimize-Registry.ps1** - Module tối ưu Registry
+5.  **Driver-Update.ps1** - Module cập nhật Driver
+6.  **Software-Health.ps1** - Module cập nhật phần mềm
+7.  **Uninstaller.ps1** - Module gỡ ứng dụng
+8.  **Remove-BrokenShortcuts.ps1** - Helper xóa shortcut lỗi
+9.  **CHANGELOG.md**, **SECURITY.md**, **LICENSE** - Tài liệu đi kèm
+
 
 ---
 
@@ -234,4 +235,4 @@ Sau khi hoàn thành:
 ---
 
 **Made with ❤️ by Brillian Pham**  
-**Date: January 30, 2026**
+**Date: February 02, 2026**

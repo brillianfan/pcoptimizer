@@ -21,6 +21,11 @@ và dự án này tuân theo [Semantic Versioning](https://semver.org/spec/v2.0.
   - Sửa lỗi ParserError do here-strings trong PowerShell
   - Sửa lỗi mất đường dẫn khi thư mục chứa dấu ngoặc `()`
   - Chuyển đổi an toàn kiểu dữ liệu Registry sang String để tránh lỗi UI
+- **[Maintenance Patch] - 2026-02-02**
+  - **Deep Junk Clean**: Sửa lỗi đệ quy vô hạn và lỗi "Path not found" khi dọn dẹp Recycle Bin.
+  - **Optimize Registry**: Thay thế ký tự Unicode mũi tên (`→`) bằng ASCII (`->`) để tránh lỗi Parser trên một số hệ thống.
+  - **Driver Update**: Cải thiện quản lý dịch vụ `wuauserv` và thêm thông báo trạng thái chi tiết khi tìm kiếm driver.
+
 
 ### 🔄 Changed
 - Cập nhật menu chính từ 10 chức năng lên 11 chức năng

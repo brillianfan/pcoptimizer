@@ -68,8 +68,8 @@ PCOptimizer/
 ```
 
 ### ⚙️ **Optimize Registry** (Optimize-Registry.ps1)
-- Reduce app close timeout (20s → 2s)
-- Remove menu delay (400ms → 0ms)
+- Reduce app close timeout (2s)
+- Remove menu delay (0ms)
 - Auto-close unresponsive apps
 - Increase mouse/keyboard responsiveness
 - Optimize network throttling
@@ -97,6 +97,7 @@ PCOptimizer/
 - Update all drivers
 - Update selected drivers
 - Windows Update API integration
+- **Enhanced Reliability**: Tự động quản lý dịch vụ Windows Update
 - Safe and verified drivers only
 
 **Usage:**

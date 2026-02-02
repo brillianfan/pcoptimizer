@@ -55,8 +55,8 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - Hữu ích khi cần kiểm soát cập nhật
 
 ### ⚙️ **Optimize Registry**
-- Giảm thời gian chờ đóng ứng dụng (20s → 2s)
-- Loại bỏ độ trễ Menu (400ms → 0ms)
+- Giảm thời gian chờ đóng ứng dụng (20s -> 2s)
+- Loại bỏ độ trễ Menu (400ms -> 0ms)
 - Tự động tắt ứng dụng không phản hồi
 - Tăng tốc độ phản hồi chuột/bàn phím
 - Tối ưu hóa Network Throttling
@@ -211,6 +211,8 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
   - Thong bao neu can khoi dong lai sau khi cap nhat
 - 📋 Đồng bộ thông tin giữa các files documentation
 - 🔧 Cải thiện UI/UX trong menu chính
+- 🐛 **Maintenance Patch (2026-02-02)**: Sửa lỗi đệ quy Recycle Bin và lỗi Parser Registry.
+
 
 ### v1.0.1 (2026-01-29)
 - 🧹 **Deep Junk Clean**: Thêm xóa shortcuts lỗi (Desktop, Start Menu, Quick Launch)
