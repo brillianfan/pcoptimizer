@@ -62,7 +62,7 @@
 
 ### Ví dụ:
 ```
-https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection
+https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1
 ```
 
 ---
@@ -76,7 +76,7 @@ https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0c
 
 ### Bằng:
 ```markdown
-[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F94-brightgreen)](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
+[![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-0%2F94-brightgreen)](https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1)
 ```
 
 **Lưu ý**: Thay `YOUR_HASH` bằng link thực tế bạn vừa copy.
@@ -92,7 +92,7 @@ Tìm đoạn này:
 
 Thay bằng:
 ```markdown
-- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
+- 🔍 **VirusTotal scan**: [Xem kết quả quét](https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1)
 ```
 
 ---

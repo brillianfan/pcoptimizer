@@ -266,6 +266,38 @@ Closes #123
 
 ---
 
+## 🏷️ Release Process
+1. **GitHub Releases:** Vào repo -> Releases -> **Create a new release**.
+2. **Tag & Title:** Sử dụng tag version (ví dụ `v1.0.2`) và tiêu đề tương ứng.
+3. **Assets:** Đính kèm file `PCOptimizer.bat` và các script PowerShell liên quan.
+4. **Publish:** Tóm tắt các thay đổi trong phần mô tả và nhấn **Publish release**.
+
+---
+
+## 📣 Sharing Templates (Optional)
+Sử dụng các mẫu này để giới thiệu dự án với cộng đồng.
+
+### Facebook/Telegram/Discord
+```
+🚀 PC Ultimate Optimizer - Công cụ tối ưu Windows miễn phí & mã nguồn mở!
+✨ Deep Clean | Registry Optimization | Internet Boost | Startup Manager
+🔒 100% An toàn - VirusTotal Clean
+📥 Tải về: https://github.com/brillianfan/pcoptimizer
+#Windows #OpenSource #PCOptimizer
+```
+
+### Reddit (r/windows, r/software)
+```
+Title: [Tool] PC Ultimate Optimizer - Free Open Source Windows Optimization Toolkit
+Body: I've developed a comprehensive optimization tool using native Windows commands.
+- 100% Open Source (MIT)
+- VirusTotal: 0/94 Clean
+- Features: Junk cleanup, Registry tweaks, Network optimization.
+GitHub: https://github.com/brillianfan/pcoptimizer
+```
+
+---
+
 ## 🏆 Contributors
 
 Danh sách những người đóng góp sẽ được hiển thị trong README.md:

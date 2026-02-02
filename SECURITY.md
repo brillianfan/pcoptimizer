@@ -216,7 +216,7 @@ findstr /i "download upload send http" PCOptimizer.bat
 
 ### 2. Quét VirusTotal
 
-- Link quét: [VirusTotal Scan Results](https://www.virustotal.com/gui/url/571e95a4c0e63bf5165352d304b72aab6d2c46394bc0cbbd1648167fe519ab56/detection)
+- Link quét: [VirusTotal Scan Results](https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1)
 - Engines: 60+ antivirus
 - Kết quả: Chấp nhận được với < 5 detections (False Positive)
 

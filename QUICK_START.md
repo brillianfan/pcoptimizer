@@ -9,10 +9,8 @@
 5. **.gitignore** - Loại trừ files không cần thiết
 6. **VIRUSTOTAL_GUIDE.md** - Hướng dẫn quét VirusTotal chi tiết
 7. **VIRUSTOTAL_RESULTS.md** - Kết quả quét VirusTotal
-8. **SHARING_TEMPLATES.md** - Mẫu chia sẻ dự án
-9. **SETUP_CHECKLIST.md** - Checklist hoàn chỉnh
-10. **PCOptimizer.bat** - File thực thi chính
-11. **Remove-BrokenShortcuts.ps1** - Helper script
+8. **PCOptimizer.bat** - File thực thi chính
+9. **Remove-BrokenShortcuts.ps1** - Helper script
 
 ---
 
@@ -112,7 +110,7 @@ git push origin main
 - [ ] Quét VirusTotal và copy link
 - [ ] Cập nhật link VirusTotal vào README
 - [ ] Thay email và username
-- [ ] Push tất cả lên GitHub
+- [ ] Tạo Release v1.0.2 với file đính kèm
 - [ ] Kiểm tra repo trên GitHub xem đã đẹp chưa
 
 ---
@@ -188,7 +186,6 @@ Bạn sẽ thấy một repo chuyên nghiệp với:
 
 **Xem file chi tiết:**
 - VIRUSTOTAL_GUIDE.md - Hướng dẫn quét VirusTotal từng bước
-- SETUP_CHECKLIST.md - Checklist đầy đủ với mọi chi tiết
 
 **Vấn đề thường gặp:**
 
