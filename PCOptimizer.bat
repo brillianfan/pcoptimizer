@@ -277,7 +277,7 @@ echo.
 echo Connecting to activation server (get.activated.win)...
 echo Please follow the instructions in the MAS window.
 echo.
-powershell -Command "irm https://get.activated.win | iex"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$script = Invoke-RestMethod -Uri 'https://get.activated.win'; $path = Join-Path $env:TEMP 'mas.ps1'; $script | Out-File -FilePath $path -Encoding UTF8; & $path; Remove-Item -Path $path -Force"
 echo.
 pause
 goto win_office_tools
