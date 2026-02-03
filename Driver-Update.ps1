@@ -10,6 +10,7 @@
 #>
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$ErrorActionPreference = 'Continue'
 
 function Enable-WindowsUpdate {
     Write-Host "`n[+] Initializing Windows Update service..." -ForegroundColor Cyan
@@ -63,10 +64,33 @@ function Get-AvailableDrivers {
         
     }
     catch {
-        Write-Host "`n[ERROR] Driver search failed: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "`n[ERROR] Driver search failed!" -ForegroundColor Red
+        Write-Host "Error details: $($_.Exception.Message)" -ForegroundColor Gray
+        Write-Host ""
+        
+        # Provide specific troubleshooting based on error type
         if ($_.Exception.Message -match "0x8024402C" -or $_.Exception.Message -match "0x80072EFD") {
-            Write-Host "    (Hint: Check your internet connection or firewall settings)" -ForegroundColor Yellow
+            Write-Host "[TROUBLESHOOTING] Network connection issue detected" -ForegroundColor Yellow
+            Write-Host "  - Check your internet connection" -ForegroundColor Gray
+            Write-Host "  - Verify firewall settings allow Windows Update" -ForegroundColor Gray
+            Write-Host "  - Try disabling VPN if active" -ForegroundColor Gray
         }
+        elseif ($_.Exception.Message -match "0x80240438") {
+            Write-Host "[TROUBLESHOOTING] Windows Update service issue" -ForegroundColor Yellow
+            Write-Host "  - The Windows Update service may need to be reset" -ForegroundColor Gray
+            Write-Host "  - Try running: net stop wuauserv && net start wuauserv" -ForegroundColor Gray
+        }
+        elseif ($_.Exception.Message -match "Access is denied" -or $_.Exception.Message -match "0x80070005") {
+            Write-Host "[TROUBLESHOOTING] Permission issue" -ForegroundColor Yellow
+            Write-Host "  - Make sure you're running this script as Administrator" -ForegroundColor Gray
+        }
+        else {
+            Write-Host "[TROUBLESHOOTING] General suggestions:" -ForegroundColor Yellow
+            Write-Host "  - Restart Windows Update service" -ForegroundColor Gray
+            Write-Host "  - Check Windows Update in Settings" -ForegroundColor Gray
+            Write-Host "  - Run Windows Update Troubleshooter" -ForegroundColor Gray
+        }
+        
         return $null
     }
 }
@@ -84,6 +108,7 @@ function Show-AvailableDrivers {
     
     if ($null -eq $updates) {
         Write-Host "[INFO] Driver search could not be completed at this time." -ForegroundColor Yellow
+        Write-Host "Please review the error messages above for troubleshooting steps." -ForegroundColor Gray
         return
     }
     
@@ -153,7 +178,14 @@ function Install-AllDrivers {
         $downloader = $updateSession.CreateUpdateDownloader()
         $downloader.Updates = $updatesToDownload
         $downloadResult = $downloader.Download()
-        Write-Host "[OK] Download completed" -ForegroundColor Green
+        
+        # Check download result
+        if ($downloadResult.ResultCode -ne 2) {
+            Write-Host "[WARNING] Download may not have completed successfully (Code: $($downloadResult.ResultCode))" -ForegroundColor Yellow
+        }
+        else {
+            Write-Host "[OK] Download completed successfully" -ForegroundColor Green
+        }
         Write-Host ""
         
         # Prepare install collection
@@ -262,7 +294,18 @@ function Install-SelectedDrivers {
             $downloader = $updateSession.CreateUpdateDownloader()
             $downloader.Updates = $updatesToDownload
             $downloadResult = $downloader.Download()
-            Write-Host "[OK] Download completed" -ForegroundColor Green
+            
+            # Check download result and log details
+            Write-Host "Download Result Code: $($downloadResult.ResultCode)" -ForegroundColor Gray
+            if ($downloadResult.ResultCode -eq 2) {
+                Write-Host "[OK] Download completed successfully" -ForegroundColor Green
+            }
+            elseif ($downloadResult.ResultCode -eq 3) {
+                Write-Host "[WARNING] Download completed with errors" -ForegroundColor Yellow
+            }
+            else {
+                Write-Host "[WARNING] Download may not have completed successfully (Code: $($downloadResult.ResultCode))" -ForegroundColor Yellow
+            }
             
             # Prepare install
             foreach ($update in $updatesToDownload) {
@@ -333,3 +376,8 @@ switch ($choice) {
         Write-Host "`nInvalid selection!" -ForegroundColor Red
     }
 }
+
+# Pause before returning to main menu
+Write-Host ""
+Write-Host "Press any key to return to main menu..." -ForegroundColor Yellow
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
