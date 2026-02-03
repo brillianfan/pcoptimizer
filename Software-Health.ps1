@@ -4,7 +4,7 @@
 .DESCRIPTION
     Manages software updates via Windows Package Manager (Winget)
 .VERSION
-    1.0.2
+    1.0.3
 .AUTHOR
     Brillian Pham (pcoptimizer.seventy907@slmail.me)
 #>
@@ -13,9 +13,10 @@
 
 function Test-WingetInstalled {
     try {
-        $winget = Get-Command winget -ErrorAction Stop
+        Get-Command winget -ErrorAction Stop | Out-Null
         return $true
-    } catch {
+    }
+    catch {
         return $false
     }
 }
@@ -26,7 +27,8 @@ function Enable-WindowsUpdate {
         sc.exe config wuauserv start= demand | Out-Null
         net start wuauserv 2>&1 | Out-Null
         Write-Host "[OK] Windows Update service enabled" -ForegroundColor Green
-    } catch {
+    }
+    catch {
         Write-Host "[WARNING] Could not enable Windows Update" -ForegroundColor Yellow
     }
 }
@@ -46,7 +48,8 @@ function Update-AllSoftware {
         Write-Host "         UPDATE COMPLETED!" -ForegroundColor Cyan
         Write-Host "======================================================`n" -ForegroundColor Cyan
         
-    } catch {
+    }
+    catch {
         Write-Host "`n[ERROR] Update failed: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
@@ -106,7 +109,8 @@ function Update-SelectedSoftware {
                 
                 if ($LASTEXITCODE -eq 0) {
                     Write-Host "`n[SUCCESS] $softwareId updated successfully!" -ForegroundColor Green
-                } else {
+                }
+                else {
                     Write-Host "`n[ERROR] Could not update $softwareId" -ForegroundColor Red
                     Write-Host "`nWould you like to:" -ForegroundColor Yellow
                     Write-Host "[1] Retry" -ForegroundColor White
@@ -130,7 +134,8 @@ function Update-SelectedSoftware {
                         }
                     }
                 }
-            } catch {
+            }
+            catch {
                 Write-Host "`n[ERROR] Update failed: $($_.Exception.Message)" -ForegroundColor Red
             }
             
@@ -143,7 +148,8 @@ function Update-SelectedSoftware {
             
         } while ($true)
         
-    } catch {
+    }
+    catch {
         Write-Host "`n[ERROR] Could not fetch update list: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
@@ -158,7 +164,8 @@ function Show-InstalledSoftware {
     
     try {
         winget list
-    } catch {
+    }
+    catch {
         Write-Host "`n[ERROR] Could not fetch installed software: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
@@ -180,7 +187,8 @@ function Search-Software {
     
     try {
         winget search $searchQuery
-    } catch {
+    }
+    catch {
         Write-Host "`n[ERROR] Search failed: $($_.Exception.Message)" -ForegroundColor Red
     }
 }

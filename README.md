@@ -5,7 +5,7 @@
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
-[![Version](https://img.shields.io/badge/Version-1.0.2-blue)](https://github.com/brillianfan/pcoptimizer/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.3-blue)](https://github.com/brillianfan/pcoptimizer/releases)
 
 ---
 
@@ -69,6 +69,7 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - Kiểm tra phiên bản Windows & Office
 - Kiểm tra trạng thái bản quyền (slmgr /xpr, ospp.vbs)
 - Mở công cụ kích hoạt MAS (Microsoft Activation Scripts – get.activated.win)
+- **Hỗ trợ Offline**: Tự động chạy `MAS_AIO.cmd` cục bộ nếu không có internet.
 
 ### 🌐 **Internet Boost**
 - Tối ưu TCP/IP settings
@@ -203,7 +204,12 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
 
 ## 📜 Changelog
 
-### v1.0.2 (2026-01-30) ✨ NEW
+### v1.0.3 (2026-02-03) ✨ NEW
+- 🔑 **Offline Activation Fallback**: Tự động sử dụng bản offline nếu không kết nối được GitHub.
+- 🗑️ **Advanced Leftover Cleanup**: Nâng cấp bộ quét tàn dư bằng wildcard và pattern matching.
+- 🔧 Đồng bộ hóa thông tin và sửa các lỗi nhỏ trong toàn bộ project.
+
+### v1.0.2 (2026-01-30)
 - 🔌 **Driver Update**: Tính năng mới - Kiểm tra và cập nhật drivers
   - Kiem tra drivers can cap nhat qua Windows Update
   - Cap nhat tat ca drivers hoac chon tung driver
@@ -211,7 +217,6 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
   - Thong bao neu can khoi dong lai sau khi cap nhat
 - 📋 Đồng bộ thông tin giữa các files documentation
 - 🔧 Cải thiện UI/UX trong menu chính
-- 🐛 **Maintenance Patch (2026-02-02)**: Sửa lỗi đệ quy Recycle Bin và lỗi Parser Registry.
 
 
 ### v1.0.1 (2026-01-29)

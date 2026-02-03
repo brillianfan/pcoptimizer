@@ -77,7 +77,8 @@ git push origin feature/amazing-feature
 ## 💡 Ý tưởng đóng góp
 
 ### Chức năng mới:
-- [x] Driver Update - Cập nhật drivers ✨ **COMPLETED v1.0.2**
+- [x] Phiên bản 1.0.3: Offline Activation Fallback ✨ **COMPLETED**
+- [x] Phiên bản 1.0.2: Driver Update ✨ **COMPLETED**
 - [ ] Tối ưu SSD (TRIM, Optimize)
 - [ ] Privacy tweaks (Tắt telemetry)
 - [ ] GPU Optimization
@@ -268,7 +269,7 @@ Closes #123
 
 ## 🏷️ Release Process
 1. **GitHub Releases:** Vào repo -> Releases -> **Create a new release**.
-2. **Tag & Title:** Sử dụng tag version (ví dụ `v1.0.2`) và tiêu đề tương ứng.
+2. **Tag & Title:** Sử dụng tag version (ví dụ `v1.0.3`) và tiêu đề tương ứng.
 3. **Assets:** Đính kèm file `PCOptimizer.bat` và các script PowerShell liên quan.
 4. **Publish:** Tóm tắt các thay đổi trong phần mô tả và nhấn **Publish release**.
 

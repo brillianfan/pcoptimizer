@@ -4,7 +4,7 @@
 .DESCRIPTION
     Comprehensive junk file cleanup with multiple cleaning options
 .VERSION
-    1.0.2
+    1.0.3
 .AUTHOR
     Brillian Pham (pcoptimizer.seventy907@slmail.me)
 #>

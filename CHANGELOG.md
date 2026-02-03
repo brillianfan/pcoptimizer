@@ -7,6 +7,21 @@ và dự án này tuân theo [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ---
 
+## [1.0.3] - 2026-02-03
+
+- **Offline Activation Fallback**: Tự động sử dụng file `MAS_AIO.cmd` cục bộ nếu không thể kết nối tới máy chủ GitHub (masgravel).
+- **Advanced Leftover Cleanup**: Nâng cấp bộ quét tàn dư cho Uninstaller với tìm kiếm Folder/Registry bằng wildcard và pattern matching.
+
+### 🐛 Fixed
+- **Deep Junk Clean**: Sửa lỗi đệ quy vô hạn và lỗi "Path not found" khi dọn dẹp Recycle Bin.
+- **Optimize Registry**: Thay thế ký tự Unicode mũi tên (`→`) bằng ASCII (`->`) để tránh lỗi Parser.
+- **Driver Update**: Cải thiện quản lý dịch vụ `wuauserv` và thêm thông báo trạng thái chi tiết.
+
+### 🔄 Changed
+- Đồng bộ thông tin và cập nhật phiên bản lên 1.0.3 trong toàn bộ hệ thống.
+
+---
+
 ## [1.0.2] - 2026-01-30
 
 ### ✨ Added
@@ -21,11 +36,6 @@ và dự án này tuân theo [Semantic Versioning](https://semver.org/spec/v2.0.
   - Sửa lỗi ParserError do here-strings trong PowerShell
   - Sửa lỗi mất đường dẫn khi thư mục chứa dấu ngoặc `()`
   - Chuyển đổi an toàn kiểu dữ liệu Registry sang String để tránh lỗi UI
-- **[Maintenance Patch] - 2026-02-02**
-  - **Deep Junk Clean**: Sửa lỗi đệ quy vô hạn và lỗi "Path not found" khi dọn dẹp Recycle Bin.
-  - **Optimize Registry**: Thay thế ký tự Unicode mũi tên (`→`) bằng ASCII (`->`) để tránh lỗi Parser.
-  - **Driver Update**: Cải thiện quản lý dịch vụ `wuauserv` và thêm thông báo trạng thái chi tiết.
-  - **Uninstaller**: Nâng cấp bộ quét tàn dư (Advanced Leftover Cleanup) với tìm kiếm Folder/Registry bằng wildcard và pattern matching.
 
 
 

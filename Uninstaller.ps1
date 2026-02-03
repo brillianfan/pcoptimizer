@@ -4,7 +4,7 @@
 .DESCRIPTION
     Lists and uninstalls applications with leftover cleanup
 .VERSION
-    1.0.2
+    1.0.3
 .AUTHOR
     Brillian Pham (pcoptimizer.seventy907@slmail.me)
 #>

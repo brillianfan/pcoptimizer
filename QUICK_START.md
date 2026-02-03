@@ -111,7 +111,7 @@ git push origin main
 - [ ] Quét VirusTotal và copy link
 - [ ] Cập nhật link VirusTotal vào README
 - [ ] Thay email và username
-- [ ] Tạo Release v1.0.2 với file đính kèm
+- [ ] Tạo Release v1.0.3 với file đính kèm
 - [ ] Kiểm tra repo trên GitHub xem đã đẹp chưa
 
 ---
@@ -148,8 +148,8 @@ PC-Ultimate-Optimizer/
 2. Click **"Create a new release"**
 3. Điền:
    - Tag: `v1.0.0`
-   - Title: `PC Ultimate Optimizer v1.0.2`
-   - Description: (Lấy thông tin từ CHANGELOG.md cho bản 1.0.2)
+   - Title: `PC Ultimate Optimizer v1.0.3`
+   - Description: (Lấy thông tin từ CHANGELOG.md cho bản 1.0.3)
 4. Upload file `PCOptimizer.bat` và `Remove-BrokenShortcuts.ps1`
 5. Click **"Publish release"**
 
@@ -235,4 +235,4 @@ Sau khi hoàn thành:
 ---
 
 **Made with ❤️ by Brillian Pham**  
-**Date: February 02, 2026**
+**Date: February 03, 2026**

@@ -4,7 +4,7 @@
 .DESCRIPTION
     Checks and updates device drivers via Windows Update API
 .VERSION
-    1.0.2
+    1.0.3
 .AUTHOR
     Brillian Pham (pcoptimizer.seventy907@slmail.me)
 #>

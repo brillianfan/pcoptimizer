@@ -1,4 +1,4 @@
-# 📚 HƯỚNG DẪN KIẾN TRÚC MODULAR - PC ULTIMATE OPTIMIZER v1.0.2
+# 📚 HƯỚNG DẪN KIẾN TRÚC MODULAR - PC ULTIMATE OPTIMIZER v1.0.3
 
 ## 🎯 Tổng quan
 
@@ -546,5 +546,5 @@ Có câu hỏi về kiến trúc modular?
 ---
 
 **Tạo bởi: Brillian Pham**  
-**Ngày: February 02, 2026**  
-**Version: 1.0.2 - Modular Architecture**
+**Ngày: February 03, 2026**  
+**Version: 1.0.3 - Modular Architecture**

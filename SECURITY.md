@@ -297,6 +297,11 @@ findstr /i "download upload send http" PCOptimizer.bat
 
 ## Changelog Bảo mật
 
+### v1.0.3 (2026-02-03)
+- ✅ Added Offline Activation Fallback
+- ✅ Advanced Leftover Cleanup using wildcards
+- ✅ Synchronized documentation across all files
+
 ### v1.0.2 (2026-01-30)
 - ✅ Added Driver Update feature
 - ✅ Uses official Windows Update API only
@@ -313,4 +318,4 @@ findstr /i "download upload send http" PCOptimizer.bat
 
 ---
 
-**Last updated**: January 30, 2026
+**Last updated**: February 03, 2026

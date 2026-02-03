@@ -1,7 +1,7 @@
 @echo off
 :: ##########################################################################
 :: # PC Ultimate Optimizer
-:: # Version: 1.0.2
+:: # Version: 1.0.3
 :: # Author: Brillian Pham (pcoptimizer.seventy907@slmail.me)
 :: # Description: Advanced system maintenance and optimization tool.
 :: # Site: https://github.com/brillianfan/pcoptimizer
@@ -13,7 +13,7 @@
 :: ##########################################################################
 
 setlocal enabledelayedexpansion
-title PC Ultimate Optimizer v1.0.2 - Brillian Pham
+title PC Ultimate Optimizer v1.0.3 - Brillian Pham
 color 0b
 
 :: ======================================================
@@ -35,7 +35,7 @@ pushd "%cd%" & CD /D "%~dp0"
 :menu
 cls
 echo ======================================================
-echo           PC ULTIMATE OPTIMIZER v1.0.2
+echo           PC ULTIMATE OPTIMIZER v1.0.3
 echo                by Brillian Pham
 echo ======================================================
 echo [1] Deep Junk Clean
@@ -281,8 +281,16 @@ if exist "%TEMP_PS%" (
     powershell -NoProfile -ExecutionPolicy Bypass -File "%TEMP_PS%"
     del /f /q "%TEMP_PS%"
 ) else (
-    echo [LOI] Khong the ket noi den may chu. Vui long kiem tra internet.
-    pause
+    echo [INFO] Khong the ket noi den may chu. Dang kiem tra ban offline...
+    if exist "%~dp0MAS_AIO.cmd" (
+        echo [INFO] Tim thay ban offline. Dang khoi chay...
+        timeout /t 2 >nul
+        call "%~dp0MAS_AIO.cmd"
+    ) else (
+        echo [LOI] Khong the ket noi den may chu va khong tim thay file offline.
+        echo [GIAI PHAP] Vui long kiem tra internet hoac dam bao file MAS_AIO.cmd co san trong thu muc.
+        pause
+    )
 )
 echo.
 goto win_office_tools
