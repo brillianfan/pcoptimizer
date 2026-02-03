@@ -4,7 +4,7 @@
 .DESCRIPTION
     Checks and updates device drivers via Windows Update API
 .VERSION
-    1.0.3
+    1.0.3 (Fixed)
 .AUTHOR
     Brillian Pham (pcoptimizer.seventy907@slmail.me)
 #>
@@ -334,5 +334,7 @@ switch ($choice) {
     }
 }
 
-Write-Host "`nPress any key to continue..." -ForegroundColor Gray
-$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+# FIXED: Replaced problematic ReadKey with standard Read-Host
+Write-Host ""
+Write-Host "Press ENTER to continue..." -ForegroundColor Gray
+Read-Host

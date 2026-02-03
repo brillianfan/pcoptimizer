@@ -1,7 +1,7 @@
 @echo off
 :: ##########################################################################
 :: # PC Ultimate Optimizer
-:: # Version: 1.0.3
+:: # Version: 1.0.3 (FIXED)
 :: # Author: Brillian Pham (pcoptimizer.seventy907@slmail.me)
 :: # Description: Advanced system maintenance and optimization tool.
 :: # Site: https://github.com/brillianfan/pcoptimizer
@@ -351,9 +351,41 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0Software-Health.ps1"
 goto menu
 
 :: ======================================================
-:: FUNCTION: Driver Update
+:: FUNCTION: Driver Update (FIXED)
 :: ======================================================
 :driver_update
 cls
+echo.
+echo [DEBUG] Starting Driver Update module...
+echo [DEBUG] Current directory: %~dp0
+echo [DEBUG] Looking for: %~dp0Driver-Update.ps1
+echo.
+
+if not exist "%~dp0Driver-Update.ps1" (
+    echo [ERROR] Cannot find Driver-Update.ps1 in current directory!
+    echo [INFO] Please ensure the file exists in: %~dp0
+    echo.
+    pause
+    goto menu
+)
+
+echo [INFO] File found. Starting PowerShell script...
+echo.
+
+:: FIXED: Added proper error handling and pause
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0Driver-Update.ps1"
+
+:: Capture error level
+set SCRIPT_ERROR=%errorlevel%
+
+echo.
+if %SCRIPT_ERROR% EQU 0 (
+    echo [INFO] Script completed successfully.
+) else (
+    echo [WARNING] Script exited with error code: %SCRIPT_ERROR%
+    echo [INFO] This may be normal if you cancelled an operation.
+)
+echo.
+echo Press any key to return to main menu...
+pause >nul
 goto menu
