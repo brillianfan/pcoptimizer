@@ -333,8 +333,3 @@ switch ($choice) {
         Write-Host "`nInvalid selection!" -ForegroundColor Red
     }
 }
-
-# FIXED: Replaced problematic ReadKey with standard Read-Host
-Write-Host ""
-Write-Host "Press ENTER to continue..." -ForegroundColor Gray
-Read-Host
