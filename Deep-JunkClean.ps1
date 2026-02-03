@@ -22,7 +22,7 @@ param(
 # Set console colors
 $Host.UI.RawUI.ForegroundColor = "Green"
 
-function Clean-TempFiles {
+function Clear-TempFiles {
     Write-Host "`n[+] Cleaning Temp, Prefetch & Cache..." -ForegroundColor Cyan
     
     # Protect current directory if running from Temp
@@ -201,7 +201,7 @@ Write-Host "             DEEP JUNK CLEAN MODULE"
 Write-Host "======================================================"
 
 if ($All) {
-    Clean-TempFiles
+    Clear-TempFiles
     Invoke-RecycleBinCleanup
     Clear-SystemLogs
     Start-DiskCleanup
@@ -209,7 +209,7 @@ if ($All) {
     Remove-BrokenShortcuts
 }
 else {
-    if ($TempFiles) { Clean-TempFiles }
+    if ($TempFiles) { Clear-TempFiles }
     if ($RecycleBin) { Invoke-RecycleBinCleanup }
     if ($SystemLogs) { Clear-SystemLogs }
     if ($DiskCleanup) { Start-DiskCleanup }

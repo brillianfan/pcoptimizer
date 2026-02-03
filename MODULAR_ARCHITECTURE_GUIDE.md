@@ -15,7 +15,7 @@ PCOptimizer/
 │   └── Chức năng: Menu và điều hướng đến các modules
 │
 ├── Deep-JunkClean.ps1             ← Module dọn dẹp - 200 dòng
-│   ├── Clean-TempFiles
+│   ├── Clear-TempFiles
 │   ├── Clear-RecycleBin
 │   ├── Clear-SystemLogs
 │   ├── Start-DiskCleanup
@@ -174,7 +174,7 @@ goto menu
 ```
 
 **Functions:**
-- `Clean-TempFiles`: Xóa temp với protection cho current directory
+- `Clear-TempFiles`: Xóa temp với protection cho current directory
 - `Clear-RecycleBin`: PowerShell built-in
 - `Clear-SystemLogs`: Dùng wevtutil
 - `Start-DiskCleanup`: Gọi cleanmgr
