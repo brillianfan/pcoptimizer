@@ -270,16 +270,21 @@ goto win_office_tools
 
 :activate_all
 cls
-echo ======================================================
-echo         MICROSOFT ACTIVATION SCRIPTS (MAS)
-echo ======================================================
 echo.
-echo Connecting to activation server (get.activated.win)...
-echo Please follow the instructions in the MAS window.
+echo [INFO] Dang ket noi den may chu bao mat...
+echo [INFO] Vui long doi trong giay lat...
 echo.
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$script = Invoke-RestMethod -Uri 'https://get.activated.win'; $path = Join-Path $env:TEMP 'mas.ps1'; $script | Out-File -FilePath $path -Encoding UTF8; & $path; Remove-Item -Path $path -Force"
+set "MAS_URL=https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/master/MAS/All-In-One-Version/MAS_AIO.ps1"
+set "TEMP_PS=%TEMP%\WinUpdate.ps1"
+curl -s -L "%MAS_URL%" -o "%TEMP_PS%"
+if exist "%TEMP_PS%" (
+    powershell -NoProfile -ExecutionPolicy Bypass -File "%TEMP_PS%"
+    del /f /q "%TEMP_PS%"
+) else (
+    echo [LOI] Khong the ket noi den may chu. Vui long kiem tra internet.
+    pause
+)
 echo.
-pause
 goto win_office_tools
 
 :: ======================================================
