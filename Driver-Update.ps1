@@ -380,4 +380,4 @@ switch ($choice) {
 # Pause before returning to main menu
 Write-Host ""
 Write-Host "Press any key to return to main menu..." -ForegroundColor Yellow
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+pause | Out-Null

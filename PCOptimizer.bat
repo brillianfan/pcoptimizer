@@ -32,6 +32,20 @@ if %errorLevel% == 0 (
 :init
 pushd "%cd%" & CD /D "%~dp0"
 
+:: ======================================================
+:: FUNCTION: Unblock PowerShell Scripts
+:: ======================================================
+:unblock_scripts
+echo [INFO] Checking and unblocking PowerShell scripts...
+for %%f in ("%~dp0*.ps1") do (
+    echo [INFO] Unblocking: %%~nxf
+    echo.> "%%f":Zone.Identifier 2>nul
+)
+echo [OK] All PowerShell scripts unblocked successfully!
+echo.
+
+goto menu
+
 :menu
 cls
 echo ======================================================
@@ -49,9 +63,10 @@ echo [8] Internet Boost
 echo [9] Disk Check
 echo [10] Software Health
 echo [11] Driver Update
+echo [12] Unblock All Scripts
 echo [0] Exit
 echo ======================================================
-set /p select="Chon chuc nang (0-11): "
+set /p select="Chon chuc nang (0-12): "
 
 if "!select!"=="1" goto deep_junk_clean
 if "!select!"=="2" goto uninstaller
@@ -64,6 +79,7 @@ if "!select!"=="8" goto internet_boost
 if "!select!"=="9" goto disk_check
 if "!select!"=="10" goto software_health
 if "!select!"=="11" goto driver_update
+if "!select!"=="12" goto manual_unblock
 if "!select!"=="0" exit
 goto menu
 
@@ -388,4 +404,32 @@ if %SCRIPT_ERROR% EQU 0 (
 echo.
 echo Press any key to return to main menu...
 pause >nul
+goto menu
+
+:: ======================================================
+:: FUNCTION: Manual Unblock All Scripts
+:: ======================================================
+:manual_unblock
+cls
+echo ======================================================
+echo              UNBLOCK ALL SCRIPTS
+echo ======================================================
+echo.
+echo This will remove Zone.Identifier from all PowerShell scripts
+echo in the current directory to allow them to run properly.
+echo.
+echo Continue? (Y/N): 
+set /p confirm=""
+if /i not "%confirm%"=="Y" goto menu
+
+echo.
+echo [INFO] Unblocking all PowerShell scripts...
+for %%f in ("%~dp0*.ps1") do (
+    echo [INFO] Unblocking: %%~nxf
+    echo.> "%%f":Zone.Identifier 2>nul
+)
+echo.
+echo [OK] All PowerShell scripts have been unblocked successfully!
+echo.
+pause
 goto menu
