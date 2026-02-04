@@ -98,10 +98,11 @@ echo [3] Clear System Logs
 echo [4] Run Disk Cleanup
 echo [5] Remove Empty Folders
 echo [6] Remove Broken Shortcuts
-echo [7] Clean ALL (Recommended)
+echo [7] Manual Search & Delete
+echo [8] Clean ALL (Recommended)
 echo [0] Back to Menu
 echo.
-set /p clean_choice="Select option (0-7): "
+set /p clean_choice="Select option (0-8): "
 
 set "ps_args="
 if "!clean_choice!"=="1" set "ps_args=-TempFiles"
@@ -110,7 +111,8 @@ if "!clean_choice!"=="3" set "ps_args=-SystemLogs"
 if "!clean_choice!"=="4" set "ps_args=-DiskCleanup"
 if "!clean_choice!"=="5" set "ps_args=-EmptyFolders"
 if "!clean_choice!"=="6" set "ps_args=-BrokenShortcuts"
-if "!clean_choice!"=="7" set "ps_args=-All"
+if "!clean_choice!"=="7" set "ps_args=-ManualSearch"
+if "!clean_choice!"=="8" set "ps_args=-All"
 if "!clean_choice!"=="0" goto menu
 
 if defined ps_args (

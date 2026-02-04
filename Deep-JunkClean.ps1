@@ -16,7 +16,8 @@ param(
     [switch]$DiskCleanup,
     [switch]$EmptyFolders,
     [switch]$BrokenShortcuts,
-    [switch]$All
+    [switch]$All,
+    [switch]$ManualSearch
 )
 
 # Set console colors
@@ -195,6 +196,176 @@ function Remove-BrokenShortcuts {
     }
 }
 
+function Invoke-ManualSearch {
+    Write-Host "`n======================================================" -ForegroundColor Cyan
+    Write-Host "         MANUAL SEARCH & DELETE" -ForegroundColor Cyan
+    Write-Host "======================================================" -ForegroundColor Cyan
+    
+    do {
+        Write-Host "`n[SEARCH OPTIONS]" -ForegroundColor Yellow
+        Write-Host "Enter keyword to search for in files, folders, and registry:" -ForegroundColor Gray
+        Write-Host "Type 'exit' to return to main menu" -ForegroundColor Gray
+        Write-Host "Keyword: " -ForegroundColor Yellow -NoNewline
+        $keyword = Read-Host
+        
+        if ($keyword -eq 'exit') { break }
+        if ([string]::IsNullOrWhiteSpace($keyword)) {
+            Write-Host "[ERROR] Please enter a valid keyword!" -ForegroundColor Red
+            continue
+        }
+        
+        Write-Host "`n[SEARCHING] Please wait, this may take a while..." -ForegroundColor Yellow
+        
+        # Search in C: drive
+        Write-Host "`n[1] Searching in C: drive..." -ForegroundColor Cyan
+        $filesFound = @()
+        $foldersFound = @()
+        
+        try {
+            # Search for files and folders
+            $filesFound = Get-ChildItem -Path "C:\" -Recurse -File -ErrorAction SilentlyContinue | 
+                Where-Object { $_.Name -like "*$keyword*" -or $_.DirectoryName -like "*$keyword*" } |
+                Select-Object -First 50 # Limit to 50 results for performance
+                
+            $foldersFound = Get-ChildItem -Path "C:\" -Recurse -Directory -ErrorAction SilentlyContinue | 
+                Where-Object { $_.Name -like "*$keyword*" } |
+                Select-Object -First 30 # Limit to 30 results for performance
+        }
+        catch {
+            Write-Host "[WARNING] Some directories could not be accessed (permission denied)" -ForegroundColor Yellow
+        }
+        
+        # Search in Registry
+        Write-Host "[2] Searching in Registry..." -ForegroundColor Cyan
+        $registryKeys = @()
+        
+        try {
+            # Search in HKLM
+            $registryKeys += Get-ChildItem -Path "HKLM:\SOFTWARE" -Recurse -ErrorAction SilentlyContinue | 
+                Where-Object { $_.Name -like "*$keyword*" } |
+                Select-Object -First 20
+                
+            $registryKeys += Get-ChildItem -Path "HKLM:\SYSTEM" -Recurse -ErrorAction SilentlyContinue | 
+                Where-Object { $_.Name -like "*$keyword*" } |
+                Select-Object -First 20
+                
+            # Search in HKCU
+            $registryKeys += Get-ChildItem -Path "HKCU:\SOFTWARE" -Recurse -ErrorAction SilentlyContinue | 
+                Where-Object { $_.Name -like "*$keyword*" } |
+                Select-Object -First 20
+        }
+        catch {
+            Write-Host "[WARNING] Some registry keys could not be accessed" -ForegroundColor Yellow
+        }
+        
+        # Display results
+        Write-Host "`n======================================================" -ForegroundColor Green
+        Write-Host "              SEARCH RESULTS" -ForegroundColor Green
+        Write-Host "======================================================" -ForegroundColor Green
+        
+        $totalFound = $filesFound.Count + $foldersFound.Count + $registryKeys.Count
+        
+        if ($totalFound -eq 0) {
+            Write-Host "`n[RESULT] No items found containing keyword: '$keyword'" -ForegroundColor Yellow
+            Write-Host "Try searching with a different keyword." -ForegroundColor Gray
+        }
+        else {
+            Write-Host "`n[RESULT] Found $totalFound item(s) containing keyword: '$keyword'" -ForegroundColor Green
+            
+            # Display files
+            if ($filesFound.Count -gt 0) {
+                Write-Host "`n--- FILES ($($filesFound.Count) found) ---" -ForegroundColor White
+                for ($i = 0; $i -lt $filesFound.Count; $i++) {
+                    $size = [math]::Round($filesFound[$i].Length / 1MB, 2)
+                    Write-Host "[$($i+1)] $($filesFound[$i].FullName) ($size MB)" -ForegroundColor Gray
+                }
+            }
+            
+            # Display folders
+            if ($foldersFound.Count -gt 0) {
+                Write-Host "`n--- FOLDERS ($($foldersFound.Count) found) ---" -ForegroundColor White
+                for ($i = 0; $i -lt $foldersFound.Count; $i++) {
+                    Write-Host "[$($filesFound.Count + $i + 1)] $($foldersFound[$i].FullName)" -ForegroundColor Gray
+                }
+            }
+            
+            # Display registry keys
+            if ($registryKeys.Count -gt 0) {
+                Write-Host "`n--- REGISTRY KEYS ($($registryKeys.Count) found) ---" -ForegroundColor White
+                for ($i = 0; $i -lt $registryKeys.Count; $i++) {
+                    Write-Host "[$($filesFound.Count + $foldersFound.Count + $i + 1)] $($registryKeys[$i].Name)" -ForegroundColor Magenta
+                }
+            }
+            
+            # Ask for deletion
+            Write-Host "`n======================================================" -ForegroundColor Yellow
+            Write-Host "Do you want to DELETE all found items?" -ForegroundColor Yellow
+            Write-Host "WARNING: This action cannot be undone!" -ForegroundColor Red
+            Write-Host "Type 'YES' to confirm, anything else to cancel: " -ForegroundColor Yellow -NoNewline
+            $confirm = Read-Host
+            
+            if ($confirm -eq 'YES') {
+                Write-Host "`n[DELETING] Please wait..." -ForegroundColor Red
+                
+                $deletedFiles = 0
+                $deletedFolders = 0
+                $deletedRegistry = 0
+                
+                # Delete files
+                foreach ($file in $filesFound) {
+                    try {
+                        Remove-Item -Path $file.FullName -Force -Recurse -ErrorAction SilentlyContinue
+                        $deletedFiles++
+                        Write-Host "[DELETED] File: $($file.Name)" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Host "[FAILED] File: $($file.Name) - $($_.Exception.Message)" -ForegroundColor Red
+                    }
+                }
+                
+                # Delete folders
+                foreach ($folder in $foldersFound) {
+                    try {
+                        Remove-Item -Path $folder.FullName -Force -Recurse -ErrorAction SilentlyContinue
+                        $deletedFolders++
+                        Write-Host "[DELETED] Folder: $($folder.Name)" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Host "[FAILED] Folder: $($folder.Name) - $($_.Exception.Message)" -ForegroundColor Red
+                    }
+                }
+                
+                # Delete registry keys
+                foreach ($key in $registryKeys) {
+                    try {
+                        Remove-Item -Path $key.Name -Force -Recurse -ErrorAction SilentlyContinue
+                        $deletedRegistry++
+                        Write-Host "[DELETED] Registry: $($key.Name)" -ForegroundColor Green
+                    }
+                    catch {
+                        Write-Host "[FAILED] Registry: $($key.Name) - $($_.Exception.Message)" -ForegroundColor Red
+                    }
+                }
+                
+                Write-Host "`n[SUMMARY] Deletion completed!" -ForegroundColor Green
+                Write-Host "Files deleted: $deletedFiles" -ForegroundColor Cyan
+                Write-Host "Folders deleted: $deletedFolders" -ForegroundColor Cyan
+                Write-Host "Registry keys deleted: $deletedRegistry" -ForegroundColor Cyan
+            }
+            else {
+                Write-Host "`n[CANCELLED] No items were deleted." -ForegroundColor Yellow
+            }
+        }
+        
+        Write-Host "`n======================================================" -ForegroundColor Cyan
+        Write-Host "Search again? (Y/N): " -ForegroundColor Yellow -NoNewline
+        $searchAgain = Read-Host
+        
+    } while ($searchAgain -eq 'Y' -or $searchAgain -eq 'y')
+    
+    Write-Host "`n[RETURNING] Going back to main menu..." -ForegroundColor Green
+}
+
 # Main execution
 Write-Host "======================================================"
 Write-Host "             DEEP JUNK CLEAN MODULE"
@@ -215,6 +386,7 @@ else {
     if ($DiskCleanup) { Start-DiskCleanup }
     if ($EmptyFolders) { Remove-EmptyFolders }
     if ($BrokenShortcuts) { Remove-BrokenShortcuts }
+    if ($ManualSearch) { Invoke-ManualSearch }
 }
 
 Write-Host "`n======================================================"
