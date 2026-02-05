@@ -124,7 +124,7 @@ if defined ps_args (
 )
 
 pause
-goto menu
+goto deep_junk_clean
 
 :: ======================================================
 :: FUNCTION: Uninstaller
