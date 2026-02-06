@@ -1,7 +1,7 @@
 @echo off
 :: ##########################################################################
 :: # PC Ultimate Optimizer
-:: # Version: 1.0.3 (FIXED)
+:: # Version: 1.0.4
 :: # Author: Brillian Pham (pcoptimizer.seventy907@slmail.me)
 :: # Description: Advanced system maintenance and optimization tool.
 :: # Site: https://github.com/brillianfan/pcoptimizer
@@ -13,7 +13,7 @@
 :: ##########################################################################
 
 setlocal enabledelayedexpansion
-title PC Ultimate Optimizer v1.0.3 - Brillian Pham
+title PC Ultimate Optimizer v1.0.4 - Brillian Pham
 color 0b
 
 :: ======================================================
@@ -49,7 +49,7 @@ goto menu
 :menu
 cls
 echo ======================================================
-echo           PC ULTIMATE OPTIMIZER v1.0.3
+echo           PC ULTIMATE OPTIMIZER v1.0.4
 echo                by Brillian Pham
 echo ======================================================
 echo [1] Deep Junk Clean
@@ -98,7 +98,7 @@ echo [3] Clear System Logs
 echo [4] Run Disk Cleanup
 echo [5] Remove Empty Folders
 echo [6] Remove Broken Shortcuts
-echo [7] Manual Search & Delete
+echo [7] Manual Search ^& Delete
 echo [8] Clean ALL (Recommended)
 echo [0] Back to Menu
 echo.

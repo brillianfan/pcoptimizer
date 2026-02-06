@@ -4,7 +4,7 @@
 .DESCRIPTION
     Manages software updates via Windows Package Manager (Winget)
 .VERSION
-    1.0.3
+    1.0.4
 .AUTHOR
     Brillian Pham (pcoptimizer.seventy907@slmail.me)
 #>

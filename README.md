@@ -5,7 +5,7 @@
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
-[![Version](https://img.shields.io/badge/Version-1.0.3-blue)](https://github.com/brillianfan/pcoptimizer/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.4-blue)](https://github.com/brillianfan/pcoptimizer/releases)
 
 ---
 
@@ -204,7 +204,12 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
 
 ## 📜 Changelog
 
-### v1.0.3 (2026-02-03) ✨ NEW
+### v1.0.4 (2026-02-06) ✨ NEW
+- 🔧 **Manual Search & Delete**: Thêm tùy chọn nhập '0' để quay lại menu
+- ⚡ **Tối ưu hóa tìm kiếm**: Tìm kiếm trong các thư mục mục tiêu thay vì toàn bộ ổ C:
+- 🐛 **Sửa lỗi menu**: Escape ký tự `&` trong "Manual Search & Delete"
+
+### v1.0.3 (2026-02-03)
 - 🔑 **Offline Activation Fallback**: Tự động sử dụng bản offline nếu không kết nối được GitHub.
 - 🗑️ **Advanced Leftover Cleanup**: Nâng cấp bộ quét tàn dư bằng wildcard và pattern matching.
 - 🔧 Đồng bộ hóa thông tin và sửa các lỗi nhỏ trong toàn bộ project.

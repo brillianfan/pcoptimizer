@@ -7,6 +7,27 @@ và dự án này tuân theo [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ---
 
+## [1.0.4] - 2026-02-06
+
+### ✨ Added
+- **Manual Search & Delete**: Thêm tùy chọn nhập '0' để quay lại menu trước
+  - Hiển thị hướng dẫn "Type '0' to return to menu"
+  - Kiểm tra input rỗng và tự động quay lại menu
+  - Cải thiện trải nghiệm người dùng
+
+### 🔄 Changed
+- **Deep Junk Clean**: Tối ưu hóa chức năng Manual Search & Delete
+  - Thay thế logic tìm kiếm từ toàn bộ ổ C: sang các thư mục mục tiêu cụ thể
+  - Tìm kiếm trong Program Files, AppData, ProgramData, Start Menu, Documents, Desktop
+  - Sử dụng `reg query` để tìm kiếm Registry hiệu quả hơn
+  - Loại bỏ vòng lặp tìm kiếm lặp lại, chỉ tìm kiếm một lần mỗi phiên
+
+### 🐛 Fixed
+- **PCOptimizer.bat**: Sửa lỗi "'Delete' is not recognized" trong menu Deep Junk Clean
+  - Escape ký tự `&` trong "Manual Search & Delete" bằng `^&`
+
+---
+
 ## [1.0.3] - 2026-02-03
 
 - **Offline Activation Fallback**: Tự động sử dụng file `MAS_AIO.cmd` cục bộ nếu không thể kết nối tới máy chủ GitHub (masgravel).

@@ -4,7 +4,7 @@
 .DESCRIPTION
     Comprehensive junk file cleanup with multiple cleaning options
 .VERSION
-    1.0.3
+    1.0.4
 .AUTHOR
     Brillian Pham (pcoptimizer.seventy907@slmail.me)
 #>
@@ -200,168 +200,96 @@ function Invoke-ManualSearch {
     Write-Host "`n======================================================" -ForegroundColor Cyan
     Write-Host "         MANUAL SEARCH & DELETE" -ForegroundColor Cyan
     Write-Host "======================================================" -ForegroundColor Cyan
+    Write-Host "`nType '0' to return to menu" -ForegroundColor Gray
     
-    do {
-        Write-Host "`n[SEARCH OPTIONS]" -ForegroundColor Yellow
-        Write-Host "Enter keyword to search for in files, folders, and registry:" -ForegroundColor Gray
-        Write-Host "Type 'exit' to return to main menu" -ForegroundColor Gray
-        Write-Host "Keyword: " -ForegroundColor Yellow -NoNewline
-        $keyword = Read-Host
+    $appName = Read-Host "`nEnter application name to search"
+    
+    # Check if user wants to exit or input is empty
+    if ($appName -eq '0') {
+        Write-Host "`n[RETURNING] Going back to main menu..." -ForegroundColor Green
+        return
+    }
+    
+    if ([string]::IsNullOrWhiteSpace($appName)) {
+        Write-Host "`n[ERROR] Please enter a valid application name!" -ForegroundColor Red
+        Write-Host "[RETURNING] Going back to main menu..." -ForegroundColor Green
+        return
+    }
+    
+    Write-Host "`n=== Searching for: $appName ===" -ForegroundColor Yellow
+    
+    $searchLocations = @{
+        "Program Files"       = "C:\Program Files"
+        "Program Files (x86)" = "C:\Program Files (x86)"
+        "AppData Roaming"     = "$env:APPDATA"
+        "AppData Local"       = "$env:LOCALAPPDATA"
+        "AppData LocalLow"    = "$env:USERPROFILE\AppData\LocalLow"
+        "ProgramData"         = "C:\ProgramData"
+        "User Documents"      = "$env:USERPROFILE\Documents"
+        "Desktop"             = "$env:USERPROFILE\Desktop"
+        "Start Menu"          = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs"
+        "Common Start Menu"   = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs"
+        "Temp"                = "$env:TEMP"
+    }
+    
+    $foundItems = @()
+    
+    foreach ($location in $searchLocations.GetEnumerator()) {
+        Write-Host "`nSearching in $($location.Key)..." -ForegroundColor Cyan
         
-        if ($keyword -eq 'exit') { break }
-        if ([string]::IsNullOrWhiteSpace($keyword)) {
-            Write-Host "[ERROR] Please enter a valid keyword!" -ForegroundColor Red
-            continue
-        }
-        
-        Write-Host "`n[SEARCHING] Please wait, this may take a while..." -ForegroundColor Yellow
-        
-        # Search in C: drive
-        Write-Host "`n[1] Searching in C: drive..." -ForegroundColor Cyan
-        $filesFound = @()
-        $foldersFound = @()
-        
-        try {
-            # Search for files and folders
-            $filesFound = Get-ChildItem -Path "C:\" -Recurse -File -ErrorAction SilentlyContinue | 
-                Where-Object { $_.Name -like "*$keyword*" -or $_.DirectoryName -like "*$keyword*" } |
-                Select-Object -First 50 # Limit to 50 results for performance
-                
-            $foldersFound = Get-ChildItem -Path "C:\" -Recurse -Directory -ErrorAction SilentlyContinue | 
-                Where-Object { $_.Name -like "*$keyword*" } |
-                Select-Object -First 30 # Limit to 30 results for performance
-        }
-        catch {
-            Write-Host "[WARNING] Some directories could not be accessed (permission denied)" -ForegroundColor Yellow
-        }
-        
-        # Search in Registry
-        Write-Host "[2] Searching in Registry..." -ForegroundColor Cyan
-        $registryKeys = @()
-        
-        try {
-            # Search in HKLM
-            $registryKeys += Get-ChildItem -Path "HKLM:\SOFTWARE" -Recurse -ErrorAction SilentlyContinue | 
-                Where-Object { $_.Name -like "*$keyword*" } |
-                Select-Object -First 20
-                
-            $registryKeys += Get-ChildItem -Path "HKLM:\SYSTEM" -Recurse -ErrorAction SilentlyContinue | 
-                Where-Object { $_.Name -like "*$keyword*" } |
-                Select-Object -First 20
-                
-            # Search in HKCU
-            $registryKeys += Get-ChildItem -Path "HKCU:\SOFTWARE" -Recurse -ErrorAction SilentlyContinue | 
-                Where-Object { $_.Name -like "*$keyword*" } |
-                Select-Object -First 20
-        }
-        catch {
-            Write-Host "[WARNING] Some registry keys could not be accessed" -ForegroundColor Yellow
-        }
-        
-        # Display results
-        Write-Host "`n======================================================" -ForegroundColor Green
-        Write-Host "              SEARCH RESULTS" -ForegroundColor Green
-        Write-Host "======================================================" -ForegroundColor Green
-        
-        $totalFound = $filesFound.Count + $foldersFound.Count + $registryKeys.Count
-        
-        if ($totalFound -eq 0) {
-            Write-Host "`n[RESULT] No items found containing keyword: '$keyword'" -ForegroundColor Yellow
-            Write-Host "Try searching with a different keyword." -ForegroundColor Gray
-        }
-        else {
-            Write-Host "`n[RESULT] Found $totalFound item(s) containing keyword: '$keyword'" -ForegroundColor Green
+        if (Test-Path $location.Value) {
+            $items = Get-ChildItem -Path $location.Value -Recurse -ErrorAction SilentlyContinue | 
+            Where-Object { $_.Name -like "*$appName*" }
             
-            # Display files
-            if ($filesFound.Count -gt 0) {
-                Write-Host "`n--- FILES ($($filesFound.Count) found) ---" -ForegroundColor White
-                for ($i = 0; $i -lt $filesFound.Count; $i++) {
-                    $size = [math]::Round($filesFound[$i].Length / 1MB, 2)
-                    Write-Host "[$($i+1)] $($filesFound[$i].FullName) ($size MB)" -ForegroundColor Gray
+            if ($items) {
+                foreach ($item in $items) {
+                    Write-Host "  Found: $($item.FullName)" -ForegroundColor Green
+                    $foundItems += $item.FullName
                 }
             }
-            
-            # Display folders
-            if ($foldersFound.Count -gt 0) {
-                Write-Host "`n--- FOLDERS ($($foldersFound.Count) found) ---" -ForegroundColor White
-                for ($i = 0; $i -lt $foldersFound.Count; $i++) {
-                    Write-Host "[$($filesFound.Count + $i + 1)] $($foldersFound[$i].FullName)" -ForegroundColor Gray
-                }
-            }
-            
-            # Display registry keys
-            if ($registryKeys.Count -gt 0) {
-                Write-Host "`n--- REGISTRY KEYS ($($registryKeys.Count) found) ---" -ForegroundColor White
-                for ($i = 0; $i -lt $registryKeys.Count; $i++) {
-                    Write-Host "[$($filesFound.Count + $foldersFound.Count + $i + 1)] $($registryKeys[$i].Name)" -ForegroundColor Magenta
-                }
-            }
-            
-            # Ask for deletion
-            Write-Host "`n======================================================" -ForegroundColor Yellow
-            Write-Host "Do you want to DELETE all found items?" -ForegroundColor Yellow
-            Write-Host "WARNING: This action cannot be undone!" -ForegroundColor Red
-            Write-Host "Type 'YES' to confirm, anything else to cancel: " -ForegroundColor Yellow -NoNewline
-            $confirm = Read-Host
-            
-            if ($confirm -eq 'YES') {
-                Write-Host "`n[DELETING] Please wait..." -ForegroundColor Red
-                
-                $deletedFiles = 0
-                $deletedFolders = 0
-                $deletedRegistry = 0
-                
-                # Delete files
-                foreach ($file in $filesFound) {
-                    try {
-                        Remove-Item -Path $file.FullName -Force -Recurse -ErrorAction SilentlyContinue
-                        $deletedFiles++
-                        Write-Host "[DELETED] File: $($file.Name)" -ForegroundColor Green
-                    }
-                    catch {
-                        Write-Host "[FAILED] File: $($file.Name) - $($_.Exception.Message)" -ForegroundColor Red
-                    }
-                }
-                
-                # Delete folders
-                foreach ($folder in $foldersFound) {
-                    try {
-                        Remove-Item -Path $folder.FullName -Force -Recurse -ErrorAction SilentlyContinue
-                        $deletedFolders++
-                        Write-Host "[DELETED] Folder: $($folder.Name)" -ForegroundColor Green
-                    }
-                    catch {
-                        Write-Host "[FAILED] Folder: $($folder.Name) - $($_.Exception.Message)" -ForegroundColor Red
-                    }
-                }
-                
-                # Delete registry keys
-                foreach ($key in $registryKeys) {
-                    try {
-                        Remove-Item -Path $key.Name -Force -Recurse -ErrorAction SilentlyContinue
-                        $deletedRegistry++
-                        Write-Host "[DELETED] Registry: $($key.Name)" -ForegroundColor Green
-                    }
-                    catch {
-                        Write-Host "[FAILED] Registry: $($key.Name) - $($_.Exception.Message)" -ForegroundColor Red
-                    }
-                }
-                
-                Write-Host "`n[SUMMARY] Deletion completed!" -ForegroundColor Green
-                Write-Host "Files deleted: $deletedFiles" -ForegroundColor Cyan
-                Write-Host "Folders deleted: $deletedFolders" -ForegroundColor Cyan
-                Write-Host "Registry keys deleted: $deletedRegistry" -ForegroundColor Cyan
-            }
-            else {
-                Write-Host "`n[CANCELLED] No items were deleted." -ForegroundColor Yellow
+        }
+    }
+    
+    # Search in Registry
+    Write-Host "`nSearching in Registry..." -ForegroundColor Cyan
+    $regLocations = @(
+        "HKLM\SOFTWARE",
+        "HKLM\SOFTWARE\WOW6432Node",
+        "HKCU\SOFTWARE"
+    )
+    
+    foreach ($regPath in $regLocations) {
+        $regResults = reg query $regPath /f $appName /s /k 2>$null
+        if ($regResults) {
+            $regResults | Where-Object { $_ -match "^HK" } | ForEach-Object {
+                Write-Host "  Registry: $_" -ForegroundColor Yellow
+                $foundItems += "Registry: $_"
             }
         }
+    }
+    
+    Write-Host "`n=== Summary ===" -ForegroundColor Yellow
+    Write-Host "Total items found: $($foundItems.Count)" -ForegroundColor Green
+    
+    # Delete option
+    if ($foundItems.Count -gt 0) {
+        $delete = Read-Host "`nDo you want to delete all found items? (Type YES to confirm)"
         
-        Write-Host "`n======================================================" -ForegroundColor Cyan
-        Write-Host "Search again? (Y/N): " -ForegroundColor Yellow -NoNewline
-        $searchAgain = Read-Host
-        
-    } while ($searchAgain -eq 'Y' -or $searchAgain -eq 'y')
+        if ($delete -eq "YES") {
+            foreach ($item in $foundItems) {
+                if ($item -like "Registry:*") {
+                    $regKey = $item -replace "Registry: ", ""
+                    Write-Host "Deleting registry: $regKey" -ForegroundColor Red
+                    reg delete $regKey /f 2>$null
+                }
+                else {
+                    Write-Host "Deleting: $item" -ForegroundColor Red
+                    Remove-Item -Path $item -Recurse -Force -ErrorAction SilentlyContinue
+                }
+            }
+            Write-Host "`nCleanup completed!" -ForegroundColor Green
+        }
+    }
     
     Write-Host "`n[RETURNING] Going back to main menu..." -ForegroundColor Green
 }
