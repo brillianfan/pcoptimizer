@@ -52,6 +52,26 @@ function Get-InstalledApplications {
     return $apps | Sort-Object Name -Unique
 }
 
+function Get-StoreApplications {
+    Write-Host "`nScanning Microsoft Store applications..." -ForegroundColor Cyan
+    Write-Host "Please wait...`n" -ForegroundColor Cyan
+    
+    $apps = Get-AppxPackage | Where-Object { 
+        $_.InstallLocation -and 
+        $_.InstallLocation -notmatch 'C:\\Windows\\SystemApps|C:\\Windows\\ImmersiveControlPanel|C:\\Windows\\PrintDialog'
+    } | ForEach-Object {
+        [PSCustomObject]@{
+            Name            = [string]$_.Name
+            PackageFullName = [string]$_.PackageFullName
+            InstallLocation = [string]$_.InstallLocation
+            Publisher       = if ($_.Publisher) { [string]$_.Publisher } else { 'Unknown' }
+            IsStoreApp      = $true
+        }
+    }
+    
+    return $apps | Sort-Object Name
+}
+
 function Show-ApplicationList {
     param($apps)
     
@@ -89,6 +109,19 @@ function Invoke-Uninstall {
     
     Write-Host "`nUninstalling $($app.Name)..." -ForegroundColor Cyan
     
+    if ($app.IsStoreApp) {
+        try {
+            Write-Host "Executing: Remove-AppxPackage -Package $($app.PackageFullName)" -ForegroundColor Gray
+            Remove-AppxPackage -Package $app.PackageFullName -ErrorAction Stop
+            Write-Host "`n[OK] Uninstall completed successfully!" -ForegroundColor Green
+        }
+        catch {
+            Write-Host "`n[ERROR] Uninstall failed: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "Please try uninstalling manually via Settings -> Apps." -ForegroundColor Yellow
+        }
+        return
+    }
+
     $uninstallCmd = if ($app.QuietUninstallString) { 
         $app.QuietUninstallString 
     }
@@ -260,52 +293,76 @@ Write-Host "======================================================"
 Write-Host "              SOFTWARE UNINSTALLER"
 Write-Host "======================================================"
 
-Write-Host "`nScanning installed applications..." -ForegroundColor Cyan
-Write-Host "Please wait...`n" -ForegroundColor Cyan
-
-$apps = Get-InstalledApplications
-
-if (-not $apps -or $apps.Count -eq 0) {
-    Write-Host "[ERROR] No applications found!" -ForegroundColor Red
-    exit 1
-}
-
 do {
-    Show-ApplicationList -apps $apps
+    Write-Host "`nSelect scanning mode:" -ForegroundColor Cyan
+    Write-Host "[1] Desktop Applications (Standard)" -ForegroundColor White
+    Write-Host "[2] Microsoft Store Applications" -ForegroundColor White
+    Write-Host "[0] Exit" -ForegroundColor Yellow
     
-    Write-Host "`nSelect application number to uninstall (0 to exit): " -ForegroundColor Yellow -NoNewline
-    $selection = Read-Host
+    Write-Host "`nChoice: " -ForegroundColor Yellow -NoNewline
+    $mode = Read-Host
     
-    if ($selection -eq '0') {
+    if ($mode -eq '0') {
         break
     }
     
-    try {
-        $index = [int]$selection - 1
-        if ($index -ge 0 -and $index -lt $apps.Count) {
-            $selectedApp = $apps[$index]
-            Invoke-Uninstall -app $selectedApp
-            
-            Write-Host "`nScan for leftovers? (Y/N): " -ForegroundColor Yellow -NoNewline
-            $scanLeftovers = Read-Host
-            
-            if ($scanLeftovers -eq 'Y' -or $scanLeftovers -eq 'y') {
-                Remove-Leftovers -app $selectedApp
-            }
-            
-            Write-Host "`nPress any key to continue..." -ForegroundColor Gray
-            $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+    $apps = @()
+    if ($mode -eq '1') {
+        Write-Host "`nScanning installed applications..." -ForegroundColor Cyan
+        Write-Host "Please wait...`n" -ForegroundColor Cyan
+        $apps = Get-InstalledApplications
+    }
+    elseif ($mode -eq '2') {
+        $apps = Get-StoreApplications
+    }
+    else {
+        Write-Host "`nInvalid selection!" -ForegroundColor Red
+        continue
+    }
+
+    if (-not $apps -or $apps.Count -eq 0) {
+        Write-Host "[ERROR] No applications found!" -ForegroundColor Red
+        continue
+    }
+
+    do {
+        Show-ApplicationList -apps $apps
+        
+        Write-Host "`nSelect application number to uninstall (0 to back): " -ForegroundColor Yellow -NoNewline
+        $selection = Read-Host
+        
+        if ($selection -eq '0') {
+            break
         }
-        else {
-            Write-Host "`nInvalid selection!" -ForegroundColor Red
+        
+        try {
+            $index = [int]$selection - 1
+            if ($index -ge 0 -and $index -lt $apps.Count) {
+                $selectedApp = $apps[$index]
+                Invoke-Uninstall -app $selectedApp
+                
+                Write-Host "`nScan for leftovers? (Y/N): " -ForegroundColor Yellow -NoNewline
+                $scanLeftovers = Read-Host
+                
+                if ($scanLeftovers -eq 'Y' -or $scanLeftovers -eq 'y') {
+                    Remove-Leftovers -app $selectedApp
+                }
+                
+                Write-Host "`nPress any key to continue..." -ForegroundColor Gray
+                $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+            }
+            else {
+                Write-Host "`nInvalid selection!" -ForegroundColor Red
+                Start-Sleep -Seconds 2
+            }
+        }
+        catch {
+            Write-Host "`nInvalid input!" -ForegroundColor Red
             Start-Sleep -Seconds 2
         }
-    }
-    catch {
-        Write-Host "`nInvalid input!" -ForegroundColor Red
-        Start-Sleep -Seconds 2
-    }
-    
+        
+    } while ($true)
+
 } while ($true)
 
 Write-Host "`nExiting uninstaller..." -ForegroundColor Green
