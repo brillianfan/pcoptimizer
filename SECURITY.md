@@ -94,12 +94,10 @@ Get-WmiObject Win32_OperatingSystem, Win32_Processor, Win32_PhysicalMemory...
 # Chỉ đọc thông tin phần cứng qua WMI, không sửa đổi
 ```
 
-#### Windows & Office Tools:
+#### Windows & Office Info:
 ```powershell
 # Kiểm tra bản quyền:
 slmgr.vbs /xpr
-# MAS Activation (Mẫu):
-irm https://get.activated.win | iex
 ```
 
 #### Internet Boost:
@@ -211,7 +209,7 @@ notepad PCOptimizer.bat
 
 # Tìm kiếm từ khóa nguy hiểm
 findstr /i "download upload send http" PCOptimizer.bat
-# Ngoại trừ: get.activated.win (MAS) và Windows Update API
+# Ngoại trừ: Windows Update API
 ```
 
 ### 2. Quét VirusTotal
@@ -297,6 +295,11 @@ findstr /i "download upload send http" PCOptimizer.bat
 
 ## Changelog Bảo mật
 
+### v1.0.5 (2026-02-23)
+- ✅ Removed Windows & Office Activation to comply with GitHub TOS
+- ✅ Windows & Office Info: Restricted to status checking only
+- ✅ Synchronized documentation across all files
+
 ### v1.0.3 (2026-02-03)
 - ✅ Added Offline Activation Fallback
 - ✅ Advanced Leftover Cleanup using wildcards
@@ -318,4 +321,4 @@ findstr /i "download upload send http" PCOptimizer.bat
 
 ---
 
-**Last updated**: February 03, 2026
+**Last updated**: February 23, 2026

@@ -7,6 +7,19 @@ và dự án này tuân theo [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ---
 
+## [1.0.5] - 2026-02-23
+
+### 🗑️ Removed
+- **Windows & Office Activation**: Loại bỏ hoàn toàn tính năng kích hoạt bản quyền để tuân thủ Điều khoản dịch vụ (TOS) của GitHub.
+- **MAS Script Integration**: Gỡ bỏ mã nguồn kết nối và thực thi Microsoft Activation Scripts (MAS).
+- **Offline Activation Fallback**: Xóa bỏ các file và logic liên quan đến kích hoạt offline.
+
+### 🔄 Changed
+- **Windows & Office Info**: Chuyển đổi mục "Activation" thành "Info", chỉ giữ lại chức năng kiểm tra phiên bản và trạng thái bản quyền hiện tại.
+- Cập nhật phiên bản lên 1.0.5 trong toàn bộ hệ thống.
+
+---
+
 ## [1.0.4] - 2026-02-06
 
 ### ✨ Added

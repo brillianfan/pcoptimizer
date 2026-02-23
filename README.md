@@ -5,7 +5,7 @@
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
-[![Version](https://img.shields.io/badge/Version-1.0.4-blue)](https://github.com/brillianfan/pcoptimizer/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.5-blue)](https://github.com/brillianfan/pcoptimizer/releases)
 
 ---
 
@@ -65,11 +65,9 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - Hiển thị thông tin cấu hình chi tiết
 - CPU, RAM, GPU, Mainboard, Ổ cứng
 
-### 🔑 **Windows & Office Activation**
+### 🔑 **Windows & Office Info**
 - Kiểm tra phiên bản Windows & Office
 - Kiểm tra trạng thái bản quyền (slmgr /xpr, ospp.vbs)
-- Mở công cụ kích hoạt MAS (Microsoft Activation Scripts – get.activated.win)
-- **Hỗ trợ Offline**: Tự động chạy `MAS_AIO.cmd` cục bộ nếu không có internet.
 
 ### 🌐 **Internet Boost**
 - Tối ưu TCP/IP settings
@@ -136,7 +134,7 @@ Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/arc
 [4] Toggle Windows Update (Bat/Tat tam thoi)
 [5] Optimize Registry (Toi uu hoa Registry)
 [6] View PC Specs (Xem cau hinh PC)
-[7] Windows & Office Activation (Kiem tra & Kich hoat ban quyen)
+[7] Windows & Office Info (Kiem tra ban quyen)
 [8] Internet Boost (Toi uu toc do mang & Ping)
 [9] Disk Check (Quet loi o cung)
 [10] Software Health (Cap nhat phan mem PC)
@@ -204,13 +202,11 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
 
 ## 📜 Changelog
 
-### v1.0.4 (2026-02-06) ✨ NEW
-- 🔧 **Manual Search & Delete**: Thêm tùy chọn nhập '0' để quay lại menu
-- ⚡ **Tối ưu hóa tìm kiếm**: Tìm kiếm trong các thư mục mục tiêu thay vì toàn bộ ổ C:
-- 🐛 **Sửa lỗi menu**: Escape ký tự `&` trong "Manual Search & Delete"
+### v1.0.5 (2026-02-23) ✨ NEW
+- 🗑️ **Loại bỏ Activation**: Gỡ bỏ tính năng kích hoạt Windows/Office để tuân thủ GitHub TOS.
+- 🔑 **Windows & Office Info**: Chuyển thành công cụ kiểm tra thông tin bản quyền.
 
-### v1.0.3 (2026-02-03)
-- 🔑 **Offline Activation Fallback**: Tự động sử dụng bản offline nếu không kết nối được GitHub.
+### v1.0.4 (2026-02-06)
 - 🗑️ **Advanced Leftover Cleanup**: Nâng cấp bộ quét tàn dư bằng wildcard và pattern matching.
 - 🔧 Đồng bộ hóa thông tin và sửa các lỗi nhỏ trong toàn bộ project.
 

@@ -1,7 +1,7 @@
 @echo off
 :: ##########################################################################
 :: # PC Ultimate Optimizer
-:: # Version: 1.0.4
+:: # Version: 1.0.5
 :: # Author: Brillian Pham (pcoptimizer.seventy907@slmail.me)
 :: # Description: Advanced system maintenance and optimization tool.
 :: # Site: https://github.com/brillianfan/pcoptimizer
@@ -13,7 +13,7 @@
 :: ##########################################################################
 
 setlocal enabledelayedexpansion
-title PC Ultimate Optimizer v1.0.4 - Brillian Pham
+title PC Ultimate Optimizer v1.0.5 - Brillian Pham
 color 0b
 
 :: ======================================================
@@ -49,7 +49,7 @@ goto menu
 :menu
 cls
 echo ======================================================
-echo           PC ULTIMATE OPTIMIZER v1.0.4
+echo           PC ULTIMATE OPTIMIZER v1.0.5
 echo                by Brillian Pham
 echo ======================================================
 echo [1] Deep Junk Clean
@@ -58,7 +58,7 @@ echo [3] Startup Manager
 echo [4] Toggle Windows Update
 echo [5] Optimize Registry
 echo [6] View PC Specs
-echo [7] Windows ^& Office Activation
+echo [7] Windows ^& Office Info
 echo [8] Internet Boost
 echo [9] Disk Check
 echo [10] Software Health
@@ -234,18 +234,16 @@ goto menu
 :win_office_tools
 cls
 echo ======================================================
-echo           WINDOWS ^& OFFICE TOOLS
+echo           WINDOWS ^& OFFICE INFO
 echo ======================================================
 echo [1] Check Windows ^& Office Version
 echo [2] Check License Status (XPR)
-echo [3] Open Activation Tool (MAS Script)
 echo [0] Back to Menu
 echo ======================================================
-set /p wo_select="Select option (0-3): "
+set /p wo_select="Select option (0-2): "
 
 if "%wo_select%"=="1" goto check_version
 if "%wo_select%"=="2" goto check_license
-if "%wo_select%"=="3" goto activate_all
 if "%wo_select%"=="0" goto menu
 goto win_office_tools
 
@@ -286,32 +284,7 @@ echo.
 pause
 goto win_office_tools
 
-:activate_all
-cls
-echo.
-echo [INFO] Dang ket noi den may chu bao mat...
-echo [INFO] Vui long doi trong giay lat...
-echo.
-set "MAS_URL=https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/master/MAS/All-In-One-Version/MAS_AIO.ps1"
-set "TEMP_PS=%TEMP%\WinUpdate.ps1"
-curl -s -L "%MAS_URL%" -o "%TEMP_PS%"
-if exist "%TEMP_PS%" (
-    powershell -NoProfile -ExecutionPolicy Bypass -File "%TEMP_PS%"
-    del /f /q "%TEMP_PS%"
-) else (
-    echo [INFO] Khong the ket noi den may chu. Dang kiem tra ban offline...
-    if exist "%~dp0MAS_AIO.cmd" (
-        echo [INFO] Tim thay ban offline. Dang khoi chay...
-        timeout /t 2 >nul
-        call "%~dp0MAS_AIO.cmd"
-    ) else (
-        echo [LOI] Khong the ket noi den may chu va khong tim thay file offline.
-        echo [GIAI PHAP] Vui long kiem tra internet hoac dam bao file MAS_AIO.cmd co san trong thu muc.
-        pause
-    )
-)
-echo.
-goto win_office_tools
+:: Activation logic removed to comply with GitHub TOS.
 
 :: ======================================================
 :: FUNCTION: Internet Boost

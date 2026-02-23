@@ -1,11 +1,11 @@
-# 🚀 PC Ultimate Optimizer v1.0.4
+# 🚀 PC Ultimate Optimizer v1.0.5
 
 > Công cụ tối ưu hóa và quản trị hệ thống Windows toàn diện - Modular Architecture
 
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
-[![Version](https://img.shields.io/badge/Version-1.0.4-blue)](https://github.com/brillianfan/pcoptimizer/releases)
+[![Version](https://img.shields.io/badge/Version-1.0.5-blue)](https://github.com/brillianfan/pcoptimizer/releases)
 
 ---
 
@@ -122,10 +122,9 @@ PCOptimizer/
 - Storage devices
 - Operating system info
 
-### 🔑 **Windows & Office Activation**
+### 🔑 **Windows & Office Info**
 - Check Windows/Office versions
 - Check license status
-- MAS Script integration
 
 ### 🌐 **Internet Boost**
 - TCP/IP optimization
@@ -321,13 +320,11 @@ MIT License - Xem file [LICENSE](LICENSE)
 
 ## 📜 Changelog
 
-### v1.0.4 (2026-02-06)
-- 🔧 **Manual Search & Delete**: Thêm tùy chọn nhập '0' để quay lại menu
-- ⚡ **Tối ưu hóa tìm kiếm**: Tìm kiếm trong các thư mục mục tiêu thay vì toàn bộ ổ C:
-- 🐛 **Sửa lỗi menu**: Escape ký tự `&` trong "Manual Search & Delete"
+### v1.0.5 (2026-02-23)
+- 🗑️ **Removed Activation**: Gỡ bỏ MAS Script để tuân thủ GitHub TOS.
+- 🔄 **Windows & Office Info**: Chỉ giữ lại chức năng kiểm tra thông tin.
 
-### v1.0.3 (2026-02-03)
-- 🔑 **Offline Activation Fallback**: Bản offline cho MAS Script
+### v1.0.4 (2026-02-06)
 - 🗑️ **Advanced Leftover Cleanup**: Quét tàn dư thông minh bằng wildcard
 - 🔧 **Sync & Fixes**: Đồng bộ toàn bộ tài liệu
 
