@@ -7,6 +7,25 @@ và dự án này tuân theo [Semantic Versioning](https://semver.org/spec/v2.0.
 
 ---
 
+## [2.0.0] - 2026-03-20
+
+### ✨ Added
+- **Giao diện GUI Hoàn chỉnh**: Chuyển đổi từ giao diện dòng lệnh (CLI) sang giao diện đồ họa (GUI) hiện đại sử dụng `customtkinter`.
+- **Advanced Uninstaller**:
+  - Hỗ trợ liệt kê và gỡ bỏ ứng dụng từ **Microsoft Store**.
+  - Tự động quét và dọn dẹp tàn dư (AppData, Registry) sau khi gỡ cài đặt.
+- **Driver Update**: Tích hợp trình quản lý Driver cho phép quét và cập nhật trực tiếp qua Windows Update API.
+- **Software Health**: Tích hợp Winget để quản lý và cập nhật toàn bộ phần mềm trên máy tính.
+- **Dashboard Hệ thống**: Hiển thị thông số cấu hình PC (CPU, RAM, GPU, Disk) ngay khi khởi động.
+- **Tự động Yêu cầu Quyền Admin**: Ứng dụng tự động yêu cầu quyền Quản trị viên khi khởi chạy để đảm bảo các tính năng hoạt động ổn định.
+
+### 🔄 Changed
+- Nâng cấp toàn bộ logic từ script đơn lẻ sang kiến trúc mô-đun (Modular Architecture).
+- Cập nhật số phiên bản lên 2.0.0 trong toàn bộ hệ thống.
+- Làm mới toàn bộ hệ thống tài liệu hướng dẫn (README, User Guide, Security).
+
+---
+
 ## [1.0.5] - 2026-02-23
 
 ### 🗑️ Removed

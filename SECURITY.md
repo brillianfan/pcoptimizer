@@ -61,9 +61,14 @@ cleanmgr /sagerun:1                  # Chạy Disk Cleanup
 
 #### Uninstaller:
 ```powershell
+# Desktop Apps (Registry):
 Get-ItemProperty HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\* | Select-Object DisplayName, UninstallString
-# Liệt kê apps từ Registry và chạy lệnh gỡ cài đặt tương ứng
+
+# Store Apps (PowerShell):
+Get-AppxPackage | Where-Object -Property NonRemovable -eq $False | Where-Object -Property IsFramework -eq $False
 ```
+- Liệt kê apps từ Registry và Microsoft Store.
+- Chạy lệnh gỡ cài đặt tiêu chuẩn hoặc `Remove-AppxPackage`.
 
 #### Startup Manager:
 ```powershell
@@ -295,6 +300,12 @@ findstr /i "download upload send http" PCOptimizer.bat
 
 ## Changelog Bảo mật
 
+### v2.0.0 (2026-03-20)
+- ✅ Added Microsoft Store Apps uninstallation support
+- ✅ Uses standard `Remove-AppxPackage` PowerShell command
+- ✅ No additional third-party dependencies for Store apps
+- ✅ Full synchronization of security documentation
+
 ### v1.0.5 (2026-02-23)
 - ✅ Removed Windows & Office Activation to comply with GitHub TOS
 - ✅ Windows & Office Info: Restricted to status checking only
@@ -321,4 +332,4 @@ findstr /i "download upload send http" PCOptimizer.bat
 
 ---
 
-**Last updated**: February 23, 2026
+**Last updated**: March 20, 2026

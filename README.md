@@ -5,7 +5,7 @@
 [![VirusTotal Scan](https://img.shields.io/badge/VirusTotal-Scanned-brightgreen)](https://www.virustotal.com/gui/url/73cf6a8d9251593ef1433a50a56de686889b906643717d74f7202c5c255d4bcd?nocache=1)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Windows](https://img.shields.io/badge/Platform-Windows%2010%2F11-0078D6)](https://www.microsoft.com/windows)
-[![Version](https://img.shields.io/badge/Version-1.0.5-blue)](https://github.com/brillianfan/pcoptimizer/releases)
+[![Version](https://img.shields.io/badge/Version-2.0.0-blue)](https://github.com/brillianfan/pcoptimizer/releases)
 
 ---
 
@@ -41,10 +41,10 @@ Script này là **HOÀN TOÀN AN TOÀN** nhưng sử dụng các quyền quản 
 - Quét và xóa thư mục rỗng (ProgramData, AppData, Program Files…)
 - **Xóa shortcuts lỗi** – các liên kết (.lnk) trỏ tới file/thư mục đã bị xóa (Desktop, Start Menu, Quick Launch)
 
-### 🗑️ **Uninstaller**
-- Liệt kê danh sách ứng dụng từ Registry (sắp xếp A–Z)
-- Chọn theo số thứ tự để gỡ bỏ phần mềm
-- Tuỳ chọn quét và xóa tàn dư (AppData, ProgramData, Registry) sau khi gỡ
+### 🗑️ **Advanced Uninstaller**
+- Liệt kê danh sách ứng dụng từ Registry và **Microsoft Store**.
+- Giao diện chọn ứng dụng trực quan.
+- Tự động quét và xóa tàn dư (AppData, ProgramData, Registry) sau khi gỡ cài đặt.
 
 ### ⚡ **Startup Manager**
 - Mở Task Manager (tab Startup) để quản lý ứng dụng khởi động cùng Windows
@@ -102,10 +102,11 @@ cd pcoptimizer
 
 Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/archive/refs/heads/main.zip)
 
-### Bước 2: Chạy script
-1. Double Click vào `PCOptimizer.bat` để chạy
-2. Chọn Yes để cho phép công cụ chạy với quyền quản trị **"Run as Administrator"**
-3. Chọn chức năng từ menu
+### Bước 2: Chạy ứng dụng
+1. Giải nén file và truy cập vào thư mục.
+2. Chạy file `PCOptimizer.bat` (Launcher) hoặc `main_gui.py` (Script).
+3. Hệ thống sẽ tự động yêu cầu quyền **"Run as Administrator"** - chọn **Yes** để tiếp tục.
+4. Giao diện GUI sẽ hiện lên, bạn chỉ cần chọn tính năng muốn sử dụng từ menu bên trái.
 
 ### Bước 3: Xử lý cảnh báo Antivirus (nếu có)
 
@@ -128,18 +129,13 @@ Hoặc tải file ZIP: [Download](https://github.com/brillianfan/pcoptimizer/arc
           CONG CU QUAN TRI & TOI UU PC
                by Brillian Pham
 ======================================================
-[1] Deep Junk Clean (Don rac & Giai phong dung luong)
-[2] Uninstaller (Go phan mem)
-[3] Startup Manager (Quan ly cac ung dung khoi dong cung Windows)
-[4] Toggle Windows Update (Bat/Tat tam thoi)
-[5] Optimize Registry (Toi uu hoa Registry)
-[6] View PC Specs (Xem cau hinh PC)
-[7] Windows & Office Info (Kiem tra ban quyen)
-[8] Internet Boost (Toi uu toc do mang & Ping)
-[9] Disk Check (Quet loi o cung)
-[10] Software Health (Cap nhat phan mem PC)
-[11] Driver Update (Kiem tra & Cap nhat Drivers) ✨ NEW
-[0] Exit
+[+] Dashboard (He thong)
+[+] Deep Clean (Don rac)
+[+] Tools & Optimization (Cong cu toi uu)
+[+] Uninstaller (Go ung dung + Store Apps)
+[+] Software Update (Cap nhat phan mem)
+[+] Driver Update (Cap nhat Drivers)
+[+] Windows & Office Info (Kiem tra ban quyen)
 ======================================================
 ```
 
@@ -202,7 +198,13 @@ Dự án này được phân phối dưới giấy phép MIT License. Xem file [
 
 ## 📜 Changelog
 
-### v1.0.5 (2026-02-23) ✨ NEW
+### v2.0.0 (2026-03-20) ✨ NEW
+- 🎨 **Giao diện GUI**: Chuyển đổi hoàn toàn sang giao diện đồ họa hiện đại.
+- 🗑️ **Store Apps Support**: Hỗ trợ gỡ ứng dụng từ Microsoft Store.
+- 📊 **Dashboard**: Hiển thị thông số PC trực quan.
+- 🔧 **Tự động Admin**: Tự động yêu cầu quyền quản trị khi chạy.
+
+### v1.0.5 (2026-02-23)
 - 🗑️ **Loại bỏ Activation**: Gỡ bỏ tính năng kích hoạt Windows/Office để tuân thủ GitHub TOS.
 - 🔑 **Windows & Office Info**: Chuyển thành công cụ kiểm tra thông tin bản quyền.
 
