@@ -10,8 +10,8 @@ from PIL import Image
 def get_store_apps():
     apps = []
     try:
-        # Get removable non-framework store apps with InstallLocation and Logo
-        cmd = 'powershell.exe -NoProfile -Command "Get-AppxPackage | Where-Object -Property NonRemovable -eq $False | Where-Object -Property IsFramework -eq $False | Select-Object Name, PackageFullName, InstallLocation, Logo | ConvertTo-Json"'
+        # Get removable non-framework store apps with InstallLocation, Logo, and Publisher
+        cmd = 'powershell.exe -NoProfile -Command "Get-AppxPackage | Where-Object -Property NonRemovable -eq $False | Where-Object -Property IsFramework -eq $False | Select-Object Name, PackageFullName, InstallLocation, Logo, Publisher | ConvertTo-Json"'
         result = subprocess.run(cmd, capture_output=True, text=True, shell=True)
         if result.returncode == 0 and result.stdout.strip():
             data = json.loads(result.stdout)
@@ -24,6 +24,7 @@ def get_store_apps():
                     "uninstall": item.get("PackageFullName"),
                     "install_location": item.get("InstallLocation"),
                     "logo": item.get("Logo"),
+                    "publisher": item.get("Publisher"),
                     "is_store": True
                 })
     except Exception as e:
@@ -67,12 +68,19 @@ def get_installed_apps(app_type="all"):
                         except:
                             icon_path = ""
                             
+                        try:
+                            publisher, _ = winreg.QueryValueEx(subkey, "Publisher")
+                        except:
+                            publisher = ""
+                            
                         if name and u_string:
                             apps.append({
                                 "name": name,
                                 "uninstall": u_string,
                                 "icon_path": icon_path,
-                                "is_store": False
+                                "publisher": publisher,
+                                "is_store": False,
+                                "subkey": subkey_name
                             })
                         winreg.CloseKey(subkey)
                     except:

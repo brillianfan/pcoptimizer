@@ -109,6 +109,40 @@ def get_upgradable_apps_list(log_callback=None):
         if log_callback: log_callback(f"[ERROR] Winget error: {e}")
         return []
 
+def enrich_app_data(winget_apps, installed_apps):
+    """
+    Merges winget update info with installed app info (Publisher, Icon).
+    """
+    enriched = []
+    for w_app in winget_apps:
+        match = None
+        # Try to find a match by subkey (exact ID)
+        for i_app in installed_apps:
+            if i_app.get('subkey') == w_app['id']:
+                match = i_app
+                break
+        
+        # If no subkey match, try name match
+        if not match:
+            for i_app in installed_apps:
+                if i_app['name'].lower() == w_app['name'].lower():
+                    match = i_app
+                    break
+        
+        if match:
+            w_app['publisher'] = match.get('publisher', 'Unknown Publisher')
+            w_app['icon_path'] = match.get('icon_path', '')
+            w_app['logo'] = match.get('logo', '')
+            w_app['install_location'] = match.get('install_location', '')
+            w_app['is_store'] = match.get('is_store', False)
+        else:
+            w_app['publisher'] = "Unknown Publisher"
+            w_app['icon_path'] = ""
+            w_app['is_store'] = False
+            
+        enriched.append(w_app)
+    return enriched
+
 if __name__ == "__main__":
     def simple_log(msg): print(msg)
     if is_winget_installed():

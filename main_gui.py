@@ -421,22 +421,60 @@ class PCOptimizerApp(ctk.CTk):
             widget.destroy()
             
         def task():
-            apps = software_health.get_upgradable_apps_list(self.log_sw)
-            if not apps:
+            # Get winget list
+            winget_apps = software_health.get_upgradable_apps_list(self.log_sw)
+            if not winget_apps:
                 self.log_sw("[INFO] No updates found.")
                 return
+            
+            # Get installed apps list for enrichment
+            self.log_sw("[+] Extracting local app info for icons/publishers...")
+            installed_apps = uninstaller.get_installed_apps("all")
+            
+            # Enrich winget data
+            apps = software_health.enrich_app_data(winget_apps, installed_apps)
                 
             for app in apps:
-                frame = ctk.CTkFrame(self.sw_updates_scroll, fg_color="transparent")
-                frame.pack(fill="x", padx=5, pady=5)
+                frame = ctk.CTkFrame(self.sw_updates_scroll, corner_radius=10)
+                frame.pack(fill="x", padx=10, pady=5)
                 
-                label_text = f"{app['name']} ({app['source']})\n{app['version']} -> {app['available']}"
-                lbl = ctk.CTkLabel(frame, text=label_text, anchor="w", justify="left")
-                lbl.pack(side="left", padx=5, fill="x", expand=True)
+                # Icon part
+                icon_label = ctk.CTkLabel(frame, text="", width=40)
+                icon_label.pack(side="left", padx=(10, 5))
                 
-                upd_btn = ctk.CTkButton(frame, text="Update", width=80, height=24, 
+                app_icon = None
+                try:
+                    # Reuse icon extraction from uninstaller
+                    pil_img = uninstaller.get_app_icon(app, size=32)
+                    if pil_img:
+                        app_icon = ctk.CTkImage(light_image=pil_img, dark_image=pil_img, size=(32, 32))
+                        icon_label.configure(image=app_icon)
+                except:
+                    pass
+
+                # Text Info Part
+                info_frame = ctk.CTkFrame(frame, fg_color="transparent")
+                info_frame.pack(side="left", padx=5, pady=10, fill="both", expand=True)
+                
+                name_lbl = ctk.CTkLabel(info_frame, text=app['name'], font=ctk.CTkFont(size=14, weight="bold"), anchor="w")
+                name_lbl.pack(fill="x")
+                
+                publisher_lbl = ctk.CTkLabel(info_frame, text=f"Publisher: {app['publisher']}", font=ctk.CTkFont(size=11), text_color="gray", anchor="w")
+                publisher_lbl.pack(fill="x")
+                
+                # Version Part
+                version_frame = ctk.CTkFrame(frame, fg_color="transparent")
+                version_frame.pack(side="left", padx=10, pady=10)
+                
+                ver_text = f"Current: {app['version']}\nNew: {app['available']}"
+                ver_lbl = ctk.CTkLabel(version_frame, text=ver_text, font=ctk.CTkFont(size=11), justify="left", anchor="w")
+                ver_lbl.pack()
+                
+                # Update Button
+                upd_btn = ctk.CTkButton(frame, text="Update", width=80, height=30, 
+                                       fg_color="#1f538d", hover_color="#14375e",
                                        command=lambda a=app: self.run_single_update(a))
-                upd_btn.pack(side="right", padx=5)
+                upd_btn.pack(side="right", padx=15)
             
             self.log_sw(f"[OK] Found {len(apps)} updates.")
                 
