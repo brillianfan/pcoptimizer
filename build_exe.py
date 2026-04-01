@@ -29,7 +29,7 @@ def build():
         '--noconsole',
         '--name=PC_Ultimate_Optimizer',
         '--clean',
-        '--hidden-import=customtkinter',
+        '--collect-all=customtkinter',
         '--hidden-import=psutil',
         '--hidden-import=wmi',
         '--hidden-import=pywin32',
@@ -37,11 +37,32 @@ def build():
         '--hidden-import=driver_update',
         '--icon=pc_opt_icon.ico',
         '--add-data=pc_opt_icon.ico;.',
+        '--add-data=Deep-JunkClean.ps1;.',
+        '--add-data=Driver-Update.ps1;.',
+        '--add-data=Optimize-Registry.ps1;.',
+        '--add-data=Remove-BrokenShortcuts.ps1;.',
+        '--add-data=SearchAndClean.ps1;.',
     ]
     
     print(f"Running PyInstaller with: {' '.join(params)}")
+    import PyInstaller.__main__
     PyInstaller.__main__.run(params)
     
+    # Cleanup
+    print("\n[+] Cleaning up build files...")
+    import shutil
+    try:
+        if os.path.exists("build"):
+            shutil.rmtree("build")
+            print(" - Removed 'build' folder.")
+        
+        spec_file = "PC_Ultimate_Optimizer.spec"
+        if os.path.exists(spec_file):
+            os.remove(spec_file)
+            print(f" - Removed '{spec_file}'")
+    except Exception as e:
+        print(f" - Warning: Cleanup failed: {e}")
+
     print("\n[SUCCESS] Build process finished!")
     print("Check the 'dist' folder for your PC_Ultimate_Optimizer.exe")
 
