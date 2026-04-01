@@ -482,7 +482,7 @@ class PCOptimizerApp(ctk.CTk):
 
     def run_single_update(self, app):
         def task():
-            self.log_sw(f"[+] Updating {app['name']}...")
+            self.log_sw(f"[+] Updating {app['name']} (ID: {app['id']})...")
             success = software_health.upgrade_app(app['id'], self.log_sw)
             if success:
                 self.log_sw(f"[OK] Successfully updated {app['name']}")

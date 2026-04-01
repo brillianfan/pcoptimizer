@@ -46,9 +46,11 @@ def get_upgradable_apps(log_callback=None):
 def upgrade_all(log_callback=None):
     if log_callback: log_callback("[+] Upgrading all apps via Winget...")
     try:
+        # Added --silent and --force for better background execution
         process = subprocess.Popen(
-            ["winget", "upgrade", "--all", "--accept-package-agreements", "--accept-source-agreements"],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=True, creationflags=CREATE_NO_WINDOW
+            "winget upgrade --all --silent --force --accept-package-agreements --accept-source-agreements",
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=True, creationflags=CREATE_NO_WINDOW,
+            encoding='utf-8', errors='replace'
         )
         if process.stdout:
             for line in process.stdout:
@@ -59,12 +61,17 @@ def upgrade_all(log_callback=None):
         if log_callback: log_callback(f"[ERROR] Failed to upgrade: {e}")
 
 def upgrade_app(app_id, log_callback=None):
-    if log_callback: log_callback(f"[+] Upgrading {app_id}...")
+    app_id = str(app_id).strip()
+    if log_callback: log_callback(f"[+] Upgrading package: {app_id}...")
     try:
-        # Use --silent and --force if needed, but for now just basic upgrade
-        subprocess.run(["winget", "upgrade", "--id", app_id, "--accept-package-agreements", "--accept-source-agreements"], 
-                       check=True, creationflags=CREATE_NO_WINDOW)
-        if log_callback: log_callback(f"[OK] {app_id} updated.")
+        # Added --silent and --force to prevent interactive installers from hanging
+        # Using shell=True for better PATH resolution on some Windows versions
+        cmd = f'winget upgrade --id "{app_id}" --silent --force --accept-package-agreements --accept-source-agreements'
+        result = subprocess.run(cmd, shell=True, check=True, creationflags=CREATE_NO_WINDOW, capture_output=True, text=True)
+        
+        if log_callback: 
+            if result.stdout: log_callback(result.stdout.strip())
+            log_callback(f"[OK] {app_id} updated.")
         return True
     except Exception as e:
         if log_callback: log_callback(f"[ERROR] Failed to upgrade {app_id}: {e}")
@@ -76,15 +83,20 @@ def get_upgradable_apps_list(log_callback=None):
     
     try:
         # Get output from winget upgrade
-        result = subprocess.run(["winget", "upgrade", "--accept-source-agreements"], 
-                               capture_output=True, text=True, check=False, creationflags=CREATE_NO_WINDOW)
+        result = subprocess.run("winget upgrade --accept-source-agreements", 
+                               shell=True, capture_output=True, text=True, check=False, creationflags=CREATE_NO_WINDOW,
+                               encoding='utf-8', errors='replace')
         lines = result.stdout.splitlines()
         
         apps = []
         parsing = False
+        idx_id, idx_ver, idx_avail, idx_source = -1, -1, -1, -1
+        
         for line in lines:
             if not line.strip(): continue
-            if "Name" in line and "Id" in line:
+            
+            # More robust header detection (handles garbage characters at start)
+            if "Name" in line and "Id" in line and ("Version" in line or "Available" in line):
                 parsing = True
                 # Find column indices for better parsing
                 header = line
@@ -94,26 +106,50 @@ def get_upgradable_apps_list(log_callback=None):
                 idx_source = header.find("Source")
                 continue
             
-            if parsing and not line.startswith("-") and not line.startswith("<"):
-                # Use the indices found to split the line
-                name = line[:idx_id].strip()
-                app_id = line[idx_id:idx_ver].strip()
-                version = line[idx_ver:idx_avail].strip()
-                available = line[idx_avail:idx_source].strip()
-                source = line[idx_source:].strip()
+            # Skip separator lines and summary lines
+            if parsing:
+                if line.startswith("-") or line.startswith("<") or "upgrades available" in line:
+                    continue
                 
-                if name and app_id:
-                    apps.append({
-                        "name": name,
-                        "id": app_id,
-                        "version": version,
-                        "available": available,
-                        "source": source
-                    })
+                # Ensure we found indices
+                if idx_id == -1 or idx_ver == -1: continue
+                
+                try:
+                    # Use the indices found to split the line
+                    # We use max of current line length and header indices to avoid out of bounds
+                    name = line[:idx_id].strip()
+                    app_id = line[idx_id:idx_ver].strip() if idx_ver > idx_id else line[idx_id:].split()[0]
+                    
+                    # Handle version/available/source safely
+                    version = ""
+                    if idx_ver != -1:
+                        end_ver = idx_avail if idx_avail > idx_ver else len(line)
+                        version = line[idx_ver:end_ver].strip()
+                        
+                    available = ""
+                    if idx_avail != -1:
+                        end_avail = idx_source if idx_source > idx_avail else len(line)
+                        available = line[idx_avail:end_avail].strip()
+                        
+                    source = ""
+                    if idx_source != -1:
+                        source = line[idx_source:].strip()
+                    
+                    if name and app_id and app_id.lower() != "id":
+                        apps.append({
+                            "name": name,
+                            "id": app_id,
+                            "version": version,
+                            "available": available,
+                            "source": source
+                        })
+                except:
+                    # Skip problematic lines
+                    continue
         
         return apps
     except Exception as e:
-        if log_callback: log_callback(f"[ERROR] Winget error: {e}")
+        if log_callback: log_callback(f"[ERROR] Winget parsing error: {e}")
         return []
 
 def enrich_app_data(winget_apps, installed_apps):

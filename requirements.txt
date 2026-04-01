@@ -3,3 +3,4 @@ psutil
 wmi
 pywin32
 requests
+Pillow
