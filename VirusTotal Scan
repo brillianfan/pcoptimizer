@@ -1,0 +1,14 @@
+name: VirusTotal Scan
+on: release
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: VirusTotal Scan
+        uses: crazy-max/ghaction-virustotal@v4 # Sử dụng Action từ cộng đồng
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          files: |
+            path/to/your/file.exe 
