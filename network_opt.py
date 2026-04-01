@@ -2,6 +2,9 @@ import subprocess
 import ctypes
 import os
 
+# Flag to suppress console window for background processes
+CREATE_NO_WINDOW = 0x08000000
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
@@ -26,7 +29,7 @@ def internet_boost(log_callback=None):
     success = 0
     for cmd, desc in commands:
         try:
-            subprocess.run(cmd, shell=True, check=True, capture_output=True)
+            subprocess.run(cmd, shell=True, check=True, capture_output=True, creationflags=CREATE_NO_WINDOW)
             if log_callback: log_callback(f"[OK] {desc}")
             success += 1
         except Exception as e:
@@ -45,13 +48,13 @@ def toggle_windows_update(enable=True, log_callback=None):
     try:
         if log_callback: log_callback(f"[+] Setting Windows Update to {action}...")
         # Config service
-        subprocess.run(f'sc config wuauserv start= {state}', shell=True, check=True, capture_output=True)
+        subprocess.run(f'sc config wuauserv start= {state}', shell=True, check=True, capture_output=True, creationflags=CREATE_NO_WINDOW)
         
         # Start/Stop service
         if enable:
-            subprocess.run('net start wuauserv', shell=True, capture_output=True)
+            subprocess.run('net start wuauserv', shell=True, capture_output=True, creationflags=CREATE_NO_WINDOW)
         else:
-            subprocess.run('net stop wuauserv /y', shell=True, capture_output=True)
+            subprocess.run('net stop wuauserv /y', shell=True, capture_output=True, creationflags=CREATE_NO_WINDOW)
             
         if log_callback: log_callback(f"[OK] Windows Update {action}dSuccessfully!")
     except Exception as e:

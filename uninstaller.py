@@ -7,12 +7,15 @@ import re
 import tempfile
 from PIL import Image
 
+# Flag to suppress console window for background processes
+CREATE_NO_WINDOW = 0x08000000
+
 def get_store_apps():
     apps = []
     try:
         # Get removable non-framework store apps with InstallLocation, Logo, and Publisher
         cmd = 'powershell.exe -NoProfile -Command "Get-AppxPackage | Where-Object -Property NonRemovable -eq $False | Where-Object -Property IsFramework -eq $False | Select-Object Name, PackageFullName, InstallLocation, Logo, Publisher | ConvertTo-Json"'
-        result = subprocess.run(cmd, capture_output=True, text=True, shell=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, shell=True, creationflags=CREATE_NO_WINDOW)
         if result.returncode == 0 and result.stdout.strip():
             data = json.loads(result.stdout)
             if isinstance(data, dict):
@@ -108,7 +111,7 @@ def run_uninstall(app_obj, log_callback=None):
             # Store apps are removed via PowerShell
             package_name = app_obj['uninstall']
             cmd = f'powershell.exe -NoProfile -Command "Remove-AppxPackage -Package {package_name}"'
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+            result = subprocess.run(cmd, shell=True, capture_output=True, text=True, creationflags=CREATE_NO_WINDOW)
             if result.returncode == 0:
                 if log_callback: log_callback("[OK] Store app removed successfully.")
                 # For Store apps, we can immediately scan leftovers
@@ -120,7 +123,7 @@ def run_uninstall(app_obj, log_callback=None):
             cmd = app_obj['uninstall']
             # Try to handle quotes in the command
             if log_callback: log_callback(f"[+] Launching uninstaller: {cmd}")
-            proc = subprocess.Popen(cmd, shell=True)
+            proc = subprocess.Popen(cmd, shell=True, creationflags=CREATE_NO_WINDOW)
             if log_callback: log_callback("[OK] Uninstaller window launched. Please complete the uninstallation in the window.")
             
             # We can't easily wait for GUI uninstallers without blocking or periodic checking
@@ -335,7 +338,7 @@ def get_app_icon(app_obj, size=32):
             ps_cmd += f"[System.Drawing.Icon]::ExtractAssociatedIcon('{target_path}').ToBitmap().Save('{temp_file}', [System.Drawing.Imaging.ImageFormat]::Png)"
             
             subprocess.run(["powershell.exe", "-NoProfile", "-Command", ps_cmd], 
-                           capture_output=True, text=True)
+                           capture_output=True, text=True, creationflags=CREATE_NO_WINDOW)
             
             if os.path.exists(temp_file):
                 img = Image.open(temp_file).convert("RGBA").resize((size, size))

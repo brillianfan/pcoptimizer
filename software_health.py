@@ -1,5 +1,9 @@
 import subprocess
 import shutil
+import os
+
+# Flag to suppress console window for background processes
+CREATE_NO_WINDOW = 0x08000000
 
 def is_winget_installed():
     return shutil.which("winget") is not None
@@ -12,7 +16,8 @@ def get_upgradable_apps(log_callback=None):
     if log_callback: log_callback("[+] Checking for software updates...")
     try:
         # winget upgrade returns a table-like output
-        result = subprocess.run(["winget", "upgrade", "--accept-source-agreements"], capture_output=True, text=True, check=False)
+        result = subprocess.run(["winget", "upgrade", "--accept-source-agreements"], 
+                               capture_output=True, text=True, check=False, creationflags=CREATE_NO_WINDOW)
         lines = result.stdout.splitlines()
         
         apps = []
@@ -43,7 +48,7 @@ def upgrade_all(log_callback=None):
     try:
         process = subprocess.Popen(
             ["winget", "upgrade", "--all", "--accept-package-agreements", "--accept-source-agreements"],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=True
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=True, creationflags=CREATE_NO_WINDOW
         )
         if process.stdout:
             for line in process.stdout:
@@ -57,7 +62,8 @@ def upgrade_app(app_id, log_callback=None):
     if log_callback: log_callback(f"[+] Upgrading {app_id}...")
     try:
         # Use --silent and --force if needed, but for now just basic upgrade
-        subprocess.run(["winget", "upgrade", "--id", app_id, "--accept-package-agreements", "--accept-source-agreements"], check=True)
+        subprocess.run(["winget", "upgrade", "--id", app_id, "--accept-package-agreements", "--accept-source-agreements"], 
+                       check=True, creationflags=CREATE_NO_WINDOW)
         if log_callback: log_callback(f"[OK] {app_id} updated.")
         return True
     except Exception as e:
@@ -70,7 +76,8 @@ def get_upgradable_apps_list(log_callback=None):
     
     try:
         # Get output from winget upgrade
-        result = subprocess.run(["winget", "upgrade", "--accept-source-agreements"], capture_output=True, text=True, check=False)
+        result = subprocess.run(["winget", "upgrade", "--accept-source-agreements"], 
+                               capture_output=True, text=True, check=False, creationflags=CREATE_NO_WINDOW)
         lines = result.stdout.splitlines()
         
         apps = []

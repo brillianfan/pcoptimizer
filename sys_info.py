@@ -5,6 +5,9 @@ import psutil # type: ignore
 import ctypes
 import subprocess
 
+# Flag to suppress console window for background processes
+CREATE_NO_WINDOW = 0x08000000
+
 def get_pc_specs():
     import pythoncom # type: ignore
     import wmi # type: ignore
@@ -39,7 +42,7 @@ def get_pc_specs():
 
 def get_windows_license():
     try:
-        output = subprocess.check_output(['cscript', '//nologo', 'C:\\Windows\\System32\\slmgr.vbs', '/xpr'], text=True)
+        output = subprocess.check_output(['cscript', '//nologo', 'C:\\Windows\\System32\\slmgr.vbs', '/xpr'], text=True, creationflags=CREATE_NO_WINDOW)
         return output.strip()
     except:
         return "Unknown"
@@ -48,7 +51,7 @@ def get_office_info():
     try:
         # PowerShell command from the original bat file to find Office name
         ps_cmd = "$office = Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*', 'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*', 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\*' -ErrorAction SilentlyContinue | Where-Object { ($_.DisplayName -like '*Microsoft Office*') -and ($_.DisplayName -notlike '*Update*') -and ($_.DisplayName -notlike '*MUI*') -and ($_.DisplayName -notlike '*Language Pack*') } | Select-Object -First 1; if ($office) { $office.DisplayName } else { 'Not found' }"
-        output = subprocess.check_output(['powershell', '-Command', ps_cmd], text=True)
+        output = subprocess.check_output(['powershell', '-Command', ps_cmd], text=True, creationflags=CREATE_NO_WINDOW)
         return output.strip()
     except:
         return "Not found"
@@ -57,7 +60,7 @@ def get_office_license():
     try:
         # Find ospp.vbs and run /dstatus
         ps_cmd = "$ospp = Get-ChildItem -Path 'C:\\Program Files\\Microsoft Office', 'C:\\Program Files (x86)\\Microsoft Office' -Filter 'ospp.vbs' -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1; if ($ospp) { $status = cscript //nologo \"$($ospp.FullName)\" /dstatus; $status | Select-String 'LICENSE NAME', 'LICENSE STATUS' | ForEach-Object { $_.ToString().Trim() } } else { 'Office license info not found.' }"
-        output = subprocess.check_output(['powershell', '-Command', ps_cmd], text=True)
+        output = subprocess.check_output(['powershell', '-Command', ps_cmd], text=True, creationflags=CREATE_NO_WINDOW)
         return output.strip() if output.strip() else "License info missing"
     except:
         return "Unknown"

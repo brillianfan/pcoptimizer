@@ -2,6 +2,9 @@
 import ctypes
 import subprocess
 
+# Flag to suppress console window for background processes
+CREATE_NO_WINDOW = 0x08000000
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() # type: ignore
@@ -81,7 +84,7 @@ def install_updates(log_callback=None):
         """
         process = subprocess.Popen(
             ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", ps_cmd],
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, creationflags=CREATE_NO_WINDOW
         )
         
         if process.stdout:

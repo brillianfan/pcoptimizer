@@ -4,6 +4,9 @@ import ctypes
 import platform
 import subprocess
 
+# Flag to suppress console window for background processes
+CREATE_NO_WINDOW = 0x08000000
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin() # type: ignore
@@ -77,7 +80,7 @@ def clear_system_logs(log_callback=None):
             "ForEach-Object { wevtutil.exe cl $_.LogName 2>$null }"
         )
         
-        subprocess.run(['powershell', '-Command', ps_command], check=True, capture_output=True)
+        subprocess.run(['powershell', '-Command', ps_command], check=True, capture_output=True, creationflags=CREATE_NO_WINDOW)
         
         if log_callback: log_callback("[OK] System logs cleared efficiently.")
     except Exception as e:
@@ -89,7 +92,7 @@ def run_disk_cleanup(log_callback=None):
         # /verylowdisk runs with all options checked and handles it automatically (shows progress)
         # /d C: ensures it targets the primary OS drive
         # We use run() instead of Popen() so the GUI log accurately reflects when it finishes.
-        subprocess.run(['cleanmgr', '/verylowdisk', '/d', 'C:'], check=False)
+        subprocess.run(['cleanmgr', '/verylowdisk', '/d', 'C:'], check=False, creationflags=CREATE_NO_WINDOW)
         if log_callback: log_callback("[OK] Windows Disk Cleanup completed.")
     except Exception as e:
         if log_callback: log_callback(f"[ERROR] Could not launch Disk Cleanup: {e}")
