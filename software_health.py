@@ -64,18 +64,36 @@ def upgrade_app(app_id, log_callback=None):
     app_id = str(app_id).strip()
     if log_callback: log_callback(f"[+] Upgrading package: {app_id}...")
     try:
-        # Added --silent and --force to prevent interactive installers from hanging
-        # Using shell=True for better PATH resolution on some Windows versions
-        cmd = f'winget upgrade --id "{app_id}" --silent --force --accept-package-agreements --accept-source-agreements'
-        result = subprocess.run(cmd, shell=True, check=True, creationflags=CREATE_NO_WINDOW, capture_output=True, text=True)
+        # Using --exact with --id is usually more reliable
+        # Use Popen to feed the log callback line by line in real-time
+        cmd = f'winget upgrade --id "{app_id}" --exact --silent --force --include-unknown --accept-package-agreements --accept-source-agreements'
+        process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, shell=True, creationflags=CREATE_NO_WINDOW,
+            encoding='utf-8', errors='replace'
+        )
         
-        if log_callback: 
-            if result.stdout: log_callback(result.stdout.strip())
-            log_callback(f"[OK] {app_id} updated.")
-        return True
+        if process.stdout:
+            for line in process.stdout:
+                if line.strip() and log_callback:
+                    log_callback(line.strip())
+        
+        process.wait()
+        
+        if process.returncode == 0:
+            if log_callback: log_callback(f"[OK] {app_id} updated.")
+            return True
+        else:
+            # Some winget error codes are actually 'success but reboot needed' or 'no change'
+            # But here we'll just log the return code for debugging
+            if log_callback: log_callback(f"[INFO] Winget finished with code: {process.returncode}")
+            # If it's a known success code (like 0x0), return True
+            return process.returncode == 0
+            
     except Exception as e:
         if log_callback: log_callback(f"[ERROR] Failed to upgrade {app_id}: {e}")
         return False
+
 
 def get_upgradable_apps_list(log_callback=None):
     if not is_winget_installed():
@@ -91,6 +109,7 @@ def get_upgradable_apps_list(log_callback=None):
         apps = []
         parsing = False
         idx_id, idx_ver, idx_avail, idx_source = -1, -1, -1, -1
+        header_offset = 0
         
         for line in lines:
             if not line.strip(): continue
@@ -98,12 +117,13 @@ def get_upgradable_apps_list(log_callback=None):
             # More robust header detection (handles garbage characters at start)
             if "Name" in line and "Id" in line and ("Version" in line or "Available" in line):
                 parsing = True
-                # Find column indices for better parsing
-                header = line
-                idx_id = header.find("Id")
-                idx_ver = header.find("Version")
-                idx_avail = header.find("Available")
-                idx_source = header.find("Source")
+                # Find the start of the "Name" column to use as offset
+                header_offset = line.find("Name")
+                # Record relative positions of other columns based on the header
+                idx_id = line.find("Id") - header_offset
+                idx_ver = line.find("Version") - header_offset
+                idx_avail = line.find("Available") - header_offset
+                idx_source = line.find("Source") - header_offset
                 continue
             
             # Skip separator lines and summary lines
@@ -111,29 +131,32 @@ def get_upgradable_apps_list(log_callback=None):
                 if line.startswith("-") or line.startswith("<") or "upgrades available" in line:
                     continue
                 
-                # Ensure we found indices
-                if idx_id == -1 or idx_ver == -1: continue
-                
+                # Check if this line is part of a previous message or garbage
+                if len(line) < header_offset + idx_id:
+                    continue
+
                 try:
-                    # Use the indices found to split the line
-                    # We use max of current line length and header indices to avoid out of bounds
-                    name = line[:idx_id].strip()
-                    app_id = line[idx_id:idx_ver].strip() if idx_ver > idx_id else line[idx_id:].split()[0]
+                    # Clean the line by removing any leading garbage matching header offset
+                    clean_line = line[header_offset:]
+                    
+                    # Use the relative indices to split the clean line
+                    name = clean_line[:idx_id].strip()
+                    app_id = clean_line[idx_id:idx_ver].strip() if idx_ver > idx_id else clean_line[idx_id:].split()[0]
                     
                     # Handle version/available/source safely
                     version = ""
                     if idx_ver != -1:
-                        end_ver = idx_avail if idx_avail > idx_ver else len(line)
-                        version = line[idx_ver:end_ver].strip()
+                        end_ver = idx_avail if idx_avail > idx_ver else len(clean_line)
+                        version = clean_line[idx_ver:end_ver].strip()
                         
                     available = ""
                     if idx_avail != -1:
-                        end_avail = idx_source if idx_source > idx_avail else len(line)
-                        available = line[idx_avail:end_avail].strip()
+                        end_avail = idx_source if idx_source > idx_avail else len(clean_line)
+                        available = clean_line[idx_avail:end_avail].strip()
                         
                     source = ""
                     if idx_source != -1:
-                        source = line[idx_source:].strip()
+                        source = clean_line[idx_source:].strip()
                     
                     if name and app_id and app_id.lower() != "id":
                         apps.append({
@@ -143,7 +166,7 @@ def get_upgradable_apps_list(log_callback=None):
                             "available": available,
                             "source": source
                         })
-                except:
+                except Exception as e:
                     # Skip problematic lines
                     continue
         
